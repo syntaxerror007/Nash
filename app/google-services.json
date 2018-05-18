@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "807067934462",
+    "firebase_url": "https://nash-a1701.firebaseio.com",
+    "project_id": "nash-a1701",
+    "storage_bucket": "nash-a1701.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807067934462:android:522236754e8d47a9",
+        "android_client_info": {
+          "package_name": "com.android.nash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "807067934462-nms77b958mtpoadctohlg3dsurhve0kn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUYBT6wCev0lC-kPMG8qVshiMOK_z8mX0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
