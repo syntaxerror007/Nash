@@ -2,10 +2,12 @@ package com.android.nash.login
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.android.nash.R
+import com.android.nash.user.register.RegisterActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.login_activity.*
 
@@ -17,6 +19,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.getUser().observe(this, Observer { observeUser(it) })
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 
     private fun observeUser(user: FirebaseUser?) {

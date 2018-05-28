@@ -25,15 +25,12 @@ object AppUtil{
     }
 
     fun copyToClipboard(context: Context, label: String, text: String) {
-        if (StringUtil.isNullOrEmpty(label) || StringUtil.isNullOrEmpty(text)) {
+        if (label.isNullOrBlank() || text.isNullOrBlank()) {
             return
         }
 
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(label, text)
-
-        if (clipboard != null) {
-            clipboard.primaryClip = clip
-        }
+        clipboard.primaryClip = clip
     }
 }

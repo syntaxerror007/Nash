@@ -8,14 +8,9 @@ object StringUtil {
 
     fun fromHtml(string: String?): Spanned {
         return when {
-            isNullOrEmpty(string) -> SpannableString("")
+            string.isNullOrEmpty() -> SpannableString("")
             AppUtil.isAndroidN() -> Html.fromHtml(string, Html.FROM_HTML_MODE_LEGACY, null, HtmlTagHandler())
             else -> Html.fromHtml(string, null, HtmlTagHandler())
         }
-    }
-
-
-    fun isNullOrEmpty(str: String?): Boolean {
-        return str == null || str.trim { it <= ' ' }.isEmpty()
     }
 }

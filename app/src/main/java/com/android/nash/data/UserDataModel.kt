@@ -1,3 +1,5 @@
 package com.android.nash.data
 
-data class UserDataModel(val username:String, val password:String, val displayName:String)
+data class UserDataModel(var id:String, var username:String, var password:String, var displayName:String, var phoneNumber:String) {
+    constructor(): this("","","","", "")
+}
