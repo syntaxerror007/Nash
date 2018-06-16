@@ -37,4 +37,8 @@ open class CoreViewModel : ViewModel() {
     fun getUser():LiveData<FirebaseUser> {
         return user
     }
+
+    fun getUserDataModel():LiveData<UserDataModel> {
+        return userDataModel
+    }
 }

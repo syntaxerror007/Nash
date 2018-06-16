@@ -18,7 +18,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".user.register.RegisterActivity"/>
+        <activity android:name=".user.register.RegisterActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".home.HomeActivity" />
+        </activity>
         <activity android:name=".home.HomeActivity"/>
     </application>
 

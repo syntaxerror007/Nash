@@ -16,6 +16,10 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         initViewModel()
     }
 
+    fun setBackButtonEnabled(isEnabled: Boolean) {
+        supportActionBar!!.setDisplayHomeAsUpEnabled(isEnabled)
+    }
+
     fun getViewModel():T {
         return viewModel
     }

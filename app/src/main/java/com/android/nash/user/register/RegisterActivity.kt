@@ -10,13 +10,9 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.CoreActivity
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.register_activity.*
 import android.widget.ArrayAdapter
-import com.android.nash.login.LoginActivity
 import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
-import com.google.firebase.auth.FirebaseAuth
 
 
 class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener {
@@ -27,8 +23,9 @@ class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_activity)
+        title = "Register"
+        setBackButtonEnabled(true)
         observeViewModel()
-
         setUserTypeSpinner()
         btnRegister.setOnClickListener(this)
 
