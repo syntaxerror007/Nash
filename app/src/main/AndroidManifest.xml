@@ -19,6 +19,7 @@
         </activity>
 
         <activity android:name=".user.register.RegisterActivity"/>
+        <activity android:name=".home.HomeActivity"/>
     </application>
 
 </manifest>
