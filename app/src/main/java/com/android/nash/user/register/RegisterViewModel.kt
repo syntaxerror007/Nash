@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.UserDataModel
+import com.android.nash.provider.UserProvider
+import com.android.nash.util.COMPANY_NAME
 import com.android.nash.util.USER_DB
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseNetworkException
@@ -17,17 +19,16 @@ import com.google.firebase.database.FirebaseDatabase
 class RegisterViewModel: CoreViewModel() {
     private var userType:String? = null
     private val loadingState: MutableLiveData<Boolean> = MutableLiveData()
-    private val createdUser: MutableLiveData<UserDataModel> = MutableLiveData()
     private val message:MutableLiveData<String> = MutableLiveData()
     private val usernameError: MutableLiveData<String> = MutableLiveData()
     private val passwordError: MutableLiveData<String> = MutableLiveData()
     private val nameError: MutableLiveData<String> = MutableLiveData()
     private val phoneError: MutableLiveData<String> = MutableLiveData()
     private val userTypeError: MutableLiveData<String> = MutableLiveData()
+    private val userProvider = UserProvider()
 
     fun init() {
         loadingState.value = false
-        createdUser.value = UserDataModel()
         mDatabaseReference = mFirebaseDatabase.getReference(USER_DB)
     }
 
@@ -68,19 +69,22 @@ class RegisterViewModel: CoreViewModel() {
         password!!
         val secondaryFirebaseAuth = FirebaseAuth.getInstance(secondaryFirebaseApp)
 
-        secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@nash.com", password).addOnCompleteListener {
-            loadingState.value = false
+        secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", password).addOnCompleteListener {
             if (it.isSuccessful) {
                 val createdUserUid = it.result.user.uid
-                val userDataModel = createdUser.value!!
+                val userDataModel = UserDataModel()
                 userDataModel.username = username
                 userDataModel.id = createdUserUid
                 userDataModel.displayName = name!!
                 userDataModel.phoneNumber = phoneNumber!!
                 userDataModel.userType = userType!!
-                mDatabaseReference.child(createdUserUid).setValue(userDataModel)
-                secondaryFirebaseAuth.signOut()
+
+                userProvider.insertUser(userDataModel).addOnCompleteListener {
+                    secondaryFirebaseAuth.signOut()
+                    loadingState.value = false
+                }
             } else {
+                loadingState.value = false
                 var errorMessage:String? = null
                 if (it.exception != null) {
                     errorMessage = when {
