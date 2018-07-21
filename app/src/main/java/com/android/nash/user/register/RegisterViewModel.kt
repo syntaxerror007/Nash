@@ -2,7 +2,6 @@ package com.android.nash.user.register
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.UserDataModel
 import com.android.nash.provider.UserProvider
@@ -12,9 +11,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class RegisterViewModel: CoreViewModel() {
     private var userType:String? = null

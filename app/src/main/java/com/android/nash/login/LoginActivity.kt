@@ -6,9 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.android.nash.R
-import com.android.nash.core.CoreActivity
+import com.android.nash.core.activity.CoreActivity
 import com.android.nash.home.HomeActivity
-import com.android.nash.user.register.RegisterActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.login_activity.*
 

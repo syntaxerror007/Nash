@@ -5,18 +5,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.android.nash.R
-import com.android.nash.core.CoreActivity
-import com.android.nash.data.UserDataModel
+import com.android.nash.core.activity.CoreActivity
 import com.android.nash.location.RegisterLocationActivity
 import com.android.nash.login.LoginActivity
-import com.android.nash.provider.LocationProvider
+import com.android.nash.service.ServiceListActivity
 import com.android.nash.user.register.RegisterActivity
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_activity.*
-import java.util.Collections
 
 class HomeActivity : CoreActivity<HomeViewModel>() {
 
@@ -34,14 +30,19 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
     }
 
     private fun onItemClick(it: String) {
-        if (it.equals("Register User", true)) {
-            goToRegisterActivity()
-        } else if (it.equals("Register Location", true)) {
-            gotoRegisterLocationActivity()
-        } else if (it.equals("Log Out", true)) {
-            FirebaseAuth.getInstance().signOut()
-            goToLoginActivity()
+        when {
+            it.equals("Register User", true) -> goToRegisterActivity()
+            it.equals("Register Location", true) -> gotoRegisterLocationActivity()
+            it.equals("Log Out", true) -> {
+                FirebaseAuth.getInstance().signOut()
+                goToLoginActivity()
+            }
+            it.equals("Services", true) -> goToServiceListActivity()
         }
+    }
+
+    private fun goToServiceListActivity() {
+        startActivity(Intent(this, ServiceListActivity::class.java))
     }
 
     private fun gotoRegisterLocationActivity() {

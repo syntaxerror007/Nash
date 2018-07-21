@@ -2,14 +2,13 @@ package com.android.nash.user.register
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import com.android.nash.R
-import com.android.nash.core.CoreActivity
+import com.android.nash.core.activity.CoreActivity
 import kotlinx.android.synthetic.main.register_activity.*
 import android.widget.ArrayAdapter
 import com.google.firebase.FirebaseApp

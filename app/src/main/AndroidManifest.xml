@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.LoginActivity">
+        <activity android:name=".login.LoginActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,13 +19,23 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".user.register.RegisterActivity">
+        <activity android:name=".user.register.RegisterActivity"
+            android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
         </activity>
-        <activity android:name=".home.HomeActivity"/>
-        <activity android:name=".location.RegisterLocationActivity">
+        <activity android:name=".home.HomeActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".location.RegisterLocationActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".home.HomeActivity" />
+        </activity>
+
+        <activity android:name=".service.ServiceListActivity"
+            android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
