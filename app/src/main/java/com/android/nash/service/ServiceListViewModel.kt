@@ -2,10 +2,13 @@ package com.android.nash.service
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.provider.ServiceProvider
 import com.google.android.gms.tasks.OnCompleteListener
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class ServiceListViewModel : CoreViewModel() {
     private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
@@ -39,5 +42,19 @@ class ServiceListViewModel : CoreViewModel() {
                     insertServiceGroupError.value = it.exception!!.localizedMessage
             }
         })
+    }
+
+    fun loadAllService() {
+        serviceProvider.getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        Log.d("MO", "SUCCESS")
+                        serviceGroupList.clear()
+                        serviceGroupList.addAll(it)
+                        serviceGroupListLiveData.value = serviceGroupList
+                    }
+                ) {
+                    it.printStackTrace()
+                }
     }
 }

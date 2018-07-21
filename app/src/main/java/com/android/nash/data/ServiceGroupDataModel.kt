@@ -1,3 +1,5 @@
 package com.android.nash.data
 
-data class ServiceGroupDataModel(var uuid:String, var serviceGroupName:String, var services:List<ServiceDataModel>)
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
+
+data class ServiceGroupDataModel(var uuid:String = "", var serviceGroupName:String = "", var services:List<ServiceDataModel> = mutableListOf()) : ExpandableGroup<ServiceDataModel>(serviceGroupName, services)
