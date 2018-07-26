@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.android.nash.core.CoreViewModel
+import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.provider.ServiceProvider
 import com.google.android.gms.tasks.OnCompleteListener
@@ -29,7 +30,7 @@ class ServiceListViewModel : CoreViewModel() {
         return insertServiceGroupError
     }
 
-    fun insertServiceDialog(serviceGroupName: String) {
+    fun insertServiceGroup(serviceGroupName: String) {
         val serviceGroup = ServiceGroupDataModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
         serviceProvider.insertServiceGroup(serviceGroup, OnCompleteListener {
             if (it.isSuccessful) {
@@ -48,7 +49,6 @@ class ServiceListViewModel : CoreViewModel() {
         serviceProvider.getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        Log.d("MO", "SUCCESS")
                         serviceGroupList.clear()
                         serviceGroupList.addAll(it)
                         serviceGroupListLiveData.value = serviceGroupList
@@ -57,4 +57,12 @@ class ServiceListViewModel : CoreViewModel() {
                     it.printStackTrace()
                 }
     }
+
+
+    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel) {
+        if (serviceGroupDataModel != null) {
+            serviceGroupDataModel.services.add(serviceDataModel)
+        }
+    }
+
 }

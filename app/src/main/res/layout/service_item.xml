@@ -15,6 +15,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/Guideline2"
         app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="Aurora Single 80%" />
 
     <android.support.constraint.Guideline
@@ -34,6 +36,8 @@
         app:layout_constraintLeft_toRightOf="@id/Guideline2"
         app:layout_constraintRight_toLeftOf="@+id/textViewReminder"
         app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="Price: Rp. 350.000" />
 
 
@@ -53,6 +57,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/Guideline3"
         app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="Reminder: 15 days" />
 
     <ImageView

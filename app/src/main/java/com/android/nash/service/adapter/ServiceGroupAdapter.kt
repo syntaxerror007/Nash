@@ -10,6 +10,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 
 class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : ExpandableRecyclerViewAdapter<ServiceGroupViewHolder, ServiceViewHolder>(serviceGroups) {
     private lateinit var mServiceGroupListCallback: ServiceGroupListCallback
+    private lateinit var mServiceItemCallback: ServiceItemCallback
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): ServiceGroupViewHolder {
         return ServiceGroupViewHolder(parent?.inflate(R.layout.service_group_item))
@@ -21,7 +22,7 @@ class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : Expanda
     }
 
     override fun onBindChildViewHolder(holder: ServiceViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?, childIndex: Int) {
-        holder?.bind((group?.items?.get(flatPosition) as ServiceGroupDataModel).services[childIndex])
+        holder?.bind((group?.items?.get(flatPosition) as ServiceGroupDataModel).services[childIndex], mServiceItemCallback)
     }
 
     override fun onBindGroupViewHolder(holder: ServiceGroupViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?) {
@@ -30,6 +31,10 @@ class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : Expanda
 
     fun setGroupListCallback(serviceGroupListCallback: ServiceGroupListCallback) {
         this.mServiceGroupListCallback = serviceGroupListCallback
+    }
+
+    fun setServiceItemCallback(serviceItemCallback: ServiceItemCallback) {
+        this.mServiceItemCallback = serviceItemCallback
     }
 
 }

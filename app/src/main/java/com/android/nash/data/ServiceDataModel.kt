@@ -5,4 +5,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ServiceDataModel(var id:String, var serviceName:String, var defaultPrice:Long, var reminder:Int, var shouldFreeText:Boolean) : Parcelable
+data class ServiceDataModel(var id:String, var serviceName:String, var price:Long, var reminder:Int, var shouldFreeText:Boolean) : Parcelable

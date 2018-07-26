@@ -26,4 +26,12 @@ abstract class CoreDialog<T : CoreViewModel> : AppCompatDialog {
     fun getViewModel():T {
         return viewModel
     }
+
+
+    fun initDialogSize() {
+        val metrics = context.resources.displayMetrics
+        val width = metrics.widthPixels
+        val height = metrics.heightPixels
+        this.window.setLayout(6 * width / 7, 4 * height / 5)
+    }
 }
