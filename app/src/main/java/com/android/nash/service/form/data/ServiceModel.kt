@@ -1,10 +1,10 @@
-package com.android.nash.data
+package com.android.nash.service.form.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-data class ServiceDataModel(var id:String = "", var serviceName:String = "", var price:Long = 0, var reminder:Int = 0, var shouldFreeText:Boolean = false) : Parcelable {
+
+data class ServiceModel(var id:String = "", var serviceName:String = "", var price:Long = 0, var reminder:Int = 0, var shouldFreeText:Boolean = false) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
@@ -26,12 +26,12 @@ data class ServiceDataModel(var id:String = "", var serviceName:String = "", var
     }
 
     companion object {
-        @JvmField val CREATOR = object : Parcelable.Creator<ServiceDataModel> {
-            override fun createFromParcel(parcel: Parcel): ServiceDataModel {
-                return ServiceDataModel(parcel)
+        @JvmField val CREATOR = object : Parcelable.Creator<ServiceModel> {
+            override fun createFromParcel(parcel: Parcel): ServiceModel {
+                return ServiceModel(parcel)
             }
 
-            override fun newArray(size: Int): Array<ServiceDataModel?> {
+            override fun newArray(size: Int): Array<ServiceModel?> {
                 return arrayOfNulls(size)
             }
         }

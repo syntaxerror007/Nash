@@ -7,6 +7,7 @@ import com.android.nash.core.CoreViewModel
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.provider.ServiceProvider
+import com.android.nash.service.form.data.ServiceGroupModel
 import com.google.android.gms.tasks.OnCompleteListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,10 +32,11 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun insertServiceGroup(serviceGroupName: String) {
-        val serviceGroup = ServiceGroupDataModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
+        val serviceGroup = ServiceGroupModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
         serviceProvider.insertServiceGroup(serviceGroup, OnCompleteListener {
             if (it.isSuccessful) {
-                serviceGroupList.add(serviceGroup)
+                val serviceGroupDataModel = ServiceGroupDataModel(serviceGroupName = serviceGroup.serviceGroupName, uuid = serviceGroup.uuid, services = mutableListOf())
+                serviceGroupList.add(serviceGroupDataModel)
                 serviceGroupListLiveData.value = serviceGroupList
                 isInsertServiceGroupSuccess.value = true
             } else {
@@ -59,10 +61,17 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
 
-    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel) {
-        if (serviceGroupDataModel != null) {
-            serviceGroupDataModel.services.add(serviceDataModel)
-        }
+    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, position: Int) {
+        serviceProvider.insertService(serviceProvider.getServiceModelFromServiceDataModel(serviceDataModel), OnCompleteListener {
+            serviceGroupDataModel?.services?.add(serviceDataModel)
+            val serviceGroupModel = serviceProvider.getServiceGroupModelFromServiceGroupDataModel(serviceGroupDataModel!!)
+            serviceProvider.updateServiceGroup(serviceGroupModel, OnCompleteListener {
+                if (it.isSuccessful) {
+                    serviceGroupList[position] = serviceGroupDataModel
+                    serviceGroupListLiveData.value = serviceGroupList
+                }
+            })
+        })
     }
 
 }

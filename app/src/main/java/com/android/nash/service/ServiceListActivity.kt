@@ -46,6 +46,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     private fun observeServiceGroup(serviceGroups: List<ServiceGroupDataModel>?) {
         val serviceGroupAdapter = ServiceGroupAdapter(serviceGroups)
         serviceGroupAdapter.setGroupListCallback(this)
+        serviceGroupAdapter.setServiceItemCallback(this)
         recyclerViewServiceGroup.adapter = serviceGroupAdapter
         serviceGroupAdapter.notifyDataSetChanged()
     }
@@ -67,12 +68,12 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         return ViewModelProviders.of(this).get(ServiceListViewModel::class.java)
     }
 
-    override fun onEditGroup(serviceGroupDataModel: ServiceGroupDataModel?) {
+    override fun onEditGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?) {
-        val serviceFormDialog = ServiceFormDialog(this, this, serviceGroupDataModel)
+    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
+        val serviceFormDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position)
         serviceFormDialog.show()
     }
 
@@ -84,7 +85,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?) {
-        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel)
+    override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
+        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel, position = position)
     }
 }

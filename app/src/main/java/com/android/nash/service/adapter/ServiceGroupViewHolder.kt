@@ -15,9 +15,9 @@ class ServiceGroupViewHolder(itemView: View?) : GroupViewHolder(itemView) {
     private var buttonAddService: TextView? = itemView?.addServiceTextView
     private var isExpanding = true
 
-    fun bind(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupListCallback: ServiceGroupListCallback) {
-        buttonEdit?.setOnClickListener { serviceGroupListCallback.onEditGroup(serviceGroupDataModel) }
-        buttonAddService?.setOnClickListener { serviceGroupListCallback.onAddService(serviceGroupDataModel) }
+    fun bind(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupListCallback: ServiceGroupListCallback, position: Int) {
+        buttonEdit?.setOnClickListener { serviceGroupListCallback.onEditGroup(serviceGroupDataModel, position) }
+        buttonAddService?.setOnClickListener { serviceGroupListCallback.onAddService(serviceGroupDataModel, position) }
         titleTextView?.text = serviceGroupDataModel?.serviceGroupName
         chevron?.setOnClickListener {
             if (isExpanding)

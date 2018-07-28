@@ -22,11 +22,11 @@ class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : Expanda
     }
 
     override fun onBindChildViewHolder(holder: ServiceViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?, childIndex: Int) {
-        holder?.bind((group?.items?.get(flatPosition) as ServiceGroupDataModel).services[childIndex], mServiceItemCallback)
+        holder?.bind((group as ServiceGroupDataModel).services[childIndex], mServiceItemCallback)
     }
 
     override fun onBindGroupViewHolder(holder: ServiceGroupViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?) {
-        holder?.bind(group as ServiceGroupDataModel, mServiceGroupListCallback)
+        holder?.bind(group as ServiceGroupDataModel, mServiceGroupListCallback, flatPosition)
     }
 
     fun setGroupListCallback(serviceGroupListCallback: ServiceGroupListCallback) {
