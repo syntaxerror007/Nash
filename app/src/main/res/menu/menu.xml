@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_landing_page"
+        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:title="Landing Page"/>
+    <item android:id="@+id/menu_location"
+        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:title="Location"/>
+    <item android:id="@+id/menu_service"
+        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:title="Service"/>
+    <item android:id="@+id/menu_customer"
+        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:title="Customer"/>
+    <item android:id="@+id/menu_setting"
+        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:title="Setting"/>
+</menu>

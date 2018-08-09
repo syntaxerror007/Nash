@@ -21,13 +21,14 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     private lateinit var serviceGroupDialog: ServiceGroupFormDialog
     private lateinit var serviceDialog: ServiceFormDialog
 
-    override fun onCreateService(serviceGroupName: String) {
+    override fun onCreateServiceGroup(serviceGroupName: String) {
         getViewModel().insertServiceGroup(serviceGroupName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_activity)
+        btnAddNewServiceGroup.setOnClickListener { showServiceGroupDialog() }
         observe()
         getViewModel().loadAllService()
     }
@@ -41,12 +42,20 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         getViewModel().getServiceGroupListLiveData().observe(this, Observer {
             observeServiceGroup(it)
         })
+
+        getViewModel().isInsertServiceSuccess().observe(this, Observer {
+            if (it != null && it)
+                serviceDialog.dismiss()
+        })
+        getViewModel().getInsertServiceError().observe(this, Observer { showErrorMessage(it!!) })
+
     }
 
     private fun observeServiceGroup(serviceGroups: List<ServiceGroupDataModel>?) {
         val serviceGroupAdapter = ServiceGroupAdapter(serviceGroups)
         serviceGroupAdapter.setGroupListCallback(this)
         serviceGroupAdapter.setServiceItemCallback(this)
+        serviceGroupAdapter.expandAllGroups()
         recyclerViewServiceGroup.adapter = serviceGroupAdapter
         serviceGroupAdapter.notifyDataSetChanged()
     }
@@ -57,6 +66,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
 
     private fun showServiceGroupDialog() {
+        serviceGroupDialog = ServiceGroupFormDialog(this, this)
         serviceGroupDialog.show()
     }
 
@@ -69,7 +79,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onEditGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
@@ -78,11 +88,11 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onItemEdit(serviceDataModel: ServiceDataModel?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onItemDelete(serviceDataModel: ServiceDataModel?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {

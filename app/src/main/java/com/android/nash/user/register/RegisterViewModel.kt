@@ -71,8 +71,8 @@ class RegisterViewModel: CoreViewModel() {
                 val userDataModel = UserDataModel()
                 userDataModel.username = username
                 userDataModel.id = createdUserUid
-                userDataModel.displayName = name!!
-                userDataModel.phoneNumber = phoneNumber!!
+//                userDataModel.displayName = name!!
+//                userDataModel.phoneNumber = phoneNumber!!
                 userDataModel.userType = userType!!
 
                 userProvider.insertUser(userDataModel).addOnCompleteListener {

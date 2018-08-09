@@ -1,5 +1,5 @@
 package com.android.nash.service
 
 interface ServiceGroupCallback {
-    fun onCreateService(serviceGroupName: String)
+    fun onCreateServiceGroup(serviceGroupName: String)
 }

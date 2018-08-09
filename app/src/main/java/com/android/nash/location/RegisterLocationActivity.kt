@@ -3,7 +3,9 @@ package com.android.nash.location
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.view.View
+import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
+import android.view.MenuItem
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
@@ -17,6 +19,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_register_activity)
+        setTitle("Location")
         getViewModel().isLoading().observe(this, Observer { processLoading(it!!) })
         getViewModel().locationAddressError().observe(this, Observer { processLocationAddressError(it) })
         getViewModel().locationNameError().observe(this, Observer { processAddressNameError(it) })
@@ -29,9 +32,6 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
 
             }
         })
-        btnRegister.setOnClickListener {
-            getViewModel().registerLocation(editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
-        }
     }
 
     private fun processPhoneNumberError(it: String?) {
@@ -47,13 +47,13 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
     }
 
     private fun processLoading(it: Boolean) {
-        loading.isIndeterminate = true
-        if (it) {
-            loading.visibility = View.VISIBLE
-            btnRegister.visibility = View.GONE
-        } else {
-            loading.visibility = View.GONE
-            btnRegister.visibility = View.VISIBLE
-        }
+//        loading.isIndeterminate = true
+//        if (it) {
+//            loading.visibility = View.VISIBLE
+//            btnRegister.visibility = View.GONE
+//        } else {
+//            loading.visibility = View.GONE
+//            btnRegister.visibility = View.VISIBLE
+//        }
     }
 }

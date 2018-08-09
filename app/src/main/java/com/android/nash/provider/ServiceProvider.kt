@@ -41,7 +41,7 @@ class ServiceProvider {
         val serviceDatabaseReference = mFirebaseDatabase.getReference(SERVICE_DB)
         val uuid = serviceDatabaseReference.push().key
         serviceDataModel.id = uuid!!
-        serviceDatabaseReference.child(uuid).setValue(serviceDataModel).addOnCompleteListener { onCompleteListener }
+        serviceDatabaseReference.child(uuid).setValue(serviceDataModel).addOnCompleteListener(onCompleteListener)
     }
 
     private fun getServiceGroupDataModelFromServiceGroupModel(serviceGroupDataModel: ServiceGroupModel): ServiceGroupDataModel {

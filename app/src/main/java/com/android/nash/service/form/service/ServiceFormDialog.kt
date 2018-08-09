@@ -18,6 +18,12 @@ class ServiceFormDialog(context: Context, serviceCallback: ServiceCallback, serv
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_form_dialog)
         initDialogSize()
+        setListener()
+    }
+
+    private fun setListener() {
+        buttonClose.setOnClickListener { dismiss() }
+        btnCancel.setOnClickListener { dismiss() }
         btnRegister.setOnClickListener { registerServiceToServiceGroup() }
     }
 

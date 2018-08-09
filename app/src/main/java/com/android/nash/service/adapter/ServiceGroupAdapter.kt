@@ -14,7 +14,6 @@ class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : Expanda
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): ServiceGroupViewHolder {
         return ServiceGroupViewHolder(parent?.inflate(R.layout.service_group_item))
-
     }
 
     override fun onCreateChildViewHolder(parent: ViewGroup?, viewType: Int): ServiceViewHolder {
@@ -36,5 +35,11 @@ class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : Expanda
     fun setServiceItemCallback(serviceItemCallback: ServiceItemCallback) {
         this.mServiceItemCallback = serviceItemCallback
     }
-
+    fun expandAllGroups() {
+        groups.forEachIndexed { groupIndex, group ->
+            if (isGroupExpanded(group).not()) {
+                onGroupClick(expandableList.getFlattenedGroupIndex(groupIndex))
+            }
+        }
+    }
 }

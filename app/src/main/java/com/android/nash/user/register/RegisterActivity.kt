@@ -23,7 +23,6 @@ class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_activity)
         title = "Register"
-        setBackButtonEnabled(true)
         observeViewModel()
         setUserTypeSpinner()
         btnRegister.setOnClickListener(this)
@@ -34,17 +33,17 @@ class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener
         val adapter = ArrayAdapter.createFromResource(this,
                 R.array.user_type, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerUserType.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                return
-            }
-
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, itemId: Long) {
-                if (position >= 0 && position < adapter.count)
-                    getViewModel().setItemSelected(adapter.getItem(position).toString())
-            }
-        }
-        spinnerUserType.adapter = adapter
+//        spinnerUserType.onItemSelectedListener = object : OnItemSelectedListener {
+//            override fun onNothingSelected(p0: AdapterView<*>?) {
+//                return
+//            }
+//
+//            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, itemId: Long) {
+//                if (position >= 0 && position < adapter.count)
+//                    getViewModel().setItemSelected(adapter.getItem(position).toString())
+//            }
+//        }
+//        spinnerUserType.adapter = adapter
     }
 
     private fun observeViewModel() {
@@ -61,15 +60,15 @@ class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener
     }
 
     private fun observeUserTypeError(it: String?) {
-        spinnerUserType.error = it
+//        spinnerUserType.error = it
     }
 
     private fun observeNameError(it: String?) {
-        editTextName.error = it
+//        editTextName.error = it
     }
 
     private fun observePhoneError(it: String?) {
-        editTextPhoneNumber.error = it
+//        editTextPhoneNumber.error = it
     }
 
     private fun observePasswordError(message: String?) {
@@ -99,7 +98,7 @@ class RegisterActivity : CoreActivity<RegisterViewModel>(), View.OnClickListener
         if (view != null) {
             if (view == btnRegister) {
                 val firebaseOptions = FirebaseApp.getInstance()!!.options
-                getViewModel().doRegister(FirebaseApp.initializeApp(this, firebaseOptions, "secondaryFirebaseApp"), editTextUsername.text.toString(), editTextPassword.text.toString(), editTextName.text.toString(), editTextPhoneNumber.text.toString())
+//                getViewModel().doRegister(FirebaseApp.initializeApp(this, firebaseOptions, "secondaryFirebaseApp"), editTextUsername.text.toString(), editTextPassword.text.toString(), editTextName.text.toString(), editTextPhoneNumber.text.toString())
             }
         }
     }

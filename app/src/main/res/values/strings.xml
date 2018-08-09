@@ -10,4 +10,7 @@
     <string name="text_location_address_hint">Location Address</string>
     <string name="text_button_cancel">Cancel</string>
     <string name="text_add_new_service">Add New Services</string>
+    <string name="text_retype_password_hint">Retype Password</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Drawer Close</string>
 </resources>

@@ -21,6 +21,6 @@ class ServiceGroupFormDialog(context: Context, serviceGroupCallback: ServiceGrou
     private fun setListener() {
         buttonClose.setOnClickListener { dismiss() }
         btnCancel.setOnClickListener { dismiss() }
-        btnRegister.setOnClickListener { serviceGroupCallback.onCreateService(editTextLayoutServiceGroupName.text.toString()) }
+        btnRegister.setOnClickListener { serviceGroupCallback.onCreateServiceGroup(editTextLayoutServiceGroupName.text.toString()) }
     }
 }
