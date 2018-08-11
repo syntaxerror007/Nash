@@ -38,9 +38,11 @@
                     android:id="@+id/rightButton"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/common_dp_32"
+                    android:paddingLeft="@dimen/common_dp_16"
+                    android:paddingRight="@dimen/common_dp_16"
                     android:layout_marginRight="@dimen/common_dp_16"
                     android:background="@drawable/white_background_with_default_border"
-                    android:text="Save"
+                    android:visibility="gone"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
             </LinearLayout>

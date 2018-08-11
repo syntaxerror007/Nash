@@ -13,4 +13,7 @@
     <string name="text_retype_password_hint">Retype Password</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Drawer Close</string>
+    <string name="text_therapist_name">Therapist Name</string>
+    <string name="text_cancel_back">Back</string>
+    <string name="text_work_since">Work Since</string>
 </resources>

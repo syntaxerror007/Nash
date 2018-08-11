@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.LocationDataModel
+import com.android.nash.data.TherapistDataModel
+import com.android.nash.data.UserDataModel
 import com.android.nash.provider.LocationProvider
 import com.android.nash.util.LOCATION_DB
 import com.google.android.gms.tasks.OnCompleteListener
@@ -16,6 +18,10 @@ class RegisterLocationViewModel: CoreViewModel() {
     private val phoneNumberError:MutableLiveData<String> = MutableLiveData()
     private val error:MutableLiveData<String> = MutableLiveData()
     private val locationProvider:LocationProvider = LocationProvider()
+    private val toRegisterUserDataModel:MutableLiveData<UserDataModel> = MutableLiveData()
+    private val toRegisterUserPassword: MutableLiveData<String> = MutableLiveData()
+    private val availableTherapists:MutableList<TherapistDataModel> = mutableListOf()
+    private val availableTherapistsLiveData:MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
 
     fun isLoading(): LiveData<Boolean> {
         return isLoading
@@ -31,6 +37,10 @@ class RegisterLocationViewModel: CoreViewModel() {
 
     fun isSuccess(): LiveData<Boolean> {
         return isSuccess
+    }
+
+    fun availableTherapistsLiveData(): LiveData<MutableList<TherapistDataModel>> {
+        return availableTherapistsLiveData
     }
 
     fun registerLocation(locationName:String, locationAddress:String, locationPhoneNumber:String) {
@@ -70,5 +80,18 @@ class RegisterLocationViewModel: CoreViewModel() {
 
     fun phoneNumberError(): LiveData<String> {
         return phoneNumberError
+    }
+
+    fun setUserDataModel(userDataModel: UserDataModel) {
+        toRegisterUserDataModel.value = userDataModel
+    }
+
+    fun setUserPassword(password: String) {
+        toRegisterUserPassword.value = password
+    }
+
+    fun registerTherapist(therapistDataModel: TherapistDataModel) {
+        availableTherapists.add(therapistDataModel)
+        availableTherapistsLiveData.value = availableTherapists
     }
 }

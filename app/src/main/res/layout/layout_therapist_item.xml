@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/common_dp_32">
+
+    <TextView
+        android:id="@+id/textViewTherapistName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/Guideline2"
+        app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="Anthony" />
+
+    <android.support.constraint.Guideline
+        app:layout_constraintGuide_percent="0.15"
+        android:id="@+id/Guideline2"
+        android:orientation="vertical"
+        android:layout_width="1dp"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/textViewPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/Guideline2"
+        app:layout_constraintRight_toLeftOf="@+id/textViewWorkSince"
+        app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="Number: 082233511448" />
+
+
+    <android.support.constraint.Guideline
+        app:layout_constraintGuide_percent="0.45"
+        android:id="@+id/Guideline3"
+        android:orientation="vertical"
+        android:layout_width="1dp"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/textViewWorkSince"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/Guideline3"
+        app:layout_constraintRight_toLeftOf="@+id/Guideline4"
+        app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="Work Since: 12-Jun-2018" />
+
+
+    <android.support.constraint.Guideline
+        app:layout_constraintGuide_percent="0.75"
+        android:id="@+id/Guideline4"
+        android:orientation="vertical"
+        android:layout_width="1dp"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/textViewJobs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/Guideline4"
+        app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="Jobs: 2" />
+
+
+    <ImageView
+        android:id="@+id/buttonEdit"
+        android:layout_width="@dimen/common_dp_16"
+        android:layout_height="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_8"
+        android:background="@android:drawable/ic_menu_edit"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/buttonDelete" />
+
+    <ImageView
+        android:id="@+id/buttonDelete"
+        android:layout_width="@dimen/common_dp_16"
+        android:layout_height="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

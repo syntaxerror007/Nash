@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
+import android.view.View
 import com.android.nash.R
 import com.android.nash.location.RegisterLocationActivity
 import com.android.nash.service.ServiceListActivity
@@ -36,6 +37,14 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
 
     override fun setTitle(resId: Int) {
         toolbarTitle.setText(resId)
+    }
+
+    fun setToolbarRightButtonText(btnText: String) {
+        rightButton.text = btnText
+    }
+
+    fun setToolbarRightButtonVisible(isVisible: Boolean) {
+        rightButton.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     fun setBackEnabled(isBackEnabled: Boolean) {

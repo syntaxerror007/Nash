@@ -3,15 +3,20 @@ package com.android.nash.location
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.view.MenuItem
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.data.TherapistDataModel
+import com.android.nash.data.UserDataModel
+import com.android.nash.therapist.RegisterTherapistDialog
+import com.android.nash.therapist.TherapistListAdapter
+import com.android.nash.therapist.TherapistRegisterCallback
+import com.android.nash.user.register.UserRegisterCallback
+import com.android.nash.user.register.UserRegisterDialog
 import kotlinx.android.synthetic.main.location_register_activity.*
 
-class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
+class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback {
+
     override fun onCreateViewModel(): RegisterLocationViewModel {
         return ViewModelProviders.of(this).get(RegisterLocationViewModel::class.java)
     }
@@ -20,10 +25,44 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
+
+        observeViewModel()
+        setOnClickListener()
+    }
+
+    private fun setOnClickListener() {
+        btnRegisterCashier.setOnClickListener { onButtonRegisterCashierClicked() }
+        btnAddTherapist.setOnClickListener { onButtonAddTherapistClicked() }
+    }
+
+    private fun onButtonRegisterCashierClicked() {
+        val userRegisterDialog = UserRegisterDialog(this, this)
+        userRegisterDialog.show()
+    }
+
+    private fun onButtonAddTherapistClicked() {
+        val registerTherapistDialog = RegisterTherapistDialog(this, this)
+        registerTherapistDialog.show()
+    }
+
+
+    override fun onTherapistRegister(therapistDataModel: TherapistDataModel) {
+        getViewModel().registerTherapist(therapistDataModel)
+    }
+
+    override fun onUserCreated(userDataModel: UserDataModel, password: String) {
+        getViewModel().setUserDataModel(userDataModel)
+        getViewModel().setUserPassword(password)
+        btnRegisterCashier.text = userDataModel.username
+    }
+
+
+    private fun observeViewModel() {
         getViewModel().isLoading().observe(this, Observer { processLoading(it!!) })
         getViewModel().locationAddressError().observe(this, Observer { processLocationAddressError(it) })
         getViewModel().locationNameError().observe(this, Observer { processAddressNameError(it) })
         getViewModel().phoneNumberError().observe(this, Observer { processPhoneNumberError(it) })
+        getViewModel().availableTherapistsLiveData().observe(this, Observer { processTherapistsList(it) })
         getViewModel().isSuccess().observe(this, Observer {
             if (it != null && it) {
                 Toast.makeText(this, "Successfully add new Location", Toast.LENGTH_LONG).show()
@@ -32,6 +71,14 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
 
             }
         })
+    }
+
+    private fun processTherapistsList(therapists: List<TherapistDataModel>?) {
+        recyclerViewTherapist.adapter = TherapistListAdapter(therapists!!) { onTherapistItemClicked() }
+    }
+
+    private fun onTherapistItemClicked() {
+
     }
 
     private fun processPhoneNumberError(it: String?) {
@@ -47,13 +94,6 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>() {
     }
 
     private fun processLoading(it: Boolean) {
-//        loading.isIndeterminate = true
-//        if (it) {
-//            loading.visibility = View.VISIBLE
-//            btnRegister.visibility = View.GONE
-//        } else {
-//            loading.visibility = View.GONE
-//            btnRegister.visibility = View.VISIBLE
-//        }
+
     }
 }

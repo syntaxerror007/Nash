@@ -9,11 +9,21 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:buttonStyle">@style/NashButton</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
-
+    <style name="NashButton" parent="android:style/Widget.Button">
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">@dimen/common_dp_4</item>
+        <item name="android:paddingBottom">@dimen/common_dp_4</item>
+        <item name="android:paddingLeft">@dimen/common_dp_8</item>
+        <item name="android:paddingRight">@dimen/common_dp_8</item>
+        <item name="android:layout_marginLeft">@dimen/common_dp_16</item>
+        <item name="android:layout_marginRight">@dimen/common_dp_16</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 </resources>
