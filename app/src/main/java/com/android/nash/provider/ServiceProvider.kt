@@ -15,7 +15,6 @@ import io.reactivex.Observable
 
 class ServiceProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-    internal val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val mDatabaseReference = mFirebaseDatabase.getReference(SERVICE_GROUP_DB)
 
     fun insertServiceGroup(serviceGroupModel: ServiceGroupModel, onCompleteListener: OnCompleteListener<Void>) {

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/btnClose"
+        android:layout_width="@dimen/common_dp_32"
+        android:layout_height="@dimen/common_dp_32"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewServiceGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/common_dp_16"
+        android:paddingRight="@dimen/common_dp_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnClose"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_dp_1"
+        android:layout_marginBottom="@dimen/common_dp_8"
+        app:layout_constraintBottom_toTopOf="@+id/btnCancel"
+        android:background="@color/gray"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnCancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginBottom="@dimen/common_dp_8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/text_cancel_back"
+        android:textAllCaps="true" />
+
+
+    <FrameLayout
+        android:id="@+id/frameLayoutButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginBottom="@dimen/common_dp_8"
+        app:layout_constraintLeft_toRightOf="@id/btnCancel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_button_register"
+            android:textAllCaps="true" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btnLogin"
+            app:layout_constraintTop_toTopOf="@id/btnLogin" />
+
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

@@ -4,11 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.LocationDataModel
+import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.data.TherapistDataModel
 import com.android.nash.data.UserDataModel
 import com.android.nash.provider.LocationProvider
+import com.android.nash.provider.ServiceProvider
 import com.android.nash.util.LOCATION_DB
 import com.google.android.gms.tasks.OnCompleteListener
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class RegisterLocationViewModel: CoreViewModel() {
     private val isLoading:MutableLiveData<Boolean> = MutableLiveData()
@@ -21,6 +24,8 @@ class RegisterLocationViewModel: CoreViewModel() {
     private val toRegisterUserDataModel:MutableLiveData<UserDataModel> = MutableLiveData()
     private val toRegisterUserPassword: MutableLiveData<String> = MutableLiveData()
     private val availableTherapists:MutableList<TherapistDataModel> = mutableListOf()
+    private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
+    private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
     private val availableTherapistsLiveData:MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
 
     fun isLoading(): LiveData<Boolean> {
@@ -43,6 +48,10 @@ class RegisterLocationViewModel: CoreViewModel() {
         return availableTherapistsLiveData
     }
 
+    fun getServiceGrouplist(): LiveData<List<ServiceGroupDataModel>> {
+        return serviceGroupListLiveData
+    }
+
     fun registerLocation(locationName:String, locationAddress:String, locationPhoneNumber:String) {
         isLoading.value = true
         if (isFormValid(locationName, locationAddress, locationPhoneNumber)) {
@@ -57,6 +66,19 @@ class RegisterLocationViewModel: CoreViewModel() {
                 }
             })
         }
+    }
+
+    fun getAllServices() {
+        ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            serviceGroupList.clear()
+                            serviceGroupList.addAll(it)
+                            serviceGroupListLiveData.value = serviceGroupList
+                        }
+                ) {
+                    it.printStackTrace()
+                }
     }
 
     private fun isFormValid(locationName: String?, locationAddress: String?, phoneNumber: String?): Boolean {

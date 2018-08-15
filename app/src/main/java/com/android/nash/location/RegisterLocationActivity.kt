@@ -8,6 +8,7 @@ import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.data.TherapistDataModel
 import com.android.nash.data.UserDataModel
+import com.android.nash.service.dialog.ServiceListDialog
 import com.android.nash.therapist.RegisterTherapistDialog
 import com.android.nash.therapist.TherapistListAdapter
 import com.android.nash.therapist.TherapistRegisterCallback
@@ -16,7 +17,6 @@ import com.android.nash.user.register.UserRegisterDialog
 import kotlinx.android.synthetic.main.location_register_activity.*
 
 class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback {
-
     override fun onCreateViewModel(): RegisterLocationViewModel {
         return ViewModelProviders.of(this).get(RegisterLocationViewModel::class.java)
     }
@@ -25,7 +25,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
-
+        getViewModel().getAllServices()
         observeViewModel()
         setOnClickListener()
     }
@@ -33,6 +33,12 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
     private fun setOnClickListener() {
         btnRegisterCashier.setOnClickListener { onButtonRegisterCashierClicked() }
         btnAddTherapist.setOnClickListener { onButtonAddTherapistClicked() }
+        btnAddService.setOnClickListener { onAddServiceClicked() }
+    }
+
+    private fun onAddServiceClicked() {
+        val serviceListDialog = ServiceListDialog(this, getViewModel().getServiceGrouplist().value)
+        serviceListDialog.show()
     }
 
     private fun onButtonRegisterCashierClicked() {

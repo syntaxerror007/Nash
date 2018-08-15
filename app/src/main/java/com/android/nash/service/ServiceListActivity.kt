@@ -28,6 +28,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_activity)
+        setTitle("Services")
         btnAddNewServiceGroup.setOnClickListener { showServiceGroupDialog() }
         observe()
         getViewModel().loadAllService()
@@ -52,7 +53,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     private fun observeServiceGroup(serviceGroups: List<ServiceGroupDataModel>?) {
-        val serviceGroupAdapter = ServiceGroupAdapter(serviceGroups)
+        val serviceGroupAdapter = ServiceGroupAdapter(serviceGroups, false)
         serviceGroupAdapter.setGroupListCallback(this)
         serviceGroupAdapter.setServiceItemCallback(this)
         serviceGroupAdapter.expandAllGroups()

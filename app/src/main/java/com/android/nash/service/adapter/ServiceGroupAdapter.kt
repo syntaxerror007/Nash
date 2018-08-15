@@ -8,16 +8,17 @@ import com.android.nash.util.inflate
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 
-class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?) : ExpandableRecyclerViewAdapter<ServiceGroupViewHolder, ServiceViewHolder>(serviceGroups) {
+class ServiceGroupAdapter(serviceGroups: List<ServiceGroupDataModel>?, isCompactMode: Boolean) : ExpandableRecyclerViewAdapter<ServiceGroupViewHolder, ServiceViewHolder>(serviceGroups) {
     private lateinit var mServiceGroupListCallback: ServiceGroupListCallback
     private lateinit var mServiceItemCallback: ServiceItemCallback
+    private val isCompactMode = isCompactMode
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): ServiceGroupViewHolder {
-        return ServiceGroupViewHolder(parent?.inflate(R.layout.service_group_item))
+        return ServiceGroupViewHolder(parent?.inflate(R.layout.service_group_item), isCompactMode)
     }
 
     override fun onCreateChildViewHolder(parent: ViewGroup?, viewType: Int): ServiceViewHolder {
-        return ServiceViewHolder(parent?.inflate(R.layout.service_item))
+        return ServiceViewHolder(parent?.inflate(R.layout.service_item), isCompactMode)
     }
 
     override fun onBindChildViewHolder(holder: ServiceViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?, childIndex: Int) {
