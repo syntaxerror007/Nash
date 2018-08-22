@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.data.TherapistDataModel
 import com.android.nash.data.UserDataModel
+import com.android.nash.service.adapter.ServiceGroupAdapter
+import com.android.nash.service.dialog.ServiceListCallback
 import com.android.nash.service.dialog.ServiceListDialog
 import com.android.nash.therapist.RegisterTherapistDialog
 import com.android.nash.therapist.TherapistListAdapter
@@ -16,7 +19,8 @@ import com.android.nash.user.register.UserRegisterCallback
 import com.android.nash.user.register.UserRegisterDialog
 import kotlinx.android.synthetic.main.location_register_activity.*
 
-class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback {
+class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback {
+
     override fun onCreateViewModel(): RegisterLocationViewModel {
         return ViewModelProviders.of(this).get(RegisterLocationViewModel::class.java)
     }
@@ -37,7 +41,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
     }
 
     private fun onAddServiceClicked() {
-        val serviceListDialog = ServiceListDialog(this, getViewModel().getServiceGrouplist().value)
+        val serviceListDialog = ServiceListDialog(this, this, getViewModel().getServiceGrouplist().value)
         serviceListDialog.show()
     }
 
@@ -51,6 +55,12 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         registerTherapistDialog.show()
     }
 
+    override fun onFinishServiceClick(selectedServices: List<ServiceGroupDataModel>) {
+        val serviceGroupAdapter = ServiceGroupAdapter(selectedServices, false)
+        serviceGroupAdapter.expandAllGroups()
+        recyclerViewService.adapter = serviceGroupAdapter
+        serviceGroupAdapter.notifyDataSetChanged()
+    }
 
     override fun onTherapistRegister(therapistDataModel: TherapistDataModel) {
         getViewModel().registerTherapist(therapistDataModel)

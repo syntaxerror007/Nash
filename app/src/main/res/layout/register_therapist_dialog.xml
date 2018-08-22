@@ -12,7 +12,13 @@
         android:layout_marginTop="@dimen/common_dp_16"
         android:layout_marginBottom="@dimen/common_dp_16"
         tools:context=".user.register.RegisterActivity">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/common_dp_16"
+            android:paddingRight="@dimen/common_dp_16"
+            android:textSize="18sp"
+            android:text="Add Therapist"/>
         <ImageView
             android:id="@+id/btnClose"
             android:layout_width="@dimen/common_dp_32"

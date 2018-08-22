@@ -11,12 +11,14 @@
         android:layout_height="wrap_content"
         android:text="Add Service"
         android:textSize="20sp"
+        android:paddingTop="@dimen/common_dp_8"
         android:paddingLeft="@dimen/common_dp_16"
         app:layout_constraintRight_toLeftOf="@+id/buttonClose"/>
     <ImageView
         android:id="@+id/buttonClose"
         android:layout_width="@dimen/common_dp_32"
         android:layout_height="@dimen/common_dp_32"
+        android:paddingTop="@dimen/common_dp_8"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:layout_marginRight="@dimen/common_dp_16"
         app:layout_constraintRight_toRightOf="parent" />
@@ -100,6 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_8"
         android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
         app:layout_constraintTop_toBottomOf="@id/divider"
@@ -112,6 +115,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_8"
+        android:layout_marginLeft="@dimen/common_dp_16"
         android:layout_marginRight="@dimen/common_dp_16"
         app:layout_constraintLeft_toRightOf="@id/btnCancel"
         app:layout_constraintRight_toRightOf="parent"

@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.service.ServiceGroupCallback
-import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
+import com.android.nash.expandablerecyclerview.viewholders.GroupViewHolder
 import kotlinx.android.synthetic.main.service_group_item.view.*
 
 class ServiceGroupViewHolder(itemView: View?, isCompactMode: Boolean) : GroupViewHolder(itemView) {
@@ -16,13 +16,13 @@ class ServiceGroupViewHolder(itemView: View?, isCompactMode: Boolean) : GroupVie
     private var isExpanding = true
     private var isCompactMode = isCompactMode
 
-    fun bind(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupListCallback: ServiceGroupListCallback, position: Int) {
+    fun bind(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupListCallback: ServiceGroupListCallback?, position: Int) {
         if (isCompactMode) {
             buttonEdit?.visibility = View.GONE
             buttonAddService?.visibility = View.GONE
         }
-        buttonEdit?.setOnClickListener { serviceGroupListCallback.onEditGroup(serviceGroupDataModel, position) }
-        buttonAddService?.setOnClickListener { serviceGroupListCallback.onAddService(serviceGroupDataModel, position) }
+        buttonEdit?.setOnClickListener { serviceGroupListCallback?.onEditGroup(serviceGroupDataModel, position) }
+        buttonAddService?.setOnClickListener { serviceGroupListCallback?.onAddService(serviceGroupDataModel, position) }
         titleTextView?.text = serviceGroupDataModel?.serviceGroupName
         chevron?.setOnClickListener {
             if (isExpanding)

@@ -84,8 +84,8 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        val serviceFormDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position)
-        serviceFormDialog.show()
+        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position)
+        serviceDialog.show()
     }
 
     override fun onItemEdit(serviceDataModel: ServiceDataModel?) {

@@ -73,15 +73,14 @@ class ServiceListViewModel : CoreViewModel() {
 
     fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, position: Int) {
         val serviceModel = serviceProvider.getServiceModelFromServiceDataModel(serviceDataModel)
-        serviceProvider.insertService(serviceModel, OnCompleteListener {
+        serviceProvider.insertService(serviceModel, OnCompleteListener { it ->
             if (it.isSuccessful) {
                 serviceDataModel.id = serviceModel.id
                 serviceGroupDataModel?.services?.add(serviceDataModel)
                 val serviceGroupModel = serviceProvider.getServiceGroupModelFromServiceGroupDataModel(serviceGroupDataModel!!)
                 serviceProvider.updateServiceGroup(serviceGroupModel, OnCompleteListener {
                     if (it.isSuccessful) {
-                        serviceGroupList[position] = serviceGroupDataModel
-                        serviceGroupListLiveData.value = serviceGroupList
+                        loadAllService()
                         isInsertServiceSuccess.value = true
                     } else {
                         isInsertServiceSuccess.value = false

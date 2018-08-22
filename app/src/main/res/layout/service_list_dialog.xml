@@ -3,9 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/common_dp_16"
+        android:paddingRight="@dimen/common_dp_16"
+        android:paddingTop="@dimen/common_dp_8"
+        android:paddingBottom="@dimen/common_dp_8"
+        android:text="Select Services"
+        android:textSize="18sp"/>
     <ImageView
         android:id="@+id/btnClose"
+        android:layout_marginTop="@dimen/common_dp_8"
         android:layout_width="@dimen/common_dp_32"
         android:layout_height="@dimen/common_dp_32"
         android:layout_marginRight="@dimen/common_dp_16"
@@ -42,6 +51,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@android:color/white"
         android:text="@string/text_cancel_back"
         android:textAllCaps="true" />
 
@@ -61,6 +71,7 @@
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:text="@string/text_button_register"
             android:textAllCaps="true" />
 

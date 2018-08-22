@@ -11,9 +11,12 @@ import com.android.nash.service.adapter.ServiceGroupListCallback
 import com.android.nash.service.adapter.ServiceItemCallback
 import kotlinx.android.synthetic.main.service_list_dialog.*
 
-class ServiceListDialog(context: Context, serviceGroupDataModels: List<ServiceGroupDataModel>?) : CoreDialog<ServiceListDialogViewModel>(context), ServiceGroupListCallback, ServiceItemCallback {
-
+class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallback, serviceGroupDataModels: List<ServiceGroupDataModel>?) : CoreDialog<ServiceListDialogViewModel>(context), ServiceGroupListCallback, ServiceItemCallback {
+    private val serviceListCallback = serviceListCallback
     private val serviceGroupDataModels = serviceGroupDataModels
+    private val selectedServiceDataModels: MutableList<ServiceDataModel> = mutableListOf()
+    private val selectedServiceGroupDataModel: MutableMap<String, ServiceGroupDataModel> = mutableMapOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_dialog)
@@ -26,20 +29,34 @@ class ServiceListDialog(context: Context, serviceGroupDataModels: List<ServiceGr
         val serviceGroupAdapter = ServiceGroupAdapter(serviceGroupDataModels, true)
         serviceGroupAdapter.setGroupListCallback(this)
         serviceGroupAdapter.setServiceItemCallback(this)
+        serviceGroupAdapter.setChildClickListener { v, checked, group, childIndex ->
+            val selectedChildren = group.selectedChildren
+            if (group is ServiceGroupDataModel) {
+                val serviceGroupDataModel = ServiceGroupDataModel()
+                serviceGroupDataModel.uuid = group.uuid
+                serviceGroupDataModel.serviceGroupName = group.serviceGroupName
+                for (selectedChildIndex in selectedChildren.indices) {
+                    if (selectedChildren[selectedChildIndex]) serviceGroupDataModel.services.add(group.services[selectedChildIndex])
+                }
+                selectedServiceGroupDataModel[serviceGroupDataModel.uuid] = serviceGroupDataModel
+            }
+        }
         serviceGroupAdapter.expandAllGroups()
         recyclerViewServiceGroup.adapter = serviceGroupAdapter
         serviceGroupAdapter.notifyDataSetChanged()
     }
 
     private fun setListener() {
-        btnClose.setOnClickListener { dismiss() }
+        btnClose.setOnClickListener { cancel() }
         btnCancel.setOnClickListener { cancel() }
         btnRegister.setOnClickListener { registerServices() }
     }
 
     private fun registerServices() {
-
+        serviceListCallback.onFinishServiceClick(selectedServiceGroupDataModel.values.toList())
+        dismiss()
     }
+
     override fun onItemEdit(serviceDataModel: ServiceDataModel?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -55,5 +72,4 @@ class ServiceListDialog(context: Context, serviceGroupDataModels: List<ServiceGr
     override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

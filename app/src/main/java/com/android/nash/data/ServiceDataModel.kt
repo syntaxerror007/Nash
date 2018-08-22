@@ -10,8 +10,7 @@ data class ServiceDataModel(var id:String = "", var serviceName:String = "", var
             parcel.readString(),
             parcel.readLong(),
             parcel.readInt(),
-            parcel.readByte() != 0.toByte()) {
-    }
+            parcel.readByte() != 0.toByte())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
