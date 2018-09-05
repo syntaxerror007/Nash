@@ -1,7 +1,9 @@
 package com.android.nash.util
 
+import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 
 
 fun ImageView.loadUrl(url: CharSequence?, @DrawableRes placeholder: Int) {
@@ -36,4 +41,17 @@ fun NashDate.convertToString(): String {
     calendar.set(Calendar.MONTH, this.month)
     calendar.set(Calendar.YEAR, this.year)
     return formatter.format(calendar.time)
+}
+
+fun AppCompatActivity.dismissKeyboard() {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    if (imm.isAcceptingText)
+        imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
+}
+
+fun EditText.validateNullOrBlank(errorMessage: String) {
+    if (this.text.toString().isBlank())
+        this.error = errorMessage
+    else
+        this.error = null
 }

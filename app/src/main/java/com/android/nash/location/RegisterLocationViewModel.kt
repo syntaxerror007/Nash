@@ -9,8 +9,14 @@ import com.android.nash.data.TherapistDataModel
 import com.android.nash.data.UserDataModel
 import com.android.nash.provider.LocationProvider
 import com.android.nash.provider.ServiceProvider
+import com.android.nash.provider.UserProvider
+import com.android.nash.util.COMPANY_NAME
 import com.android.nash.util.LOCATION_DB
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class RegisterLocationViewModel: CoreViewModel() {
@@ -52,10 +58,52 @@ class RegisterLocationViewModel: CoreViewModel() {
         return serviceGroupListLiveData
     }
 
-    fun registerLocation(locationName:String, locationAddress:String, locationPhoneNumber:String) {
+    fun registerLocation(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
         isLoading.value = true
-        if (isFormValid(locationName, locationAddress, locationPhoneNumber)) {
-            val locationDataModel = LocationDataModel(locationName, locationAddress, locationPhoneNumber)
+        if (!isFormValid(locationName, locationAddress, locationPhoneNumber)) {
+            isLoading.value = false
+            return
+        }
+        registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber)
+    }
+
+    private fun registerUser(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+        val secondaryFirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
+        val username = toRegisterUserDataModel.value!!.username
+
+        secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", toRegisterUserPassword.value!!).addOnCompleteListener { it ->
+            secondaryFirebaseAuth.signOut()
+            if (it.isSuccessful) {
+                val createdUserUid = it.result.user.uid
+                val userDataModel = UserDataModel()
+                userDataModel.username = username
+                userDataModel.id = createdUserUid
+                userDataModel.userType = "CASHIER"
+
+                UserProvider().insertUser(userDataModel).addOnCompleteListener {
+                    toRegisterUserDataModel.value = userDataModel
+                    doRegisterLocation(userDataModel, locationName, locationAddress, locationPhoneNumber)
+                }
+            } else {
+                isLoading.value = false
+                var errorMessage: String? = null
+                if (it.exception != null) {
+                    errorMessage = when {
+                        it.exception is FirebaseAuthException -> {
+                            (it.exception as FirebaseAuthException).message
+                        }
+                        it.exception is FirebaseNetworkException -> {
+                            (it.exception as FirebaseNetworkException).message
+                        }
+                        else -> null
+                    }
+                }
+            }
+        }
+    }
+
+    private fun doRegisterLocation(userDataModel: UserDataModel, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, selectedServices = serviceGroupListLiveData.value!!, therapists = availableTherapistsLiveData.value!!, user = userDataModel)
             locationProvider.insertLocation(locationDataModel, OnCompleteListener {
                 isLoading.value = false
                 if (it.isSuccessful) {
@@ -65,7 +113,6 @@ class RegisterLocationViewModel: CoreViewModel() {
                         error.value = it.exception!!.localizedMessage
                 }
             })
-        }
     }
 
     fun getAllServices() {
@@ -115,5 +162,9 @@ class RegisterLocationViewModel: CoreViewModel() {
     fun registerTherapist(therapistDataModel: TherapistDataModel) {
         availableTherapists.add(therapistDataModel)
         availableTherapistsLiveData.value = availableTherapists
+    }
+
+    fun setSelectedServices(selectedServices: MutableList<ServiceGroupDataModel>) {
+        serviceGroupListLiveData.value = selectedServices
     }
 }

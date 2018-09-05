@@ -41,7 +41,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
                 hideServiceGroupDialog()
         })
         getViewModel().getServiceGroupListLiveData().observe(this, Observer {
-            observeServiceGroup(it)
+            observeServiceGroup(it!!)
         })
 
         getViewModel().isInsertServiceSuccess().observe(this, Observer {
@@ -52,7 +52,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
     }
 
-    private fun observeServiceGroup(serviceGroups: List<ServiceGroupDataModel>?) {
+    private fun observeServiceGroup(serviceGroups: MutableList<ServiceGroupDataModel>) {
         val serviceGroupAdapter = ServiceGroupAdapter(serviceGroups, false)
         serviceGroupAdapter.setGroupListCallback(this)
         serviceGroupAdapter.setServiceItemCallback(this)
@@ -83,20 +83,20 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
     }
 
-    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position)
+    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int) {
+        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, groupPosition, 0)
         serviceDialog.show()
     }
 
-    override fun onItemEdit(serviceDataModel: ServiceDataModel?) {
+    override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
 
     }
 
-    override fun onItemDelete(serviceDataModel: ServiceDataModel?) {
+    override fun onItemDelete(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
 
     }
 
-    override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel, position = position)
+    override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
+        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel, groupPosition = groupPosition, position = position)
     }
 }

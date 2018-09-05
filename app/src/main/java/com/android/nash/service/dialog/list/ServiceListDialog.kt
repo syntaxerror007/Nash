@@ -1,20 +1,18 @@
-package com.android.nash.service.dialog
+package com.android.nash.service.dialog.list
 
 import android.content.Context
 import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.dialog.CoreDialog
-import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.service.adapter.ServiceGroupAdapter
 import com.android.nash.service.adapter.ServiceGroupListCallback
 import com.android.nash.service.adapter.ServiceItemCallback
 import kotlinx.android.synthetic.main.service_list_dialog.*
 
-class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallback, serviceGroupDataModels: List<ServiceGroupDataModel>?) : CoreDialog<ServiceListDialogViewModel>(context), ServiceGroupListCallback, ServiceItemCallback {
+class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallback, serviceGroupDataModels: MutableList<ServiceGroupDataModel>?) : CoreDialog<ServiceListDialogViewModel>(context), ServiceGroupListCallback, ServiceItemCallback {
     private val serviceListCallback = serviceListCallback
     private val serviceGroupDataModels = serviceGroupDataModels
-    private val selectedServiceDataModels: MutableList<ServiceDataModel> = mutableListOf()
     private val selectedServiceGroupDataModel: MutableMap<String, ServiceGroupDataModel> = mutableMapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,7 @@ class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallba
     }
 
     private fun initDialogAdapter() {
-        val serviceGroupAdapter = ServiceGroupAdapter(serviceGroupDataModels, true)
+        val serviceGroupAdapter = ServiceGroupAdapter(serviceGroupDataModels!!, true)
         serviceGroupAdapter.setGroupListCallback(this)
         serviceGroupAdapter.setServiceItemCallback(this)
         serviceGroupAdapter.setChildClickListener { v, checked, group, childIndex ->
@@ -53,23 +51,7 @@ class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallba
     }
 
     private fun registerServices() {
-        serviceListCallback.onFinishServiceClick(selectedServiceGroupDataModel.values.toList())
+        serviceListCallback.onFinishServiceClick(selectedServiceGroupDataModel.values.toMutableList())
         dismiss()
-    }
-
-    override fun onItemEdit(serviceDataModel: ServiceDataModel?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onItemDelete(serviceDataModel: ServiceDataModel?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onEditGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

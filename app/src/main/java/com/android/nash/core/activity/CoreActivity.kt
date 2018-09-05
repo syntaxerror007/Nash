@@ -1,5 +1,6 @@
 package com.android.nash.core.activity
 
+import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
 import android.view.View
 import com.android.nash.R
+import com.android.nash.core.loading_dialog.LoadingDialog
 import com.android.nash.location.RegisterLocationActivity
 import com.android.nash.service.ServiceListActivity
 import kotlinx.android.synthetic.main.core_activity.*
@@ -24,13 +26,22 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     private var mToolBarNavigationListenerIsRegistered = false
     private lateinit var viewModel: T
     private var backEnabled = false
+    private lateinit var loadingDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = onCreateViewModel()
+        loadingDialog = LoadingDialog(this)
         initViewModel()
     }
 
+    fun showLoadingDialog() {
+        loadingDialog.show()
+    }
+
+    fun hideLoadingDialog() {
+        loadingDialog.dismiss()
+    }
     fun setTitle(title: String) {
         toolbarTitle.text = title
     }
@@ -45,6 +56,10 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
 
     fun setToolbarRightButtonVisible(isVisible: Boolean) {
         rightButton.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    fun setToolbarRightOnClickListener(onClickListener: View.OnClickListener) {
+        rightButton.setOnClickListener(onClickListener)
     }
 
     fun setBackEnabled(isBackEnabled: Boolean) {

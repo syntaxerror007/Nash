@@ -3,15 +3,19 @@ package com.android.nash.expandablecheckrecyclerview.models;
 import android.os.Parcel;
 
 import com.android.nash.expandablerecyclerview.models.ExpandableGroup;
+import com.google.firebase.database.Exclude;
 
 import java.util.Arrays;
 import java.util.List;
+
+import kotlin.jvm.Transient;
 
 /**
  * An extension of ExpandableGroup that holds onto the checked state of it's children
  */
 public abstract class CheckedExpandableGroup extends ExpandableGroup {
 
+    @Exclude
     public boolean[] selectedChildren;
 
     public CheckedExpandableGroup(String title, List items) {

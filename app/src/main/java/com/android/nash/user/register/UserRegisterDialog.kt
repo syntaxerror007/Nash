@@ -19,6 +19,7 @@ class UserRegisterDialog(context: Context, userCallback: UserRegisterCallback) :
     private fun registerUser() {
         if (verifyUserInput()) {
             userRegisterCallback.onUserCreated(UserDataModel(username = editTextUsername.text.toString()), editTextPassword.text.toString())
+            dismiss()
         }
     }
 
@@ -35,7 +36,7 @@ class UserRegisterDialog(context: Context, userCallback: UserRegisterCallback) :
             editTextRetypePassword.error = "Please retype password"
             return false
         }
-        if (editTextRetypePassword.text != editTextPassword) {
+        if (editTextRetypePassword.text.toString() != editTextPassword.text.toString()) {
             editTextRetypePassword.error = "Please input same password"
             return false
         }

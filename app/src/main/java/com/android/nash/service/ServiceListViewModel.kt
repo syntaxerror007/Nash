@@ -14,7 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class ServiceListViewModel : CoreViewModel() {
-    private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
+    private val serviceGroupListLiveData = MutableLiveData<MutableList<ServiceGroupDataModel>>()
     private val isInsertServiceGroupSuccess = MutableLiveData<Boolean>()
     private val isInsertServiceSuccess = MutableLiveData<Boolean>()
     private val insertServiceGroupError = MutableLiveData<String>()
@@ -22,7 +22,7 @@ class ServiceListViewModel : CoreViewModel() {
     private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
     private val serviceProvider:ServiceProvider = ServiceProvider()
 
-    fun getServiceGroupListLiveData(): LiveData<List<ServiceGroupDataModel>> {
+    fun getServiceGroupListLiveData(): LiveData<MutableList<ServiceGroupDataModel>> {
         return serviceGroupListLiveData
     }
 
@@ -71,7 +71,7 @@ class ServiceListViewModel : CoreViewModel() {
                 }
     }
 
-    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, position: Int) {
+    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, groupPosition: Int, position: Int) {
         val serviceModel = serviceProvider.getServiceModelFromServiceDataModel(serviceDataModel)
         serviceProvider.insertService(serviceModel, OnCompleteListener { it ->
             if (it.isSuccessful) {

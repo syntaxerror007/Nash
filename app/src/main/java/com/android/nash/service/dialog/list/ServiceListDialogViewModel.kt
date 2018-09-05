@@ -1,4 +1,4 @@
-package com.android.nash.service.dialog
+package com.android.nash.service.dialog.list
 
 import com.android.nash.core.CoreViewModel
 
