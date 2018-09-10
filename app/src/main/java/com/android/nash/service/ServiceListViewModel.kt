@@ -83,4 +83,12 @@ class ServiceListViewModel : CoreViewModel() {
         })
     }
 
+    fun removeService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?) {
+        serviceProvider.deleteServiceGroup(serviceGroupDataModel, serviceDataModel, OnCompleteListener {
+            if (it.isSuccessful) {
+                loadAllService()
+            }
+        })
+    }
+
 }

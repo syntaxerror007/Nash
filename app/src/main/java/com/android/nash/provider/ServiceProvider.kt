@@ -81,4 +81,24 @@ class ServiceProvider {
 
         })
     }
+
+    fun deleteServiceGroup(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Void>) {
+        if (serviceDataModel != null) {
+            mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).removeValue().continueWith {
+                mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").addListenerForSingleValueEvent(object: ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").setValue(p0.value as Long - 1)
+                    }
+
+                })
+                mServiceNameReference.child(serviceDataModel.serviceName).removeValue()
+                onCompleteListener.onComplete(it)
+            }
+
+        }
+    }
 }
