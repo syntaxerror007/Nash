@@ -1,4 +1,4 @@
-package com.android.nash.location
+package com.android.nash.location.register
 
 import android.app.Dialog
 import android.arch.lifecycle.Observer
@@ -149,12 +149,9 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         if (isLoading) {
             showLoadingDialog()
         } else {
+            firebaseApp.delete()
             hideLoadingDialog()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        firebaseApp.delete()
-    }
 }

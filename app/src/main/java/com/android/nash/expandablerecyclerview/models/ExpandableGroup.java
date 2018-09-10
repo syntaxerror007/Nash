@@ -2,6 +2,9 @@ package com.android.nash.expandablerecyclerview.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +19,16 @@ public class ExpandableGroup<T extends Parcelable> implements Parcelable {
     this.title = title;
     this.items = items;
   }
-
   public String getTitle() {
     return title;
   }
 
   public List<T> getItems() {
     return items;
+  }
+
+  public void setItems(List<T> items) {
+    this.items = items;
   }
 
   public int getItemCount() {

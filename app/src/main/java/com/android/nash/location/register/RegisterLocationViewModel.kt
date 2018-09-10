@@ -1,4 +1,4 @@
-package com.android.nash.location
+package com.android.nash.location.register
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -11,7 +11,6 @@ import com.android.nash.provider.LocationProvider
 import com.android.nash.provider.ServiceProvider
 import com.android.nash.provider.UserProvider
 import com.android.nash.util.COMPANY_NAME
-import com.android.nash.util.LOCATION_DB
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseNetworkException
@@ -33,6 +32,7 @@ class RegisterLocationViewModel: CoreViewModel() {
     private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
     private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
     private val availableTherapistsLiveData:MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
+    private val totalServiceSelectedLiveData: MutableLiveData<Int> = MutableLiveData()
 
     fun isLoading(): LiveData<Boolean> {
         return isLoading
@@ -103,8 +103,8 @@ class RegisterLocationViewModel: CoreViewModel() {
     }
 
     private fun doRegisterLocation(userDataModel: UserDataModel, locationName:String, locationAddress:String, locationPhoneNumber:String) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, selectedServices = serviceGroupListLiveData.value!!, therapists = availableTherapistsLiveData.value!!, user = userDataModel)
-            locationProvider.insertLocation(locationDataModel, OnCompleteListener {
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = userDataModel)
+            locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!,  OnCompleteListener {
                 isLoading.value = false
                 if (it.isSuccessful) {
                     isSuccess.value = true
@@ -164,7 +164,17 @@ class RegisterLocationViewModel: CoreViewModel() {
         availableTherapistsLiveData.value = availableTherapists
     }
 
+
     fun setSelectedServices(selectedServices: MutableList<ServiceGroupDataModel>) {
+        totalServiceSelectedLiveData.value = calculateSelectedServices(selectedServices)
         serviceGroupListLiveData.value = selectedServices
+    }
+
+    private fun calculateSelectedServices(selectedServices: MutableList<ServiceGroupDataModel>): Int {
+        var count = 0
+        selectedServices.iterator().forEach {
+            count += it.services.size
+        }
+        return count
     }
 }

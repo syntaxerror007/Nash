@@ -11,6 +11,7 @@ import com.android.nash.service.form.data.ServiceGroupModel
 import com.android.nash.service.form.data.ServiceModel
 import com.google.android.gms.tasks.OnCompleteListener
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class ServiceListViewModel : CoreViewModel() {
@@ -43,11 +44,10 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun insertServiceGroup(serviceGroupName: String) {
-        val serviceGroup = ServiceGroupModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
+        val serviceGroup = ServiceGroupDataModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
         serviceProvider.insertServiceGroup(serviceGroup, OnCompleteListener {
             if (it.isSuccessful) {
-                val serviceGroupDataModel = ServiceGroupDataModel(serviceGroupName = serviceGroup.serviceGroupName, uuid = serviceGroup.uuid, services = mutableListOf())
-                serviceGroupList.add(serviceGroupDataModel)
+                serviceGroupList.add(serviceGroup)
                 serviceGroupListLiveData.value = serviceGroupList
                 isInsertServiceGroupSuccess.value = true
             } else {
@@ -59,7 +59,7 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun loadAllService() {
-        serviceProvider.getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+        val disposable = serviceProvider.getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         serviceGroupList.clear()
@@ -71,22 +71,14 @@ class ServiceListViewModel : CoreViewModel() {
                 }
     }
 
-    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, groupPosition: Int, position: Int) {
-        val serviceModel = serviceProvider.getServiceModelFromServiceDataModel(serviceDataModel)
-        serviceProvider.insertService(serviceModel, OnCompleteListener { it ->
+    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel) {
+        serviceProvider.insertService(serviceGroupDataModel, serviceDataModel, OnCompleteListener {
             if (it.isSuccessful) {
-                serviceDataModel.id = serviceModel.id
-                serviceGroupDataModel?.services?.add(serviceDataModel)
-                val serviceGroupModel = serviceProvider.getServiceGroupModelFromServiceGroupDataModel(serviceGroupDataModel!!)
-                serviceProvider.updateServiceGroup(serviceGroupModel, OnCompleteListener {
-                    if (it.isSuccessful) {
-                        loadAllService()
-                        isInsertServiceSuccess.value = true
-                    } else {
-                        isInsertServiceSuccess.value = false
-                        insertServiceError.value = it.exception?.localizedMessage
-                    }
-                })
+                loadAllService()
+                isInsertServiceSuccess.value = true
+            } else {
+                isInsertServiceSuccess.value = false
+                insertServiceError.value = it.exception?.localizedMessage
             }
         })
     }

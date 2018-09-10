@@ -9,16 +9,21 @@
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:text="Create Service Group"
         android:textSize="20sp"
+        android:layout_marginTop="@dimen/common_dp_8"
         android:paddingLeft="@dimen/common_dp_16"
         app:layout_constraintRight_toLeftOf="@+id/buttonClose"/>
     <ImageView
+        android:layout_marginTop="@dimen/common_dp_8"
         android:id="@+id/buttonClose"
         android:layout_width="@dimen/common_dp_32"
         android:layout_height="@dimen/common_dp_32"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:layout_marginRight="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
     <android.support.design.widget.TextInputLayout
@@ -45,6 +50,8 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_dp_1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputLayoutServiceGroupName"
         android:background="@color/gray"/>
 
@@ -54,9 +61,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_8"
         android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginBottom="@dimen/common_dp_8"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
         app:layout_constraintTop_toBottomOf="@id/divider"
+        android:textColor="@color/white"
         android:text="@string/text_button_cancel"
         android:textAllCaps="true" />
 
@@ -66,7 +76,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_8"
+        android:layout_marginLeft="@dimen/common_dp_16"
         android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginBottom="@dimen/common_dp_8"
         app:layout_constraintLeft_toRightOf="@id/btnCancel"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
@@ -75,6 +87,7 @@
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="@string/text_button_register"
             android:textAllCaps="true" />
 

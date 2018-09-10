@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
-import com.android.nash.location.RegisterLocationActivity
+import com.android.nash.location.register.RegisterLocationActivity
 import com.android.nash.login.LoginActivity
 import com.android.nash.service.ServiceListActivity
 import com.android.nash.user.register.RegisterActivity

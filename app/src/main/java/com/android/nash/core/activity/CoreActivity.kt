@@ -15,7 +15,8 @@ import android.view.MenuItem
 import android.view.View
 import com.android.nash.R
 import com.android.nash.core.loading_dialog.LoadingDialog
-import com.android.nash.location.RegisterLocationActivity
+import com.android.nash.location.list.LocationListActivity
+import com.android.nash.location.register.RegisterLocationActivity
 import com.android.nash.service.ServiceListActivity
 import kotlinx.android.synthetic.main.core_activity.*
 
@@ -114,7 +115,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     }
 
     private fun gotoLocationPage() {
-        startActivity(Intent(this, RegisterLocationActivity::class.java))
+        startActivity(Intent(this, LocationListActivity::class.java))
         finish()
     }
 

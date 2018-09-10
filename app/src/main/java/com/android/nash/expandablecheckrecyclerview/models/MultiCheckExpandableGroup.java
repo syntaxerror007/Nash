@@ -2,8 +2,6 @@ package com.android.nash.expandablecheckrecyclerview.models;
 
 import android.os.Parcel;
 
-import com.android.nash.expandablecheckrecyclerview.models.CheckedExpandableGroup;
-
 import java.util.List;
 
 /**

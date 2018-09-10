@@ -21,6 +21,11 @@ class ServiceGroupFormDialog(context: Context, serviceGroupCallback: ServiceGrou
     private fun setListener() {
         buttonClose.setOnClickListener { dismiss() }
         btnCancel.setOnClickListener { dismiss() }
-        btnRegister.setOnClickListener { serviceGroupCallback.onCreateServiceGroup(editTextLayoutServiceGroupName.text.toString()) }
+        btnRegister.setOnClickListener {
+            if (!editTextLayoutServiceGroupName.text.isBlank())
+                serviceGroupCallback.onCreateServiceGroup(editTextLayoutServiceGroupName.text.toString())
+            else
+                editTextLayoutServiceGroupName.error = "Service Group Name is Required"
+        }
     }
 }

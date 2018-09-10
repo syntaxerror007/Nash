@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/white_background_with_gray_border"
+    android:layout_marginLeft="@dimen/common_dp_16"
+    android:layout_marginRight="@dimen/common_dp_16"
+    android:layout_marginTop="@dimen/common_dp_4"
+    android:layout_marginBottom="@dimen/common_dp_4"
+    xmlns:tools="http://schemas.android.com/tools">
+    <TextView
+        android:id="@+id/textViewLocationName"
+        android:paddingLeft="@dimen/common_dp_8"
+        android:paddingRight="@dimen/common_dp_8"
+        android:paddingTop="@dimen/common_dp_4"
+        android:paddingBottom="@dimen/common_dp_4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/imageViewRemove"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Location Name"/>
+    <ImageView
+        android:id="@+id/imageViewRemove"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="@dimen/common_dp_16"
+        android:layout_height="@dimen/common_dp_16"
+        android:layout_margin="@dimen/common_dp_8"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"/>
+    <View
+        android:id="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@id/textViewLocationName"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_dp_2"
+        android:background="@android:color/black"/>
+    <TextView
+        android:id="@+id/textViewAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:padding="@dimen/common_dp_8"
+        tools:text="Address: Jl. Pegangsaan timur No. 34 Jakarta"/>
+    <TextView
+        android:id="@+id/textViewPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+        tools:text="Phone NUmber: 08229919191"
+        android:padding="@dimen/common_dp_8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/Guideline2"/>
+
+
+    <android.support.constraint.Guideline
+        app:layout_constraintGuide_percent="0.33"
+        android:id="@+id/Guideline2"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+        android:orientation="vertical"
+        android:layout_width="1dp"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/textViewTotalServices"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+        tools:text="Total Services: 17 services served"
+        android:padding="@dimen/common_dp_8"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toRightOf="@id/Guideline2"
+        app:layout_constraintRight_toLeftOf="@+id/Guideline3"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+
+    <android.support.constraint.Guideline
+        app:layout_constraintGuide_percent="0.66"
+        android:id="@+id/Guideline3"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+        android:orientation="vertical"
+        android:layout_width="1dp"
+        android:layout_height="0dp"/>
+
+
+    <TextView
+        android:id="@+id/textViewTotalTherapist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddress"
+        tools:text="Total Therapist: 17 therapists available"
+        android:padding="@dimen/common_dp_8"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toRightOf="@id/Guideline3"
+        app:layout_constraintRight_toRightOf="parent"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+
+</android.support.constraint.ConstraintLayout>

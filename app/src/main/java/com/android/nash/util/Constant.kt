@@ -3,6 +3,7 @@ package com.android.nash.util
 var USER_DB = "users"
 var LOCATION_DB = "locations"
 var SERVICE_GROUP_DB = "services_group"
+var SERVICE_GROUP_NAME_REFERENCE_DB = "services_group_name"
 var SERVICE_DB = "services"
 var COMPANY_NAME = "nash"
 

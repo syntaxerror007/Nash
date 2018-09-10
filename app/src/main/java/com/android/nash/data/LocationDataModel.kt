@@ -1,3 +1,5 @@
 package com.android.nash.data
 
-data class LocationDataModel(val locationName:String = "", val locationAddress:String = "", var phoneNumber:String = "", var uuid:String = "", var selectedServices:List<ServiceGroupDataModel> = mutableListOf(), var user:UserDataModel = UserDataModel(), var therapists:List<TherapistDataModel> = mutableListOf())
+import com.google.firebase.database.Exclude
+
+data class LocationDataModel(var locationName: String = "", var locationAddress: String = "", var phoneNumber: String = "", var uuid: String = "", @get:Exclude var selectedServices: List<ServiceGroupDataModel> = mutableListOf(), var user: UserDataModel = UserDataModel(), @get:Exclude var therapists: List<TherapistDataModel> = mutableListOf(), var totalServices: Int = 0)

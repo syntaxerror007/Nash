@@ -21,10 +21,6 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     private lateinit var serviceGroupDialog: ServiceGroupFormDialog
     private lateinit var serviceDialog: ServiceFormDialog
 
-    override fun onCreateServiceGroup(serviceGroupName: String) {
-        getViewModel().insertServiceGroup(serviceGroupName)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_activity)
@@ -50,6 +46,10 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         })
         getViewModel().getInsertServiceError().observe(this, Observer { showErrorMessage(it!!) })
 
+    }
+
+    override fun onCreateServiceGroup(serviceGroupName: String) {
+        getViewModel().insertServiceGroup(serviceGroupName)
     }
 
     private fun observeServiceGroup(serviceGroups: MutableList<ServiceGroupDataModel>) {
@@ -97,6 +97,6 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
-        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel, groupPosition = groupPosition, position = position)
+        getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel)
     }
 }
