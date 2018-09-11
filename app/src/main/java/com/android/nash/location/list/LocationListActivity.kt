@@ -9,6 +9,7 @@ import com.android.nash.core.activity.CoreActivity
 import com.android.nash.data.LocationDataModel
 import com.android.nash.location.register.RegisterLocationActivity
 import kotlinx.android.synthetic.main.location_list_activity.*
+import org.parceler.Parcels
 
 class LocationListActivity : CoreActivity<LocationListViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,10 @@ class LocationListActivity : CoreActivity<LocationListViewModel>() {
     }
 
     private fun navigateToLocationDetail(it: LocationDataModel) {
-
+        val intent = Intent(this, RegisterLocationActivity::class.java)
+        val bundle = Bundle()
+        bundle.putParcelable("locationDataModel", Parcels.wrap(it))
+        startActivity(intent.putExtras(bundle))
     }
 
     private fun navigateToNewLocationForm() {

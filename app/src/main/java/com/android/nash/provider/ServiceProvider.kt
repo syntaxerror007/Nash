@@ -9,6 +9,7 @@ import com.android.nash.util.SERVICE_GROUP_DB
 import com.android.nash.util.SERVICE_GROUP_NAME_REFERENCE_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import io.reactivex.Observable
 
@@ -49,7 +50,7 @@ class ServiceProvider {
         }
     }
 
-    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, onCompleteListener: OnCompleteListener<Void>) {
+    fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {
         mServiceNameReference.child(serviceDataModel.serviceName).addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -58,31 +59,19 @@ class ServiceProvider {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
                     if (serviceGroupDataModel != null) {
-                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).setValue(serviceDataModel).addOnCompleteListener {
-                            mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").addListenerForSingleValueEvent(object: ValueEventListener{
-                                override fun onCancelled(p0: DatabaseError) {
-
-                                }
-
-                                override fun onDataChange(p0: DataSnapshot) {
-                                    if (p0.exists()) {
-                                        val prevCount = p0.value as Long
-                                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").setValue(prevCount+1)
-                                        mServiceNameReference.child(serviceDataModel.serviceName).setValue(true)
-                                        onCompleteListener.onComplete(it)
-                                    }
-                                }
-
-                            })
-                        }
+                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).setValue(serviceDataModel)
+                                .continueWith {
+                                    mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").setValue(serviceGroupDataModel.services.size + 1)
+                                }.continueWith {
+                                    mServiceNameReference.child(serviceDataModel.serviceName).setValue(true)
+                                }.addOnCompleteListener(onCompleteListener)
                     }
                 }
             }
-
         })
     }
 
-    fun deleteServiceGroup(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Void>) {
+    fun deleteService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Void>) {
         if (serviceDataModel != null) {
             mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).removeValue().continueWith {
                 mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").addListenerForSingleValueEvent(object: ValueEventListener {
@@ -100,5 +89,16 @@ class ServiceProvider {
             }
 
         }
+    }
+
+    fun updateServiceGroup(oldServiceGroupName: String, serviceGroupDataModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).setValue(serviceGroupDataModel).continueWith { _ ->
+            val newServiceDatabaseRef = mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services")
+            serviceGroupDataModel.services.forEach {
+                newServiceDatabaseRef.child(it.serviceName).setValue(it)
+            }
+        }.continueWith {
+            mDatabaseReference.child(oldServiceGroupName).removeValue()
+        }.addOnCompleteListener(onCompleteListener)
     }
 }

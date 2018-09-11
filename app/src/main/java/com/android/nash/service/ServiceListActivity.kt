@@ -48,8 +48,8 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
     }
 
-    override fun onCreateServiceGroup(serviceGroupName: String) {
-        getViewModel().insertServiceGroup(serviceGroupName)
+    override fun onCreateServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, newServiceGroupName: String) {
+        getViewModel().insertServiceGroup(serviceGroupDataModel, newServiceGroupName)
     }
 
     private fun observeServiceGroup(serviceGroups: MutableList<ServiceGroupDataModel>) {
@@ -67,7 +67,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
 
     private fun showServiceGroupDialog() {
-        serviceGroupDialog = ServiceGroupFormDialog(this, this)
+        serviceGroupDialog = ServiceGroupFormDialog(this, this, null)
         serviceGroupDialog.show()
     }
 
@@ -80,11 +80,12 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onEditGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-
+        serviceGroupDialog = ServiceGroupFormDialog(this, this, serviceGroupDataModel)
+        serviceGroupDialog.show()
     }
 
-    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int) {
-        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, groupPosition, 0)
+    override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
+        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position, 0)
         serviceDialog.show()
     }
 

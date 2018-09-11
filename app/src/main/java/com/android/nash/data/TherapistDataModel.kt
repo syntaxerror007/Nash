@@ -1,3 +1,6 @@
 package com.android.nash.data
 
-data class TherapistDataModel(val uuid: String = "", val therapistName: String = "", val phoneNumber: String = "", val workSince: NashDate = NashDate(), val job: Int = 0)
+import org.parceler.Parcel
+
+@Parcel(Parcel.Serialization.BEAN)
+data class TherapistDataModel(var uuid: String = "", var therapistName: String = "", var phoneNumber: String = "", var workSince: NashDate = NashDate(), var job: Int = 0)

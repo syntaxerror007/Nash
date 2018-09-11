@@ -17,7 +17,7 @@ class LocationListAdapter(private val items: List<LocationDataModel>, private va
 
     class LocationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(locationDataModel: LocationDataModel, listener: (LocationDataModel) -> Unit) = with(itemView) {
-            itemView.setOnClickListener { listener }
+            itemView.setOnClickListener { listener.invoke(locationDataModel) }
             textViewLocationName.text = locationDataModel.locationName
             textViewAddress.text = "Address: ${locationDataModel.locationAddress}"
             textViewPhoneNumber.text = "Phone Number: ${locationDataModel.phoneNumber}"

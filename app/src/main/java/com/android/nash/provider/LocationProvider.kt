@@ -54,12 +54,12 @@ class LocationProvider {
         return RxFirebaseDatabase.data(mDatabaseReference).flatMapObservable {
             val locations = it.children.mapNotNull{
                 val locationDataModel = it.getValue(LocationDataModel::class.java)
-                locationDataModel?.therapists = it.child("therapists").children.mapNotNull { it.getValue(TherapistDataModel::class.java) }
+                locationDataModel?.therapists = it.child("therapists").children.mapNotNull { it.getValue(TherapistDataModel::class.java) }.toMutableList()
                 locationDataModel?.selectedServices = it.child("selectedServices").children.mapNotNull {
                     val serviceGroup = it.getValue(ServiceGroupDataModel::class.java)
                     serviceGroup?.services = it.child("services").children.mapNotNull { it.getValue(ServiceDataModel::class.java) }.toMutableList()
                     return@mapNotNull serviceGroup
-                }
+                }.toMutableList()
                 return@mapNotNull locationDataModel
             }
             return@flatMapObservable Observable.fromArray(locations)

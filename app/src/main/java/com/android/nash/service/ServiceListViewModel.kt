@@ -2,17 +2,12 @@ package com.android.nash.service
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.provider.ServiceProvider
-import com.android.nash.service.form.data.ServiceGroupModel
-import com.android.nash.service.form.data.ServiceModel
 import com.google.android.gms.tasks.OnCompleteListener
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class ServiceListViewModel : CoreViewModel() {
     private val serviceGroupListLiveData = MutableLiveData<MutableList<ServiceGroupDataModel>>()
@@ -43,19 +38,33 @@ class ServiceListViewModel : CoreViewModel() {
         return insertServiceError
     }
 
-    fun insertServiceGroup(serviceGroupName: String) {
-        val serviceGroup = ServiceGroupDataModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
-        serviceProvider.insertServiceGroup(serviceGroup, OnCompleteListener {
-            if (it.isSuccessful) {
-                serviceGroupList.add(serviceGroup)
-                serviceGroupListLiveData.value = serviceGroupList
-                isInsertServiceGroupSuccess.value = true
-            } else {
-                isInsertServiceGroupSuccess.value = false
-                if (it.exception != null)
-                    insertServiceGroupError.value = it.exception!!.localizedMessage
-            }
-        })
+    fun insertServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupName: String) {
+        if (serviceGroupDataModel != null) {
+            val oldServiceGroupName = serviceGroupDataModel.serviceGroupName
+            serviceGroupDataModel.serviceGroupName = serviceGroupName
+            serviceProvider.updateServiceGroup(oldServiceGroupName, serviceGroupDataModel, OnCompleteListener {
+                if (it.isSuccessful) {
+                    loadAllService()
+                    isInsertServiceGroupSuccess.value = true
+                } else {
+                    isInsertServiceGroupSuccess.value = false
+                    if (it.exception != null)
+                        insertServiceGroupError.value = it.exception!!.localizedMessage
+                }
+            })
+        } else {
+            val serviceGroup = ServiceGroupDataModel(serviceGroupName = serviceGroupName, uuid = "", services = mutableListOf())
+            serviceProvider.insertServiceGroup(serviceGroup, OnCompleteListener {
+                if (it.isSuccessful) {
+                    loadAllService()
+                    isInsertServiceGroupSuccess.value = true
+                } else {
+                    isInsertServiceGroupSuccess.value = false
+                    if (it.exception != null)
+                        insertServiceGroupError.value = it.exception!!.localizedMessage
+                }
+            })
+        }
     }
 
     fun loadAllService() {
@@ -84,7 +93,7 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun removeService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?) {
-        serviceProvider.deleteServiceGroup(serviceGroupDataModel, serviceDataModel, OnCompleteListener {
+        serviceProvider.deleteService(serviceGroupDataModel, serviceDataModel, OnCompleteListener {
             if (it.isSuccessful) {
                 loadAllService()
             }

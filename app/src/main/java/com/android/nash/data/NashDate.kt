@@ -1,3 +1,6 @@
 package com.android.nash.data
 
-data class NashDate(val day: Int = 1, val month: Int = 1, val year: Int = 2018)
+import org.parceler.Parcel
+
+@Parcel(Parcel.Serialization.BEAN)
+data class NashDate(var day: Int = 1, var month: Int = 1, var year: Int = 2018)

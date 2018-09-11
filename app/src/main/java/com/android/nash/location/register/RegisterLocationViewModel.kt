@@ -177,4 +177,8 @@ class RegisterLocationViewModel: CoreViewModel() {
         }
         return count
     }
+
+    fun initData(locationDataModel: LocationDataModel?) {
+
+    }
 }

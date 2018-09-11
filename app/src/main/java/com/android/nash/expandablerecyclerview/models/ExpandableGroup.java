@@ -12,17 +12,21 @@ import java.util.List;
  * The backing data object for an {@link ExpandableGroup}
  */
 public class ExpandableGroup<T extends Parcelable> implements Parcelable {
+  @Exclude
   private String title;
+  @Exclude
   private List<T> items;
 
   public ExpandableGroup(String title, List<T> items) {
     this.title = title;
     this.items = items;
   }
+  @Exclude
   public String getTitle() {
     return title;
   }
 
+  @Exclude
   public List<T> getItems() {
     return items;
   }

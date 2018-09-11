@@ -8,10 +8,7 @@ import android.view.View
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
-import com.android.nash.data.ServiceDataModel
-import com.android.nash.data.ServiceGroupDataModel
-import com.android.nash.data.TherapistDataModel
-import com.android.nash.data.UserDataModel
+import com.android.nash.data.*
 import com.android.nash.service.adapter.ServiceGroupAdapter
 import com.android.nash.service.adapter.ServiceItemCallback
 import com.android.nash.service.dialog.list.ServiceListCallback
@@ -26,11 +23,13 @@ import com.android.nash.user.register.UserRegisterDialog
 import com.android.nash.util.dismissKeyboard
 import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.location_register_activity.*
+import org.parceler.Parcels
 
 class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback {
     private lateinit var serviceDialog: Dialog
     private lateinit var serviceGroupAdapter: ServiceGroupAdapter
     private lateinit var firebaseApp: FirebaseApp
+    private var locationDataModel: LocationDataModel? = null
 
     override fun onCreateViewModel(): RegisterLocationViewModel {
         return ViewModelProviders.of(this).get(RegisterLocationViewModel::class.java)
@@ -38,14 +37,27 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
         setToolbarRightButtonVisible(true)
         setToolbarRightButtonText("Save Configuration")
         setToolbarRightOnClickListener(View.OnClickListener { onToolbarRightButtonClicked() })
         getViewModel().getAllServices()
+        initData()
         observeViewModel()
         setOnClickListener()
+    }
+
+    private fun initData() {
+        getViewModel().initData(locationDataModel)
+        editTextLocationName.setText(locationDataModel?.locationName)
+        editTextLocationAddress.setText(locationDataModel?.locationAddress)
+        editTextPhoneNumber.setText(locationDataModel?.phoneNumber)
+        if (locationDataModel != null)
+            onFinishServiceClick(locationDataModel!!.selectedServices)
+
+        processTherapistsList(locationDataModel?.therapists)
     }
 
     private fun onToolbarRightButtonClicked() {
