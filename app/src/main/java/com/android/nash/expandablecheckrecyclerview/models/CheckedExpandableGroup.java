@@ -15,11 +15,20 @@ import kotlin.jvm.Transient;
  */
 public abstract class CheckedExpandableGroup extends ExpandableGroup {
 
-    @Exclude
     public boolean[] selectedChildren;
 
     public CheckedExpandableGroup(String title, List items) {
         super(title, items);
+        selectedChildren = new boolean[items.size()];
+        for (int i = 0; i < items.size(); i++) {
+            selectedChildren[i] = false;
+        }
+    }
+
+    @Override
+    public void setItems(List items) {
+        super.setItems(items);
+
         selectedChildren = new boolean[items.size()];
         for (int i = 0; i < items.size(); i++) {
             selectedChildren[i] = false;

@@ -12,6 +12,7 @@ import com.android.nash.provider.ServiceProvider
 import com.android.nash.provider.UserProvider
 import com.android.nash.util.COMPANY_NAME
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -64,10 +65,20 @@ class RegisterLocationViewModel: CoreViewModel() {
             isLoading.value = false
             return
         }
-        registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber)
+        registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber, OnCompleteListener {
+            doRegisterLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { registerLocation ->
+                isLoading.value = false
+                if (registerLocation.isSuccessful) {
+                    isSuccess.value = true
+                } else {
+                    if (registerLocation.exception != null)
+                        error.value = registerLocation.exception!!.localizedMessage
+                }
+            })
+        })
     }
 
-    private fun registerUser(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+    private fun registerUser(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String, onCompleteListener: OnCompleteListener<Void>) {
         val secondaryFirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
         val username = toRegisterUserDataModel.value!!.username
 
@@ -82,7 +93,7 @@ class RegisterLocationViewModel: CoreViewModel() {
 
                 UserProvider().insertUser(userDataModel).addOnCompleteListener {
                     toRegisterUserDataModel.value = userDataModel
-                    doRegisterLocation(userDataModel, locationName, locationAddress, locationPhoneNumber)
+                    onCompleteListener.onComplete(it)
                 }
             } else {
                 isLoading.value = false
@@ -102,17 +113,9 @@ class RegisterLocationViewModel: CoreViewModel() {
         }
     }
 
-    private fun doRegisterLocation(userDataModel: UserDataModel, locationName:String, locationAddress:String, locationPhoneNumber:String) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = userDataModel)
-            locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!,  OnCompleteListener {
-                isLoading.value = false
-                if (it.isSuccessful) {
-                    isSuccess.value = true
-                } else {
-                    if (it.exception != null)
-                        error.value = it.exception!!.localizedMessage
-                }
-            })
+    private fun doRegisterLocation(locationName:String, locationAddress:String, locationPhoneNumber:String, onCompleteListener: OnCompleteListener<Unit>) {
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = userDataModel.value!!)
+        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!,  onCompleteListener)
     }
 
     fun getAllServices() {
@@ -179,6 +182,37 @@ class RegisterLocationViewModel: CoreViewModel() {
     }
 
     fun initData(locationDataModel: LocationDataModel?) {
+        if (locationDataModel != null) {
+            toRegisterUserDataModel.value = locationDataModel.user
+            availableTherapistsLiveData.value = locationDataModel.therapists
+            serviceGroupListLiveData.value = locationDataModel.selectedServices
+            totalServiceSelectedLiveData.value = locationDataModel.selectedServices.size
+        }
+    }
 
+    fun updateLocation(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+        isLoading.value = true
+        if (!isFormValid(locationName, locationAddress, locationPhoneNumber)) {
+            isLoading.value = false
+            return
+        }
+        if (toRegisterUserPassword.value != null) {
+            registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber, OnCompleteListener {
+                doUpdateLocation(locationName, locationAddress, locationPhoneNumber)
+            })
+        } else {
+            doUpdateLocation(locationName, locationAddress, locationPhoneNumber)
+        }
+    }
+
+    private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String) {
+        doRegisterLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
+            if (it.isSuccessful) {
+                locationProvider.removeLocation(locationName, OnCompleteListener { it2 ->
+                    if (it2.isSuccessful)
+                        isLoading.value = false
+                })
+            }
+        })
     }
 }

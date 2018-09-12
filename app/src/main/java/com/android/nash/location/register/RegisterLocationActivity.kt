@@ -37,7 +37,8 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
+        if (intent.extras != null)
+            locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
         setToolbarRightButtonVisible(true)
@@ -54,16 +55,20 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         editTextLocationName.setText(locationDataModel?.locationName)
         editTextLocationAddress.setText(locationDataModel?.locationAddress)
         editTextPhoneNumber.setText(locationDataModel?.phoneNumber)
-        if (locationDataModel != null)
+        if (locationDataModel != null) {
             onFinishServiceClick(locationDataModel!!.selectedServices)
-
-        processTherapistsList(locationDataModel?.therapists)
+            onUserCreated(locationDataModel!!.user, null)
+        }
     }
 
     private fun onToolbarRightButtonClicked() {
         val firebaseOptions = FirebaseApp.getInstance()!!.options
         firebaseApp = FirebaseApp.initializeApp(this, firebaseOptions, "secondaryFirebaseApp")
-        getViewModel().registerLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+        if (locationDataModel == null) {
+            getViewModel().registerLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+        } else {
+            getViewModel().updateLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+        }
     }
 
     private fun setOnClickListener() {
@@ -101,9 +106,10 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         getViewModel().registerTherapist(therapistDataModel)
     }
 
-    override fun onUserCreated(userDataModel: UserDataModel, password: String) {
+    override fun onUserCreated(userDataModel: UserDataModel, password: String?) {
         getViewModel().setUserDataModel(userDataModel)
-        getViewModel().setUserPassword(password)
+        if (password != null)
+            getViewModel().setUserPassword(password)
         btnRegisterCashier.text = userDataModel.username
     }
 

@@ -17,9 +17,7 @@ class LocationProvider {
     private val mDatabaseReference = mFirebaseDatabase.getReference(LOCATION_DB)
 
     fun insertLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, onCompleteListener: OnCompleteListener<Unit>) {
-        val uuid = mDatabaseReference.push().key
-        locationDataModel.uuid = uuid!!
-        val locationRef = mDatabaseReference.child(uuid)
+        val locationRef = mDatabaseReference.child(locationDataModel.locationName)
         locationRef.setValue(locationDataModel).continueWith {
             if (it.isSuccessful) {
                 val selectedServiceGroupRef = locationRef.child("selectedServices")
@@ -64,5 +62,9 @@ class LocationProvider {
             }
             return@flatMapObservable Observable.fromArray(locations)
         }
+    }
+
+    fun removeLocation(locationName: String, onCompleteListener: OnCompleteListener<Void>) {
+        mDatabaseReference.child(locationName).removeValue().addOnCompleteListener { onCompleteListener.onComplete(it) }
     }
 }
