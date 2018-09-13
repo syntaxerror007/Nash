@@ -33,13 +33,10 @@ class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallba
                 val serviceGroupDataModel = ServiceGroupDataModel()
                 serviceGroupDataModel.uuid = group.uuid
                 serviceGroupDataModel.serviceGroupName = group.serviceGroupName
-//                selectedChildren.indices
-//                        .filter { selectedChildren[it] }
-//                        .map { serviceGroupDataModel.services.add(group.services[it]) }
-                for (selectedChildIndex in selectedChildren.indices) {
-                    if (selectedChildren[selectedChildIndex]) serviceGroupDataModel.services.add(group.services[selectedChildIndex])
-                }
-                selectedServiceGroupDataModel[serviceGroupDataModel.uuid] = serviceGroupDataModel
+                selectedChildren.indices
+                        .filter { selectedChildren[it] }
+                        .map { serviceGroupDataModel.services.add(group.services[it]) }
+                selectedServiceGroupDataModel[serviceGroupDataModel.serviceGroupName] = serviceGroupDataModel
             }
         }
         serviceGroupAdapter.expandAllGroups()

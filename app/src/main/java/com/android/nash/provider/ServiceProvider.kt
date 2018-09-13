@@ -1,35 +1,48 @@
 package com.android.nash.provider
 
+import android.util.Log
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
-import com.android.nash.service.form.data.ServiceGroupModel
-import com.android.nash.service.form.data.ServiceModel
 import com.android.nash.util.SERVICE_DB
 import com.android.nash.util.SERVICE_GROUP_DB
 import com.android.nash.util.SERVICE_GROUP_NAME_REFERENCE_DB
+import com.android.nash.util.SERVICE_NAME_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 
 
 class ServiceProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val mDatabaseReference = mFirebaseDatabase.getReference(SERVICE_GROUP_DB)
+    private val mServiceGroupDatabaseReference = mFirebaseDatabase.getReference(SERVICE_GROUP_DB)
     private val mServiceGroupNameReference = mFirebaseDatabase.getReference(SERVICE_GROUP_NAME_REFERENCE_DB)
-    private val mServiceNameReference = mFirebaseDatabase.getReference(SERVICE_DB)
+    private val mServiceNameReference = mFirebaseDatabase.getReference(SERVICE_NAME_DB)
+    private val mServiceReference = mFirebaseDatabase.getReference(SERVICE_DB)
+
+    fun getKey(mDatabaseReference: DatabaseReference): String {
+        return mDatabaseReference.push().key!!
+    }
+
 
     fun insertServiceGroup(serviceGroupModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Void>) {
-        mServiceGroupNameReference.child(serviceGroupModel.serviceGroupName).addListenerForSingleValueEvent(object: ValueEventListener {
+        mServiceGroupNameReference.child(serviceGroupModel.serviceGroupName).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-
+                Log.d("POPO", p0.toException().localizedMessage)
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
+                    val uuid = getKey(mServiceGroupNameReference)
                     mServiceGroupNameReference.child(serviceGroupModel.serviceGroupName).setValue(true)
-                    mDatabaseReference.child(serviceGroupModel.serviceGroupName).setValue(serviceGroupModel).addOnCompleteListener(onCompleteListener)
+                    serviceGroupModel.uuid = uuid
+                    mServiceGroupDatabaseReference.child(uuid).setValue(serviceGroupModel).addOnCompleteListener(onCompleteListener)
                 } else {
 
                 }
@@ -39,19 +52,30 @@ class ServiceProvider {
     }
 
     fun getAllServiceGroup(): Observable<List<ServiceGroupDataModel>> {
-        return RxFirebaseDatabase.data(mDatabaseReference).flatMapObservable {
-            val serviceGroups = it.children.mapNotNull{
+        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference).flatMapObservable {
+            val serviceGroups = it.children.mapNotNull {
                 val serviceGroupDataModel = it.getValue(ServiceGroupDataModel::class.java)
-                serviceGroupDataModel?.services = it.child("services").children.mapNotNull { it.getValue(ServiceDataModel::class.java) }.toMutableList()
-                serviceGroupDataModel?.items = serviceGroupDataModel?.services
+                serviceGroupDataModel?.serviceKeys = it.child("services").children.map { it.key!! }.toList()
                 return@mapNotNull serviceGroupDataModel
             }
             return@flatMapObservable Observable.fromArray(serviceGroups)
         }
     }
 
+    fun getServiceGroupWithoutServiceFromUUID(uuid: String): Observable<ServiceGroupDataModel> {
+        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference.child(uuid)).flatMapObservable {
+            Observable.just(it.getValue(ServiceGroupDataModel::class.java))
+        }
+    }
+
+    fun getServiceFromUUID(uuid: String): Observable<ServiceDataModel> {
+        return RxFirebaseDatabase.data(mServiceReference.child(uuid)).flatMapObservable {
+            Observable.just(it.getValue(ServiceDataModel::class.java))
+        }
+    }
+
     fun insertService(serviceGroupDataModel: ServiceGroupDataModel?, serviceDataModel: ServiceDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {
-        mServiceNameReference.child(serviceDataModel.serviceName).addListenerForSingleValueEvent(object: ValueEventListener {
+        mServiceNameReference.child(serviceDataModel.serviceName).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -59,12 +83,16 @@ class ServiceProvider {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.exists()) {
                     if (serviceGroupDataModel != null) {
-                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).setValue(serviceDataModel)
-                                .continueWith {
-                                    mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").setValue(serviceGroupDataModel.services.size + 1)
-                                }.continueWith {
-                                    mServiceNameReference.child(serviceDataModel.serviceName).setValue(true)
-                                }.addOnCompleteListener(onCompleteListener)
+                        val uuid = getKey(mServiceReference)
+                        serviceDataModel.uuid = uuid
+                        mServiceReference.child(uuid).setValue(serviceDataModel).continueWith {
+                            val serviceGroupRef = mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("services")
+                            serviceGroupRef.child(serviceDataModel.uuid).setValue(true)
+                        }.continueWith {
+                            mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("itemCount").setValue(serviceGroupDataModel.services.size + 1)
+                        }.continueWith {
+                            mServiceNameReference.child(serviceDataModel.serviceName).setValue(true)
+                        }.addOnCompleteListener(onCompleteListener)
                     }
                 }
             }
@@ -73,18 +101,34 @@ class ServiceProvider {
 
     fun deleteService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Void>) {
         if (serviceDataModel != null) {
-            mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services").child(serviceDataModel.serviceName).removeValue().continueWith {
-                mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").addListenerForSingleValueEvent(object: ValueEventListener {
+            mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("services").child(serviceDataModel.uuid).removeValue().continueWith {
+                mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("itemCount").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
                     }
 
                     override fun onDataChange(p0: DataSnapshot) {
-                        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("itemCount").setValue(p0.value as Long - 1)
+                        if (p0.exists())
+                            mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("itemCount").runTransaction(object : Transaction.Handler {
+                                override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+
+                                }
+
+                                override fun doTransaction(p0: MutableData): Transaction.Result {
+                                    val itemCount = p0.getValue(Long::class.java)
+                                    if (itemCount != null) {
+                                        p0.value = itemCount - 1
+                                    } else {
+                                        p0.value = 0
+                                    }
+                                    return Transaction.success(p0)
+                                }
+
+                            })
                     }
 
                 })
-                mServiceNameReference.child(serviceDataModel.serviceName).removeValue()
+                mServiceNameReference.child(serviceDataModel.uuid).removeValue()
                 onCompleteListener.onComplete(it)
             }
 
@@ -92,13 +136,34 @@ class ServiceProvider {
     }
 
     fun updateServiceGroup(oldServiceGroupName: String, serviceGroupDataModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {
-        mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).setValue(serviceGroupDataModel).continueWith { _ ->
-            val newServiceDatabaseRef = mDatabaseReference.child(serviceGroupDataModel.serviceGroupName).child("services")
+        val newUuid = getKey(mServiceGroupDatabaseReference)
+        serviceGroupDataModel.uuid = newUuid
+        mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).setValue(serviceGroupDataModel).continueWith { _ ->
+            val newServiceDatabaseRef = mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("services")
             serviceGroupDataModel.services.forEach {
-                newServiceDatabaseRef.child(it.serviceName).setValue(it)
+                newServiceDatabaseRef.child(it.uuid).setValue(true)
             }
         }.continueWith {
-            mDatabaseReference.child(oldServiceGroupName).removeValue()
+            mServiceGroupDatabaseReference.child(oldServiceGroupName).removeValue()
         }.addOnCompleteListener(onCompleteListener)
+    }
+
+    fun findServiceGroup(uuid: String): ServiceGroupDataModel {
+
+        return ServiceGroupDataModel()
+    }
+
+    private fun findService(uuid: String): Observable<ServiceDataModel> {
+        return RxFirebaseDatabase.data(mServiceReference.child(uuid)).map { it.getValue(ServiceDataModel::class.java)!! }.toObservable()
+    }
+
+    fun getServiceFromServiceGroup(serviceGroupDataModel: ServiceGroupDataModel): Observable<ServiceGroupDataModel> {
+        return Observable.fromIterable(serviceGroupDataModel.serviceKeys).flatMap {
+            findService(it)
+        }.toList().flatMapObservable {
+            serviceGroupDataModel.services = it
+            serviceGroupDataModel.items = it
+            return@flatMapObservable Observable.just(serviceGroupDataModel)
+        }
     }
 }

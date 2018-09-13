@@ -40,9 +40,9 @@ class ServiceListViewModel : CoreViewModel() {
 
     fun insertServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, serviceGroupName: String) {
         if (serviceGroupDataModel != null) {
-            val oldServiceGroupName = serviceGroupDataModel.serviceGroupName
+            val oldServiceUuid = serviceGroupDataModel.uuid
             serviceGroupDataModel.serviceGroupName = serviceGroupName
-            serviceProvider.updateServiceGroup(oldServiceGroupName, serviceGroupDataModel, OnCompleteListener {
+            serviceProvider.updateServiceGroup(oldServiceUuid, serviceGroupDataModel, OnCompleteListener {
                 if (it.isSuccessful) {
                     loadAllService()
                     isInsertServiceGroupSuccess.value = true
@@ -68,13 +68,19 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun loadAllService() {
-        val disposable = serviceProvider.getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+
+        ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+                .flatMapIterable {
+                    it
+                }.flatMap {
+                    ServiceProvider().getServiceFromServiceGroup(it)
+                }.toList()
                 .subscribe(
-                    {
-                        serviceGroupList.clear()
-                        serviceGroupList.addAll(it)
-                        serviceGroupListLiveData.value = serviceGroupList
-                    }
+                        {
+                            serviceGroupList.clear()
+                            serviceGroupList.addAll(it)
+                            serviceGroupListLiveData.value = serviceGroupList
+                        }
                 ) {
                     it.printStackTrace()
                 }

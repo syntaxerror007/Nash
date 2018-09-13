@@ -19,20 +19,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class RegisterLocationViewModel: CoreViewModel() {
-    private val isLoading:MutableLiveData<Boolean> = MutableLiveData()
-    private val isSuccess:MutableLiveData<Boolean> = MutableLiveData()
-    private val locationNameError:MutableLiveData<String> = MutableLiveData()
-    private val locationAddressError:MutableLiveData<String> = MutableLiveData()
-    private val phoneNumberError:MutableLiveData<String> = MutableLiveData()
-    private val error:MutableLiveData<String> = MutableLiveData()
-    private val locationProvider:LocationProvider = LocationProvider()
-    private val toRegisterUserDataModel:MutableLiveData<UserDataModel> = MutableLiveData()
+class RegisterLocationViewModel : CoreViewModel() {
+    private val isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    private val locationNameError: MutableLiveData<String> = MutableLiveData()
+    private val locationAddressError: MutableLiveData<String> = MutableLiveData()
+    private val phoneNumberError: MutableLiveData<String> = MutableLiveData()
+    private val error: MutableLiveData<String> = MutableLiveData()
+    private val locationProvider: LocationProvider = LocationProvider()
+    private val toRegisterUserDataModel: MutableLiveData<UserDataModel> = MutableLiveData()
     private val toRegisterUserPassword: MutableLiveData<String> = MutableLiveData()
-    private val availableTherapists:MutableList<TherapistDataModel> = mutableListOf()
+    private val availableTherapists: MutableList<TherapistDataModel> = mutableListOf()
     private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
     private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
-    private val availableTherapistsLiveData:MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
+    private val availableTherapistsLiveData: MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
     private val totalServiceSelectedLiveData: MutableLiveData<Int> = MutableLiveData()
 
     fun isLoading(): LiveData<Boolean> {
@@ -59,13 +59,13 @@ class RegisterLocationViewModel: CoreViewModel() {
         return serviceGroupListLiveData
     }
 
-    fun registerLocation(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+    fun registerLocation(firebaseApp: FirebaseApp, locationName: String, locationAddress: String, locationPhoneNumber: String) {
         isLoading.value = true
         if (!isFormValid(locationName, locationAddress, locationPhoneNumber)) {
             isLoading.value = false
             return
         }
-        registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber, OnCompleteListener {
+        registerUser(firebaseApp, OnCompleteListener {
             doRegisterLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { registerLocation ->
                 isLoading.value = false
                 if (registerLocation.isSuccessful) {
@@ -78,7 +78,7 @@ class RegisterLocationViewModel: CoreViewModel() {
         })
     }
 
-    private fun registerUser(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String, onCompleteListener: OnCompleteListener<Void>) {
+    private fun registerUser(firebaseApp: FirebaseApp, onCompleteListener: OnCompleteListener<Void>) {
         val secondaryFirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
         val username = toRegisterUserDataModel.value!!.username
 
@@ -113,20 +113,23 @@ class RegisterLocationViewModel: CoreViewModel() {
         }
     }
 
-    private fun doRegisterLocation(locationName:String, locationAddress:String, locationPhoneNumber:String, onCompleteListener: OnCompleteListener<Unit>) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = userDataModel.value!!)
-        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!,  onCompleteListener)
+    private fun doRegisterLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = toRegisterUserDataModel.value!!)
+        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, onCompleteListener)
     }
 
     fun getAllServices() {
         ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            serviceGroupList.clear()
-                            serviceGroupList.addAll(it)
-                            serviceGroupListLiveData.value = serviceGroupList
-                        }
-                ) {
+                .flatMapIterable {
+                    it
+                }.flatMap {
+                    ServiceProvider().getServiceFromServiceGroup(it)
+                }.toList()
+                .subscribe({
+                    serviceGroupList.clear()
+                    serviceGroupList.addAll(it)
+                    serviceGroupListLiveData.value = serviceGroupList
+                }) {
                     it.printStackTrace()
                 }
     }
@@ -190,27 +193,29 @@ class RegisterLocationViewModel: CoreViewModel() {
         }
     }
 
-    fun updateLocation(firebaseApp: FirebaseApp, locationName:String, locationAddress:String, locationPhoneNumber:String) {
+    fun updateLocation(firebaseApp: FirebaseApp, locationUUID: String, locationName: String, locationAddress: String, locationPhoneNumber: String) {
         isLoading.value = true
         if (!isFormValid(locationName, locationAddress, locationPhoneNumber)) {
             isLoading.value = false
             return
         }
         if (toRegisterUserPassword.value != null) {
-            registerUser(firebaseApp, locationName, locationAddress, locationPhoneNumber, OnCompleteListener {
-                doUpdateLocation(locationName, locationAddress, locationPhoneNumber)
+            registerUser(firebaseApp, OnCompleteListener {
+                doUpdateLocation(locationUUID, locationName, locationAddress, locationPhoneNumber)
             })
         } else {
-            doUpdateLocation(locationName, locationAddress, locationPhoneNumber)
+            doUpdateLocation(locationUUID, locationName, locationAddress, locationPhoneNumber)
         }
     }
 
-    private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String) {
+    private fun doUpdateLocation(locationUUID: String, locationName: String, locationAddress: String, locationPhoneNumber: String) {
         doRegisterLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
             if (it.isSuccessful) {
-                locationProvider.removeLocation(locationName, OnCompleteListener { it2 ->
-                    if (it2.isSuccessful)
+                locationProvider.removeLocation(locationUUID, OnCompleteListener { it2 ->
+                    if (it2.isSuccessful) {
                         isLoading.value = false
+                        isSuccess.value = true
+                    }
                 })
             }
         })

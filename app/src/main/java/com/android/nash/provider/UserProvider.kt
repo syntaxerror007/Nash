@@ -27,4 +27,10 @@ class UserProvider {
             return@flatMapObservable Observable.fromArray(locations)
         }
     }
+
+    fun getUserFromUUID(it: String): Observable<UserDataModel> {
+        return RxFirebaseDatabase.data(mDatabaseReference.child(it)).flatMapObservable {
+            return@flatMapObservable Observable.just(it.getValue(UserDataModel::class.java))
+        }
+    }
 }

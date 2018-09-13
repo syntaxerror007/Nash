@@ -14,6 +14,7 @@ import java.util.List;
 public class ExpandableGroup<T extends Parcelable> implements Parcelable {
   @Exclude
   private String title;
+  @Exclude
   private List<T> items;
 
   public ExpandableGroup(String title, List<T> items) {
@@ -25,6 +26,7 @@ public class ExpandableGroup<T extends Parcelable> implements Parcelable {
     return title;
   }
 
+  @Exclude
   public List<T> getItems() {
     return items;
   }

@@ -67,7 +67,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         if (locationDataModel == null) {
             getViewModel().registerLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
         } else {
-            getViewModel().updateLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+            getViewModel().updateLocation(firebaseApp, locationDataModel!!.uuid, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
         }
     }
 

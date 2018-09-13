@@ -1,70 +1,150 @@
 package com.android.nash.provider
 
 import com.android.nash.data.*
-import com.android.nash.util.LOCATION_DB
+import com.android.nash.util.*
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.android.gms.tasks.Task
+import com.google.firebase.database.*
 import io.reactivex.Observable
-import com.google.firebase.database.GenericTypeIndicator
-
-
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 
 
 class LocationProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mDatabaseReference = mFirebaseDatabase.getReference(LOCATION_DB)
+    private val mTherapistReference = mFirebaseDatabase.getReference(THERAPIST_DB)
+    private val mLocationServiceGroupReference = mFirebaseDatabase.getReference(LOCATION_SERVICE_GROUP_DB)
+    private val mLocationTherapistReference = mFirebaseDatabase.getReference(LOCATION_THERAPIST_DB)
+    private val mLocationUserReference = mFirebaseDatabase.getReference(LOCATION_USER_DB)
 
-    fun insertLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, onCompleteListener: OnCompleteListener<Unit>) {
-        val locationRef = mDatabaseReference.child(locationDataModel.locationName)
+
+    fun getKey(databaseReference: DatabaseReference): String {
+        return databaseReference.push().key!!
+    }
+
+    fun insertLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        val uuid = getKey(mDatabaseReference)
+        locationDataModel.uuid = uuid
+        val locationRef = mDatabaseReference.child(uuid)
         locationRef.setValue(locationDataModel).continueWith {
             if (it.isSuccessful) {
-                val selectedServiceGroupRef = locationRef.child("selectedServices")
-                insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup)
-
-                val therapistsRef = locationRef.child("therapists")
+                val selectedServiceGroupRef = mLocationServiceGroupReference.child(uuid)
+                insertSelectedServiceGroup( selectedServiceGroupRef, selectedServiceGroup)
+            }
+        }.continueWith {
+            if (it.isSuccessful) {
+                val therapistsRef = mLocationTherapistReference.child(uuid)
                 insertTherapists(therapistsRef, therapists)
             }
+        }.continueWith {
+            mLocationUserReference.child(uuid).child(locationDataModel.user.id).setValue(true)
         }.addOnCompleteListener(onCompleteListener)
 
     }
 
     private fun insertTherapists(therapistsRef: DatabaseReference, therapists: MutableList<TherapistDataModel>) {
         therapists.forEach {
-            therapistsRef.child(it.therapistName).setValue(it)
+            val uuid = getKey(mTherapistReference)
+            it.uuid = uuid
+            mTherapistReference.child(uuid).setValue(it).continueWith {
+                therapistsRef.child(uuid).setValue(true)
+            }
         }
     }
 
     private fun insertSelectedServiceGroup(selectedServiceGroupRef: DatabaseReference, selectedServiceGroup: List<ServiceGroupDataModel>) {
         selectedServiceGroup.forEach { serviceGroup ->
-            selectedServiceGroupRef.child(serviceGroup.serviceGroupName).setValue(serviceGroup).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    serviceGroup.services.forEach {serviceDataModel ->
-                        selectedServiceGroupRef.child(serviceGroup.serviceGroupName).child("services").child(serviceDataModel.serviceName).setValue(serviceDataModel)
-                    }
-                }
+            serviceGroup.services.map {
+                selectedServiceGroupRef.child("service_groups").child(serviceGroup.uuid).child(it.uuid).setValue(true)
             }
         }
     }
 
     fun getAllLocation(): Observable<List<LocationDataModel>> {
-        return RxFirebaseDatabase.data(mDatabaseReference).flatMapObservable {
-            val locations = it.children.mapNotNull{
-                val locationDataModel = it.getValue(LocationDataModel::class.java)
-                locationDataModel?.therapists = it.child("therapists").children.mapNotNull { it.getValue(TherapistDataModel::class.java) }.toMutableList()
-                locationDataModel?.selectedServices = it.child("selectedServices").children.mapNotNull {
-                    val serviceGroup = it.getValue(ServiceGroupDataModel::class.java)
-                    serviceGroup?.services = it.child("services").children.mapNotNull { it.getValue(ServiceDataModel::class.java) }.toMutableList()
-                    return@mapNotNull serviceGroup
-                }.toMutableList()
-                return@mapNotNull locationDataModel
-            }
-            return@flatMapObservable Observable.fromArray(locations)
+        return RxFirebaseDatabase.data(mDatabaseReference).flatMapObservable { Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(LocationDataModel::class.java) }) }
+                .flatMapIterable { it }
+                .flatMap { location: LocationDataModel ->
+                    Observable.zip(Observable.just(location), getTherapist(location).toObservable(), BiFunction { location: LocationDataModel, therapists: MutableList<TherapistDataModel> ->
+                        location.therapists = therapists
+                        Observable.just(location)
+                    })
+                }.flatMap { it }
+                .flatMap { location: LocationDataModel ->
+                    Observable.zip(Observable.just(location), getServiceGroups(location), BiFunction { location: LocationDataModel, serviceGroups: MutableList<ServiceGroupDataModel> ->
+                        location.selectedServices = serviceGroups
+                        Observable.just(location)
+                    })
+                }.flatMap { it }
+                .flatMap { location: LocationDataModel ->
+                    Observable.zip(Observable.just(location), getUser(location.uuid), BiFunction { location: LocationDataModel, userDataModel: UserDataModel ->
+                        location.user = userDataModel
+                        Observable.just(location)
+                    })
+                }.flatMap { it }
+                .toList().toObservable()
+    }
+
+    private fun getUser(uuid: String): Observable<UserDataModel> {
+        return RxFirebaseDatabase.data(mLocationUserReference.child(uuid)).toObservable()
+                .flatMap { Observable.fromArray(it.children.map { it.key!!}) }
+                .flatMapIterable { it }
+                .flatMap {
+                    UserProvider().getUserFromUUID(it)
+                }
+    }
+
+    private fun getServiceGroups(location: LocationDataModel): Observable<MutableList<ServiceGroupDataModel>> {
+        return RxFirebaseDatabase.data(mLocationServiceGroupReference.child(location.uuid).child("service_groups")).toObservable()
+                .flatMap { Observable.fromArray(it.children.map { it.key!! }) }
+                .flatMapIterable { it }
+                .flatMap {
+                    Observable.zip(getServiceGroupFromUUID(it), getSelectedServicesFromServiceGroupUUID(location.uuid, it),
+                            BiFunction { serviceGroup: ServiceGroupDataModel, services: MutableList<ServiceDataModel> ->
+                                serviceGroup.services = services
+                                Observable.just(serviceGroup)
+                            })
+                }.flatMap { it }
+                .toList().toObservable()
+
+    }
+
+    private fun getSelectedServicesFromServiceGroupUUID(locationUUID: String, serviceGroupUUID: String): Observable<MutableList<ServiceDataModel>> {
+        return RxFirebaseDatabase.data(mLocationServiceGroupReference.child(locationUUID).child("service_groups").child(serviceGroupUUID)).toObservable()
+                .flatMap {
+                    val servicesKey = it.children.map { it.key!!}.toList()
+                    Observable.fromArray(servicesKey)
+                }
+                .flatMapIterable { it }
+                .flatMap {
+                    ServiceProvider().getServiceFromUUID(it)
+                }.toList().toObservable()
+    }
+
+    private fun getServiceGroupFromUUID(serviceGroupUUID: String): Observable<ServiceGroupDataModel> {
+        return ServiceProvider().getServiceGroupWithoutServiceFromUUID(serviceGroupUUID)
+    }
+
+    private fun getTherapist(location: LocationDataModel): Single<MutableList<TherapistDataModel>> {
+        return RxFirebaseDatabase.data(mLocationTherapistReference.child(location.uuid)).toObservable()
+                .flatMap { Observable.fromArray(it.children.map { it.key!! }) }
+                .flatMapIterable { it }
+                .flatMap { getTherapist(it).toObservable() }
+                .toList()
+    }
+
+    private fun getTherapist(therapistUUID: String): Single<TherapistDataModel> {
+        return RxFirebaseDatabase.data(mTherapistReference.child(therapistUUID)).map {
+            it.getValue(TherapistDataModel::class.java)
         }
     }
 
-    fun removeLocation(locationName: String, onCompleteListener: OnCompleteListener<Void>) {
-        mDatabaseReference.child(locationName).removeValue().addOnCompleteListener { onCompleteListener.onComplete(it) }
+    fun removeLocation(uuid: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        mLocationTherapistReference.child(uuid).removeValue()
+                .continueWith { mLocationServiceGroupReference.child(uuid).removeValue() }
+                .continueWith { mLocationTherapistReference.child(uuid).removeValue() }
+                .continueWith { mDatabaseReference.child(uuid).removeValue() }
+                .addOnCompleteListener(onCompleteListener)
     }
 }

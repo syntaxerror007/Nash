@@ -3,7 +3,7 @@ package com.android.nash.data
 import android.os.Parcel
 import android.os.Parcelable
 
-data class ServiceDataModel(var id:String = "", var serviceName:String = "", var price:Long = 0, var reminder:Int = 0, var shouldFreeText:Boolean = false) : Parcelable {
+data class ServiceDataModel(var uuid:String = "", var serviceName:String = "", var price:Long = 0, var reminder:Int = 0, var shouldFreeText:Boolean = false) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
@@ -12,7 +12,7 @@ data class ServiceDataModel(var id:String = "", var serviceName:String = "", var
             parcel.readByte() != 0.toByte())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
+        parcel.writeString(uuid)
         parcel.writeString(serviceName)
         parcel.writeLong(price)
         parcel.writeInt(reminder)
