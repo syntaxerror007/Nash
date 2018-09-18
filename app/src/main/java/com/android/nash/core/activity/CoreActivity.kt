@@ -89,7 +89,6 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     fun setDrawerItemClickListener() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_landing_page -> { gotoLandingPage() }
                 R.id.menu_location -> { gotoLocationPage() }
                 R.id.menu_customer -> { gotoCustomerPage() }
                 R.id.menu_service -> { gotoServicePage() }
@@ -117,10 +116,6 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     private fun gotoLocationPage() {
         startActivity(Intent(this, LocationListActivity::class.java))
         finish()
-    }
-
-    private fun gotoLandingPage() {
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

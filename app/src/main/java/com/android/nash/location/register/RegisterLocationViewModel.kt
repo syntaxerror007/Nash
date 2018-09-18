@@ -118,8 +118,13 @@ class RegisterLocationViewModel : CoreViewModel() {
         locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, onCompleteListener)
     }
 
+    private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = toRegisterUserDataModel.value!!)
+        locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, onCompleteListener)
+    }
+
     fun getAllServices() {
-        ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+        val disposable = ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable {
                     it
                 }.flatMap {
@@ -209,7 +214,7 @@ class RegisterLocationViewModel : CoreViewModel() {
     }
 
     private fun doUpdateLocation(locationUUID: String, locationName: String, locationAddress: String, locationPhoneNumber: String) {
-        doRegisterLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
+        doUpdateLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
             if (it.isSuccessful) {
                 locationProvider.removeLocation(locationUUID, OnCompleteListener { it2 ->
                     if (it2.isSuccessful) {

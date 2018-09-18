@@ -1,5 +1,6 @@
 package com.android.nash.provider
 
+import android.app.Service
 import android.util.Log
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
@@ -11,13 +12,8 @@ import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-
+import io.reactivex.*
+import io.reactivex.disposables.Disposable
 
 class ServiceProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -34,7 +30,7 @@ class ServiceProvider {
     fun insertServiceGroup(serviceGroupModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Void>) {
         mServiceGroupNameReference.child(serviceGroupModel.serviceGroupName).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                Log.d("POPO", p0.toException().localizedMessage)
+
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -68,9 +64,12 @@ class ServiceProvider {
         }
     }
 
-    fun getServiceFromUUID(uuid: String): Observable<ServiceDataModel> {
-        return RxFirebaseDatabase.data(mServiceReference.child(uuid)).flatMapObservable {
-            Observable.just(it.getValue(ServiceDataModel::class.java))
+    fun getServiceFromUUID(uuid: String): Maybe<ServiceDataModel> {
+        return RxFirebaseDatabase.data(mServiceReference.child(uuid)).flatMapMaybe {
+            if (it.exists()) {
+                return@flatMapMaybe Maybe.just(it.getValue(ServiceDataModel::class.java))
+            }
+            return@flatMapMaybe Maybe.empty<ServiceDataModel>()
         }
     }
 
@@ -99,7 +98,7 @@ class ServiceProvider {
         })
     }
 
-    fun deleteService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Void>) {
+    fun deleteService(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, onCompleteListener: OnCompleteListener<Disposable>) {
         if (serviceDataModel != null) {
             mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("services").child(serviceDataModel.uuid).removeValue().continueWith {
                 mServiceGroupDatabaseReference.child(serviceGroupDataModel.uuid).child("itemCount").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -128,9 +127,11 @@ class ServiceProvider {
                     }
 
                 })
-                mServiceNameReference.child(serviceDataModel.uuid).removeValue()
-                onCompleteListener.onComplete(it)
             }
+                    .continueWith { mServiceReference.child(serviceDataModel.uuid).removeValue() }
+                    .continueWith { mServiceNameReference.child(serviceDataModel.uuid).removeValue() }
+                    .continueWith { LocationProvider().removeAnyService(serviceDataModel.uuid) }
+                    .addOnCompleteListener { onCompleteListener.onComplete(it) }
 
         }
     }
@@ -148,9 +149,12 @@ class ServiceProvider {
         }.addOnCompleteListener(onCompleteListener)
     }
 
-    fun findServiceGroup(uuid: String): ServiceGroupDataModel {
-
-        return ServiceGroupDataModel()
+    fun findServiceGroup(uuid: String): Observable<ServiceGroupDataModel> {
+        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference.child(uuid)).map {
+            val serviceGroupDataModel = it.getValue(ServiceGroupDataModel::class.java)
+            serviceGroupDataModel?.serviceKeys = it.child("services").children.map { it.key!! }.toList()
+            return@map serviceGroupDataModel
+        }.flatMapObservable { getServiceFromServiceGroup(it) }
     }
 
     private fun findService(uuid: String): Observable<ServiceDataModel> {
