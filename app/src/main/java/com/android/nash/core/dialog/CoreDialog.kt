@@ -14,14 +14,8 @@ import com.android.nash.login.LoginActivity
 import com.google.firebase.auth.FirebaseUser
 
 
-abstract class CoreDialog<T : CoreViewModel> : AppCompatDialog {
+abstract class CoreDialog<T : CoreViewModel>(context: Context) : AppCompatDialog(context) {
     private lateinit var viewModel: T
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, theme: Int) : super(context, theme)
-
-    protected constructor(context: Context, cancelable: Boolean, cancelListener: DialogInterface.OnCancelListener) : super(context, cancelable, cancelListener)
 
     fun getViewModel():T {
         return viewModel

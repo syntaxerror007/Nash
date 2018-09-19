@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_16"
-        android:layout_marginBottom="@dimen/common_dp_16"
-        tools:context=".user.register.RegisterActivity">
+        android:layout_marginBottom="@dimen/common_dp_16">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:paddingLeft="@dimen/common_dp_16"
             android:paddingRight="@dimen/common_dp_16"
             android:textSize="18sp"
@@ -103,6 +104,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
             app:layout_constraintTop_toBottomOf="@id/divider"
+            android:textColor="@color/white"
             android:text="@string/text_cancel_back"
             android:textAllCaps="true" />
 
@@ -123,6 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_button_register"
+                android:textColor="@color/white"
                 android:textAllCaps="true" />
 
             <ProgressBar

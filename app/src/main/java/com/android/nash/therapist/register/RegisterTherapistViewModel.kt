@@ -1,4 +1,4 @@
-package com.android.nash.therapist
+package com.android.nash.therapist.register
 
 import com.android.nash.core.CoreViewModel
 

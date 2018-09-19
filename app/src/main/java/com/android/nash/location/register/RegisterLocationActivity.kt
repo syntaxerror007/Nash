@@ -15,9 +15,11 @@ import com.android.nash.service.dialog.list.ServiceListCallback
 import com.android.nash.service.dialog.list.ServiceListDialog
 import com.android.nash.service.form.ServiceCallback
 import com.android.nash.service.form.service.ServiceFormDialog
-import com.android.nash.therapist.RegisterTherapistDialog
+import com.android.nash.therapist.register.RegisterTherapistDialog
 import com.android.nash.therapist.TherapistListAdapter
-import com.android.nash.therapist.TherapistRegisterCallback
+import com.android.nash.therapist.assignment.TherapistAssignmentCallback
+import com.android.nash.therapist.assignment.TherapistAssignmentDialog
+import com.android.nash.therapist.register.TherapistRegisterCallback
 import com.android.nash.user.register.UserRegisterCallback
 import com.android.nash.user.register.UserRegisterDialog
 import com.android.nash.util.dismissKeyboard
@@ -25,7 +27,8 @@ import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.location_register_activity.*
 import org.parceler.Parcels
 
-class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback {
+class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback, TherapistAssignmentCallback {
+
     private lateinit var serviceDialog: Dialog
     private lateinit var serviceGroupAdapter: ServiceGroupAdapter
     private lateinit var firebaseApp: FirebaseApp
@@ -37,8 +40,9 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent.extras != null)
+        if (intent.extras != null) {
             locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
+        }
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
         setToolbarRightButtonVisible(true)
@@ -56,6 +60,21 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         editTextLocationAddress.setText(locationDataModel?.locationAddress)
         editTextPhoneNumber.setText(locationDataModel?.phoneNumber)
         if (locationDataModel != null) {
+            locationDataModel!!.selectedServices.forEach {
+                it.services.forEach {serviceDataModel ->
+                    val therapistAssignmentMap = mutableMapOf<String, List<TherapistDataModel>>()
+                    val therapistAssigned = mutableListOf<TherapistDataModel>()
+                    locationDataModel!!.therapists.filter {
+                        serviceDataModel.assignedTherapistSet.contains(it.uuid)
+                    }.forEach {
+                        therapistAssigned.add(it)
+                    }
+                    getViewModel().assignTherapistToService(serviceDataModel, therapistAssigned)
+                }
+            }
+            locationDataModel!!.therapists.forEach {
+                getViewModel().registerTherapist(it)
+            }
             onFinishServiceClick(locationDataModel!!.selectedServices)
             onUserCreated(locationDataModel!!.user, null)
         }
@@ -102,7 +121,6 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
     }
 
     override fun onTherapistRegister(therapistDataModel: TherapistDataModel) {
-        dismissKeyboard()
         getViewModel().registerTherapist(therapistDataModel)
     }
 
@@ -120,6 +138,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         getViewModel().locationNameError().observe(this, Observer { processAddressNameError(it) })
         getViewModel().phoneNumberError().observe(this, Observer { processPhoneNumberError(it) })
         getViewModel().availableTherapistsLiveData().observe(this, Observer { processTherapistsList(it) })
+        getViewModel().getTherapistAssignmentLiveData().observe(this, Observer { Toast.makeText(this, "changed", Toast.LENGTH_LONG).show() })
         getViewModel().isSuccess().observe(this, Observer {
             if (it != null && it) {
                 Toast.makeText(this, "Successfully add new Location", Toast.LENGTH_LONG).show()
@@ -131,8 +150,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
-        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, groupPosition, childPosition, true, serviceDataModel)
-        serviceDialog.show()
+        TherapistAssignmentDialog(this, serviceDataModel, getViewModel().availableTherapistsLiveData().value!!, this).show()
     }
 
     override fun onEditService(prevServiceDataModel: ServiceDataModel?, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
@@ -172,4 +190,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         }
     }
 
+    override fun onTherapistAssigned(serviceDataModel: ServiceDataModel?, assignedTherapist: List<TherapistDataModel>) {
+        getViewModel().assignTherapistToService(serviceDataModel, assignedTherapist)
+    }
 }

@@ -18,4 +18,5 @@
     <string name="text_work_since">Work Since</string>
     <string name="text_button_add_location">Add New Location</string>
     <string name="text_location_list_title">Locations</string>
+    <string name="select_therapist">Select Therapist</string>
 </resources>

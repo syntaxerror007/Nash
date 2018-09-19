@@ -3,10 +3,7 @@ package com.android.nash.location.register
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
-import com.android.nash.data.LocationDataModel
-import com.android.nash.data.ServiceGroupDataModel
-import com.android.nash.data.TherapistDataModel
-import com.android.nash.data.UserDataModel
+import com.android.nash.data.*
 import com.android.nash.provider.LocationProvider
 import com.android.nash.provider.ServiceProvider
 import com.android.nash.provider.UserProvider
@@ -34,6 +31,8 @@ class RegisterLocationViewModel : CoreViewModel() {
     private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
     private val availableTherapistsLiveData: MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
     private val totalServiceSelectedLiveData: MutableLiveData<Int> = MutableLiveData()
+    private val therapistAssignmentMapLiveDataModel: MutableLiveData<MutableMap<String, List<TherapistDataModel>>> = MutableLiveData()
+    private val therapistAssignmentMap = mutableMapOf<String, List<TherapistDataModel>>()
 
     fun isLoading(): LiveData<Boolean> {
         return isLoading
@@ -57,6 +56,10 @@ class RegisterLocationViewModel : CoreViewModel() {
 
     fun getServiceGrouplist(): LiveData<List<ServiceGroupDataModel>> {
         return serviceGroupListLiveData
+    }
+
+    fun getTherapistAssignmentLiveData(): LiveData<MutableMap<String, List<TherapistDataModel>>> {
+        return therapistAssignmentMapLiveDataModel
     }
 
     fun registerLocation(firebaseApp: FirebaseApp, locationName: String, locationAddress: String, locationPhoneNumber: String) {
@@ -114,13 +117,13 @@ class RegisterLocationViewModel : CoreViewModel() {
     }
 
     private fun doRegisterLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = toRegisterUserDataModel.value!!)
-        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, onCompleteListener)
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
+        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, therapistAssignmentMapLiveDataModel.value!!, onCompleteListener)
     }
 
     private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, totalServices = totalServiceSelectedLiveData.value!!, user = toRegisterUserDataModel.value!!)
-        locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, onCompleteListener)
+        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
+        locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, therapistAssignmentMapLiveDataModel.value!!, onCompleteListener)
     }
 
     fun getAllServices() {
@@ -224,5 +227,24 @@ class RegisterLocationViewModel : CoreViewModel() {
                 })
             }
         })
+    }
+
+    fun assignTherapistToService(serviceDataModel: ServiceDataModel?, assignedTherapists: List<TherapistDataModel>) {
+        if (serviceDataModel != null) {
+            therapistAssignmentMap[serviceDataModel.uuid] = assignedTherapists
+            therapistAssignmentMapLiveDataModel.value = therapistAssignmentMap
+            serviceDataModel.numTherapist = assignedTherapists.size
+            assignedTherapists.forEach {assignedTherapist ->
+                availableTherapists.forEach {availableTherapist ->
+                    if (availableTherapist.therapistName == assignedTherapist.therapistName) {
+                        availableTherapist.assignmentSet.add(serviceDataModel.uuid)
+                        availableTherapist.job = availableTherapist.assignmentSet.size
+                    }
+                }
+            }
+
+            availableTherapistsLiveData.value = availableTherapists
+            serviceGroupListLiveData.value = serviceGroupList
+        }
     }
 }

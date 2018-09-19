@@ -25,33 +25,33 @@ class LocationProvider {
         return databaseReference.push().key!!
     }
 
-    fun insertLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, onCompleteListener: OnCompleteListener<Task<Void>>) {
+    fun insertLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, assignmentTherapistMap: Map<String, List<TherapistDataModel>>, onCompleteListener: OnCompleteListener<Task<Void>>) {
         val locationUUID = getKey(mDatabaseReference)
         locationDataModel.uuid = locationUUID
         val locationRef = mDatabaseReference.child(locationUUID)
         locationRef.setValue(locationDataModel).continueWith {
             if (it.isSuccessful) {
-                val selectedServiceGroupRef = mLocationServiceGroupReference.child(locationUUID)
-                insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup)
+                val therapistsRef = mLocationTherapistReference.child(locationUUID)
+                insertTherapists(therapistsRef, therapists)
             }
         }.continueWith {
             if (it.isSuccessful) {
-                val therapistsRef = mLocationTherapistReference.child(locationUUID)
-                insertTherapists(therapistsRef, therapists)
+                val selectedServiceGroupRef = mLocationServiceGroupReference.child(locationUUID)
+                insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup, assignmentTherapistMap)
             }
         }.continueWith {
             mLocationUserReference.child(locationUUID).child(locationDataModel.user.id).setValue(true)
         }.addOnCompleteListener(onCompleteListener)
     }
 
-    fun updateLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, onCompleteListener: OnCompleteListener<Task<Void>>) {
+    fun updateLocation(locationDataModel: LocationDataModel, selectedServiceGroup: List<ServiceGroupDataModel>, therapists: MutableList<TherapistDataModel>, assignmentTherapistMap: Map<String, List<TherapistDataModel>>, onCompleteListener: OnCompleteListener<Task<Void>>) {
         val locationUUID = getKey(mDatabaseReference)
         locationDataModel.uuid = locationUUID
         val locationRef = mDatabaseReference.child(locationUUID)
         locationRef.setValue(locationDataModel).continueWith {
             if (it.isSuccessful) {
                 val selectedServiceGroupRef = mLocationServiceGroupReference.child(locationUUID)
-                insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup)
+                insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup, assignmentTherapistMap)
             }
         }.continueWith {
             if (it.isSuccessful) {
@@ -79,10 +79,12 @@ class LocationProvider {
         }
     }
 
-    private fun insertSelectedServiceGroup(selectedServiceGroupRef: DatabaseReference, selectedServiceGroup: List<ServiceGroupDataModel>) {
+    private fun insertSelectedServiceGroup(selectedServiceGroupRef: DatabaseReference, selectedServiceGroup: List<ServiceGroupDataModel>, assignmentTherapistMap: Map<String, List<TherapistDataModel>>) {
         selectedServiceGroup.forEach { serviceGroup ->
-            serviceGroup.services.map {
-                selectedServiceGroupRef.child("service_groups").child(serviceGroup.uuid).child(it.uuid).setValue(true)
+            serviceGroup.services.map { serviceDataModel ->
+                assignmentTherapistMap[serviceDataModel.uuid]?.map {
+                    selectedServiceGroupRef.child("service_groups").child(serviceGroup.uuid).child(serviceDataModel.uuid).child(it.uuid).setValue(true)
+                }
             }
         }
     }
@@ -102,6 +104,13 @@ class LocationProvider {
                         Observable.just(location)
                     })
                 }.flatMap { it }
+//                .flatMap { location: LocationDataModel ->
+//                    Observable.zip(Observable.just(location), getTherapistAssignment(location), BiFunction { locationDataModel: LocationDataModel, therapistAssignmentMap: MutableMap<String, MutableList<String>> ->
+//                        locationDataModel.therapistAssignmentMap = therapistAssignmentMap
+//                        Observable.just(locationDataModel)
+//                    })
+//                }
+//                .flatMap { it }
                 .flatMap { location: LocationDataModel ->
                     Observable.zip(Observable.just(location), getUser(location.uuid), BiFunction { location: LocationDataModel, userDataModel: UserDataModel ->
                         location.user = userDataModel
@@ -109,6 +118,36 @@ class LocationProvider {
                     })
                 }.flatMap { it }
                 .toList().toObservable()
+    }
+
+    private fun getTherapistAssignment(location: LocationDataModel): Observable<MutableMap<String, MutableList<String>>> {
+        val ref = mLocationServiceGroupReference.child(location.uuid).child("service_groups")
+        location.selectedServices.forEach {
+            val serviceGroupRef = ref.child(it.uuid)
+            it.services.map {
+                RxFirebaseDatabase.data(serviceGroupRef.child(it.uuid)).toObservable()
+            }.map {
+                it
+            }
+        }
+        val serviceGroupRef = mLocationServiceGroupReference.child(location.uuid).child("service_groups")
+        val assignmentMap = mutableMapOf<String, MutableList<String>>()
+        return RxFirebaseDatabase.data(serviceGroupRef).toObservable()
+                .flatMap { Observable.fromArray(it.children.map { it.key!! }) }
+                .flatMapIterable { it }
+                .flatMap { RxFirebaseDatabase.data(serviceGroupRef.child(it)).toObservable() }
+                .flatMap { serviceGroupSnapshot ->
+                    Observable.fromArray(serviceGroupSnapshot.children.map { serviceSnapshot ->
+                        val serviceKey = serviceSnapshot.key!!
+                        Observable.zip(Observable.just(serviceKey), RxFirebaseDatabase.data(serviceGroupRef.child(serviceGroupSnapshot.key!!).child(serviceKey)).toObservable(), BiFunction { serviceKey: String, snapshot: DataSnapshot ->
+                            assignmentMap[serviceKey] = snapshot.children.map { it.key!! }.toMutableList()
+                            return@BiFunction assignmentMap
+                        })
+                    })
+                }
+                .flatMapIterable { it }
+                .flatMap { it }
+
     }
 
     private fun getUser(uuid: String): Observable<UserDataModel> {
@@ -147,7 +186,26 @@ class LocationProvider {
                 .flatMapIterable { it }
                 .flatMapMaybe {
                     ServiceProvider().getServiceFromUUID(it)
+                }.flatMap {
+                    Observable.zip(Observable.just(it),
+                            getAssignedTherapist(mLocationServiceGroupReference.child(locationUUID).child("service_groups").child(serviceGroupUUID).child(it.uuid)),
+                            BiFunction { serviceDataModel: ServiceDataModel, assignedTherapistList: MutableList<String> ->
+                                serviceDataModel.assignedTherapistSet = assignedTherapistList
+                                serviceDataModel
+                            })
                 }.toList().toObservable()
+    }
+
+    private fun getAssignedTherapist(therapistAssignmentRef: DatabaseReference): Observable<MutableList<String>> {
+        return Observable.zip(
+                Observable.just(mutableListOf()),
+                RxFirebaseDatabase.data(therapistAssignmentRef).toObservable(),
+                BiFunction { therapistAssignment: MutableList<String>, dataSnapshot: DataSnapshot ->
+                    dataSnapshot.children.forEach {
+                        therapistAssignment.add(it.key!!)
+                    }
+                    therapistAssignment
+                })
     }
 
     private fun getServiceGroupFromUUID(serviceGroupUUID: String): Observable<ServiceGroupDataModel> {
@@ -168,7 +226,7 @@ class LocationProvider {
         }
     }
 
-    public fun removeLocation(uuid: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
+    fun removeLocation(uuid: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
         mDatabaseReference.child(uuid).removeValue()
                 .continueWith { mLocationServiceGroupReference.child(uuid).removeValue() }
                 .continueWith { mLocationTherapistReference.child(uuid).removeValue() }

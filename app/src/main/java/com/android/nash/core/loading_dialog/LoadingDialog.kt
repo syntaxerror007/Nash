@@ -10,5 +10,6 @@ class LoadingDialog(context: Context) : CoreDialog<CoreViewModel>(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.loading_dialog)
+        setCancelable(false)
     }
 }

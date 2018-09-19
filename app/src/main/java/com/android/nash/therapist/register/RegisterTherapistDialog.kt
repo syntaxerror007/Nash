@@ -1,4 +1,4 @@
-package com.android.nash.therapist
+package com.android.nash.therapist.register
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -9,6 +9,7 @@ import com.android.nash.data.NashDate
 import com.android.nash.data.TherapistDataModel
 import com.android.nash.util.DateUtil
 import com.android.nash.util.convertToString
+import com.android.nash.util.dismissKeyboard
 import kotlinx.android.synthetic.main.register_therapist_dialog.*
 import java.util.*
 
@@ -51,6 +52,7 @@ class RegisterTherapistDialog(context: Context, therapistRegisterCallback: Thera
         if (isDataValid(therapistName, phoneNumber, workSince)) {
             val therapistDataModel = TherapistDataModel(therapistName = therapistName, phoneNumber = phoneNumber, workSince = DateUtil.convertShownDateToNashDate(workSince), job = 0)
             therapistCallback.onTherapistRegister(therapistDataModel)
+            dismissKeyboard()
             dismiss()
         }
 

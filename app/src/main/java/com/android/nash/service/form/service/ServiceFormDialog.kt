@@ -41,7 +41,7 @@ class ServiceFormDialog(context: Context, serviceCallback: ServiceCallback, serv
         val serviceName = editTextServiceName.text.toString()
         val price = editTextPrice.text.toString()
         val reminder = editTextReminder.text.toString()
-        val serviceDataModel = ServiceDataModel(serviceName = serviceName, price = price.toLong(), reminder = reminder.toInt(), uuid = "", shouldFreeText = false)
+        val serviceDataModel = ServiceDataModel(uuid = "", serviceName = serviceName, price = price.toLong(), reminder = reminder.toInt(), shouldFreeText = false)
         if (!isEditPriceOnly) {
             serviceCallback.onServiceCreated(serviceDataModel = serviceDataModel, serviceGroupDataModel = serviceGroupDataModel, groupPosition = groupPosition, position = position)
         } else {

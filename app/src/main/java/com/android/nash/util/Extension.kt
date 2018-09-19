@@ -1,5 +1,6 @@
 package com.android.nash.util
 
+import android.app.Dialog
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
@@ -45,6 +46,11 @@ fun NashDate.convertToString(): String {
 
 fun AppCompatActivity.dismissKeyboard() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    if (imm.isAcceptingText)
+        imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
+}
+fun Dialog.dismissKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     if (imm.isAcceptingText)
         imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
 }
