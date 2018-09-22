@@ -10,4 +10,11 @@
     <dimen name="common_dp_64">64dp</dimen>
     <dimen name="common_dp_128">128dp</dimen>
     <dimen name="default_button_width">200dp</dimen>
+    <dimen name="common_dp_256">256dp</dimen>
+    <dimen name="common_sp_32">32sp</dimen>
+    <dimen name="common_sp_16">16sp</dimen>
+    <dimen name="common_sp_20">20sp</dimen>
+    <dimen name="common_sp_28">28sp</dimen>
+    <dimen name="common_sp_25">25sp</dimen>
+    <dimen name="common_sp_24">24sp</dimen>
 </resources>

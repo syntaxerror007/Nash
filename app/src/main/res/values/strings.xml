@@ -19,4 +19,24 @@
     <string name="text_button_add_location">Add New Location</string>
     <string name="text_location_list_title">Locations</string>
     <string name="select_therapist">Select Therapist</string>
+    <string name="text_search">Search</string>
+    <string name="text_new_customer">New Customer</string>
+    <string name="text_reminder">Reminder</string>
+    <string name="text_address_hint">Address</string>
+    <string name="text_date_birth_hint">Date of Birth</string>
+    <string name="text_customer_name_hint">Customer Name</string>
+    <string name="text_email_hint">Email</string>
+    <string name="text_has_eyelash_before_title">Have you ever had eyelash extension before?</string>
+    <string name="text_have_allergy">Do you have any allergy?</string>
+    <string name="text_wear_contact_lens">Do you wear contact lens?</string>
+    <string name="text_had_surgery">Have you had eye surgery/surgery around your eyes?</string>
+    <string name="text_know_nash">How do you know Nash beauty lounge?</string>
+    <string name="text_please_add_addtional_info">Please add more information</string>
+    <string name="text_agree_tnc">With this I agree with Nash Terms and Conditions</string>
+    <array name="list_know_nash_options">
+        <item name="text_social_media">Social Media</item>
+        <item name="text_signage">Signage</item>
+        <item name="text_relatives">Friends/family/recommendations</item>
+        <item name="text_others">Others</item>
+    </array>
 </resources>

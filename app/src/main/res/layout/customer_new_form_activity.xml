@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextCustomerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_16"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        app:met_maxCharacters="24"
+        android:hint="@string/text_customer_name_hint"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        app:met_floatingLabel="highlight" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextBirthDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_date_birth_hint"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        app:met_floatingLabel="highlight" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_address_hint"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        app:met_floatingLabel="highlight" />
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_email_hint"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        app:met_floatingLabel="highlight" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_phone_number_hint"
+        android:inputType="phone|number"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        app:met_maxCharacters="14"
+        app:met_floatingLabel="highlight" />
+
+    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+        android:id="@+id/hasEyelashBeforeMCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:padding="@dimen/common_dp_4" />
+
+    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+        android:id="@+id/haveAllergyMCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:padding="@dimen/common_dp_4" />
+
+    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+        android:id="@+id/wearContactLensMCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:padding="@dimen/common_dp_4" />
+
+    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+        android:id="@+id/hadEyeSurgeryMCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:padding="@dimen/common_dp_4" />
+
+    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+        android:id="@+id/knowNashMCG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:padding="@dimen/common_dp_4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:orientation="horizontal"
+        android:padding="@dimen/common_dp_4">
+
+        <CheckBox
+            android:id="@+id/checkBoxAgreeTnC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewTnC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_agree_tnc" />
+    </LinearLayout>
+</LinearLayout>

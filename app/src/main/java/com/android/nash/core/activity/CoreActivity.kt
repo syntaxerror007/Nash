@@ -75,6 +75,10 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         backEnabled = isBackEnabled
     }
 
+    fun hideToolbar() {
+        toolbar.visibility = View.GONE
+    }
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         mDrawerLayout = drawerLayout
