@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
-import com.android.nash.newcustomer.CustomerNewFormActivity
+import com.android.nash.customer.customerservice.CustomerServiceActivity
+import com.android.nash.customer.newcustomer.CustomerNewFormActivity
 import kotlinx.android.synthetic.main.home_activity.*
 
 class HomeActivity : CoreActivity<HomeViewModel>() {
@@ -28,7 +29,7 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
     }
 
     private fun gotoSearchActivity() {
-
+        startActivity(Intent(this, CustomerServiceActivity::class.java))
     }
 
     override fun onCreateViewModel(): HomeViewModel {

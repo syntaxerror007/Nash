@@ -33,6 +33,14 @@
     <string name="text_know_nash">How do you know Nash beauty lounge?</string>
     <string name="text_please_add_addtional_info">Please add more information</string>
     <string name="text_agree_tnc">With this I agree with Nash Terms and Conditions</string>
+    <string name="text_title_customer_name">Name</string>
+    <string name="text_title_date">Date</string>
+    <string name="text_title_service_name">Service</string>
+    <string name="text_title_therapist_name">Therapist</string>
+    <string name="text_title_price">Price</string>
+    <string name="text_title_customer_reminder">Reminder</string>
+    <string name="text_total_value">Total Value</string>
+    <string name="text_add_service">Add Service</string>
     <array name="list_know_nash_options">
         <item name="text_social_media">Social Media</item>
         <item name="text_signage">Signage</item>

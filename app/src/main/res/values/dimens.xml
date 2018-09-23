@@ -12,6 +12,7 @@
     <dimen name="default_button_width">200dp</dimen>
     <dimen name="common_dp_256">256dp</dimen>
     <dimen name="common_sp_32">32sp</dimen>
+    <dimen name="common_sp_12">12sp</dimen>
     <dimen name="common_sp_16">16sp</dimen>
     <dimen name="common_sp_20">20sp</dimen>
     <dimen name="common_sp_28">28sp</dimen>

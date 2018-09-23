@@ -1,4 +1,4 @@
-package com.android.nash.newcustomer
+package com.android.nash.customer.newcustomer
 
 import com.android.nash.core.CoreViewModel
 

@@ -16,9 +16,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 
 fun ImageView.loadUrl(url: CharSequence?, @DrawableRes placeholder: Int) {
@@ -60,4 +61,13 @@ fun EditText.validateNullOrBlank(errorMessage: String) {
         this.error = errorMessage
     else
         this.error = null
+}
+
+
+fun Long.convertToPrice(): String {
+    val symbol = DecimalFormatSymbols()
+    symbol.decimalSeparator = ','
+    symbol.groupingSeparator = '.'
+    val decimalFormat =  DecimalFormat("#,###.###", symbol)
+    return "Rp. ${decimalFormat.format(this)}"
 }
