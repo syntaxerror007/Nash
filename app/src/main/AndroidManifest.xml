@@ -48,6 +48,8 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.android.nash.customer.customerservice.CustomerServiceActivity"
             android:screenOrientation="portrait" />
+        <activity android:name="com.android.nash.customer.customersearch.CustomerListActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/common_dp_16"
     android:paddingTop="@dimen/common_dp_16">
@@ -11,25 +11,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.15"/>
+        app:layout_constraintGuide_percent="0.2"/>
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="0.45"/>
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75"/>
+        app:layout_constraintGuide_percent="0.7"/>
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9"/>
+        app:layout_constraintGuide_percent="0.85"/>
+
 
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="0dp"
@@ -38,7 +39,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/guideline1"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/text_title_date"/>
+        android:text="@string/text_title_customer_name"/>
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -46,7 +47,7 @@
         app:layout_constraintLeft_toLeftOf="@id/guideline1"
         app:layout_constraintRight_toLeftOf="@id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/text_title_service_name"/>
+        android:text="@string/text_title_customer_email"/>
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -54,22 +55,14 @@
         app:layout_constraintLeft_toLeftOf="@id/guideline2"
         app:layout_constraintRight_toLeftOf="@id/guideline3"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/text_title_therapist_name"/>
+        android:text="@string/text_title_customer_phone"/>
     <android.support.v7.widget.AppCompatTextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/guideline3"
         app:layout_constraintRight_toLeftOf="@id/guideline4"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/text_title_price"/>
-    <android.support.v7.widget.AppCompatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="@id/guideline4"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/text_title_customer_reminder"/>
+        android:text="@string/text_title_customer_service"/>
 
 </android.support.constraint.ConstraintLayout>

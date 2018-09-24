@@ -17,7 +17,7 @@ class TherapistListAdapter(private val items: List<TherapistDataModel>, private 
 
     override fun onBindViewHolder(holder: TherapistListViewHolder, position: Int) = holder.bind(items[position], listener)
 
-    class TherapistListViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    class TherapistListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(therapistDataModel: TherapistDataModel, listener: (TherapistDataModel) -> Unit) = with(itemView) {
             textViewTherapistName.text = therapistDataModel.therapistName
             textViewPhoneNumber.text = "Phone Number: ${therapistDataModel.phoneNumber}"

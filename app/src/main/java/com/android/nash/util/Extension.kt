@@ -71,3 +71,12 @@ fun Long.convertToPrice(): String {
     val decimalFormat =  DecimalFormat("#,###.###", symbol)
     return "Rp. ${decimalFormat.format(this)}"
 }
+
+
+fun View.setVisible(isVisible: Boolean) {
+    if (isVisible) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
+}

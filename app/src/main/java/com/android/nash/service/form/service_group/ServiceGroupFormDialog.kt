@@ -29,7 +29,7 @@ class ServiceGroupFormDialog(context: Context, serviceGroupCallback: ServiceGrou
         buttonClose.setOnClickListener { dismiss() }
         btnCancel.setOnClickListener { dismiss() }
         btnRegister.setOnClickListener {
-            if (!editTextLayoutServiceGroupName.text.isBlank())
+            if (!editTextLayoutServiceGroupName.text!!.isBlank())
                 serviceGroupCallback.onCreateServiceGroup(serviceGroupDataModel, editTextLayoutServiceGroupName.text.toString())
             else
                 editTextLayoutServiceGroupName.error = "Service Group Name is Required"

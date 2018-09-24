@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.R
+import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormDialog
 import com.android.nash.data.CustomerServiceDataModel
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.TherapistDataModel
@@ -21,5 +22,9 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
         val customerServiceDataModel = CustomerServiceDataModel(service = serviceDataModel, therapist = therapistDataModel, price = 100000, hasReminded = true)
         val customerServiceAdapter = CustomerServiceAdapter(listOf(customerServiceDataModel, customerServiceDataModel, customerServiceDataModel, customerServiceDataModel))
         recyclerViewService.adapter = customerServiceAdapter
+        buttonAddService.setOnClickListener {
+            val dialog = CustomerAddServiceFormDialog(this)
+            dialog.show()
+        }
     }
 }
