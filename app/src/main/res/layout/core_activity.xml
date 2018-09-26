@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawerLayout"
+<android.support.v4.widget.DrawerLayout android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,17 +22,19 @@
             app:contentInsetStartWithNavigation="0dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/toolbarTitle"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white" />
+                    android:textSize="@dimen/common_sp_20"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    tools:text="title"/>
 
                 <Button
                     android:id="@+id/rightButton"
@@ -41,11 +43,31 @@
                     android:paddingLeft="@dimen/common_dp_16"
                     android:paddingRight="@dimen/common_dp_16"
                     android:layout_marginRight="@dimen/common_dp_16"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:background="@drawable/white_background_with_default_border"
                     android:visibility="gone"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
-            </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewPrimaryButton"
+                    android:layout_width="@dimen/common_dp_32"
+                    android:layout_height="@dimen/common_dp_32"
+                    android:layout_margin="@dimen/common_dp_16"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:background="@android:drawable/ic_menu_search" />
+                <ImageView
+                    android:id="@+id/imageViewSecondaryButton"
+                    android:layout_width="@dimen/common_dp_32"
+                    android:layout_height="@dimen/common_dp_32"
+                    android:layout_margin="@dimen/common_dp_16"
+                    android:layout_toLeftOf="@id/imageViewPrimaryButton"
+                    android:visibility="gone"
+                    android:background="@android:drawable/ic_menu_search" />
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
         <ScrollView

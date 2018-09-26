@@ -57,4 +57,16 @@ class MultiCheckCheckGroup : LinearLayout {
         this.multiCheckCheckGroupData = multiCheckCheckGroupData
         initView()
     }
+
+    fun getMultiCheckData(): MultiCheckCheckGroupResultData {
+        val multiCheckResultData = MultiCheckCheckGroupResultData()
+        multiCheckResultData.additionalData = editTextAdditionalInfo.text.toString()
+        optionsCheckBox.forEach {
+            if (it.isChecked) {
+                multiCheckResultData.selectedItems.add(it.text.toString())
+            }
+        }
+        return multiCheckResultData
+    }
+
 }

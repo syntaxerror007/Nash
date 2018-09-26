@@ -45,6 +45,8 @@
     <string name="text_title_customer_phone">Phone</string>
     <string name="text_title_customer_service">Service</string>
     <string name="text_customer_add_service_title">Add new service</string>
+    <string name="text_new_customer_form_title">New Customer</string>
+    <string name="text_common_continue">Continue</string>
     <array name="list_know_nash_options">
         <item name="text_social_media">Social Media</item>
         <item name="text_signage">Signage</item>

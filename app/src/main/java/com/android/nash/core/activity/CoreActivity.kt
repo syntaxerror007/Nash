@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import com.android.nash.core.CoreViewModel
@@ -15,9 +16,11 @@ import android.view.MenuItem
 import android.view.View
 import com.android.nash.R
 import com.android.nash.core.loading_dialog.LoadingDialog
+import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
 import com.android.nash.location.register.RegisterLocationActivity
 import com.android.nash.service.ServiceListActivity
+import com.android.nash.util.setVisible
 import kotlinx.android.synthetic.main.core_activity.*
 
 
@@ -34,6 +37,12 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         viewModel = onCreateViewModel()
         loadingDialog = LoadingDialog(this)
         initViewModel()
+    }
+
+    private fun onUserLoaded(it: UserDataModel) {
+        if (it.userType != "ADMIN") {
+            setBackEnabled(true)
+        }
     }
 
     fun showLoadingDialog() {
@@ -88,6 +97,30 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
 
         drawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
+    }
+
+    fun setPrimaryButtonImage(resId: Int) {
+        imageViewPrimaryButton.setImageDrawable(ContextCompat.getDrawable(this, resId))
+    }
+
+    fun setSecondaryButtonImage(resId: Int) {
+        imageViewSecondaryButton.setImageDrawable(ContextCompat.getDrawable(this, resId))
+    }
+
+    fun setPrimaryButtonClick(onClick: (view: View) -> Unit) {
+        imageViewPrimaryButton.setOnClickListener { onClick(it) }
+    }
+
+    fun setSecondaryButtonClick(onClick: (view: View) -> Unit) {
+        imageViewSecondaryButton.setOnClickListener { onClick(it) }
+    }
+
+    fun showPrimaryButton() {
+        imageViewPrimaryButton.setVisible(true)
+    }
+
+    fun showSecondaryButton() {
+        imageViewSecondaryButton.setVisible(true)
     }
 
     fun setDrawerItemClickListener() {
@@ -147,6 +180,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
 
     override fun initViewModel() {
         viewModel.getUser().observe(this, Observer { observeUser(it) })
+        getViewModel().getUserDataModel().observe(this, Observer { onUserLoaded(it!!) })
     }
 
     override fun observeUser(it: FirebaseUser?) {
