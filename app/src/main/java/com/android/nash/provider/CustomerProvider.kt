@@ -28,11 +28,16 @@ class CustomerProvider {
     fun deleteCustomer(uuid: String): Completable = RxFirebaseDatabase.removeValue(mCustomerDatabaseRef.child(uuid))
 
     fun getAllCustomer(): Observable<List<CustomerDataModel>> {
-        return RxFirebaseDatabase.data(mCustomerDatabaseRef).flatMapObservable {
+        return searchCustomer("")
+    }
+
+
+    fun searchCustomer(inputtedText: String): Observable<List<CustomerDataModel>> {
+        return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerName").startAt("%$inputtedText%").endAt("$inputtedText\uf8ff")).flatMapObservable {
             if (it.exists())
                 Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) })
             else
-                Observable.just(null)
+                Observable.just(listOf())
         }
     }
 
