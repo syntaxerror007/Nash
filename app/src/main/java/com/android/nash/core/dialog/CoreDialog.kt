@@ -21,6 +21,9 @@ abstract class CoreDialog<T : CoreViewModel>(context: Context) : AppCompatDialog
         return viewModel
     }
 
+    fun setViewModel(viewModel: T) {
+        this.viewModel = viewModel
+    }
 
     fun initDialogSize() {
         val metrics = context.resources.displayMetrics

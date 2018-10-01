@@ -8,8 +8,8 @@ import com.android.nash.core.activity.CoreActivity
 import com.android.nash.R
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
-import com.android.nash.data.NashDate
 import kotlinx.android.synthetic.main.customer_list_activity.*
+import org.parceler.Parcels
 
 class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     override fun onCreateViewModel(): CustomerListViewModel = ViewModelProviders.of(this).get(CustomerListViewModel::class.java)
@@ -27,7 +27,9 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
 
     private fun initRecyclerViewCustomer(it: List<CustomerDataModel>) {
         recyclerViewCustomer.adapter = CustomerListAdapter(it) {
-            startActivity(Intent(this, CustomerServiceActivity::class.java))
+            val bundle = Bundle()
+            bundle.putParcelable("customerDataModel", Parcels.wrap(it))
+            startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
         }
     }
 }

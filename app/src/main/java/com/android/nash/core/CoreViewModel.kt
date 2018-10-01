@@ -12,7 +12,7 @@ import com.google.firebase.database.*
 
 open class CoreViewModel : ViewModel() {
     internal val user: MutableLiveData<FirebaseUser> = MutableLiveData()
-    private val userDataModel: MutableLiveData<UserDataModel> = MutableLiveData()
+    private val userDataModelLiveData: MutableLiveData<UserDataModel> = MutableLiveData()
     internal val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     internal var mDatabaseReference: DatabaseReference
@@ -23,7 +23,9 @@ open class CoreViewModel : ViewModel() {
         if (loggedInUser != null) {
             val disposable = RxFirebaseDatabase.data(mDatabaseReference.child(loggedInUser.uid)).subscribe({
                 if (it.exists()) {
-                    userDataModel.value = it.getValue(UserDataModel::class.java)
+                    val userDataModel = it.getValue(UserDataModel::class.java)
+                    userDataModel!!.locationUUID = "-LMgdupDuqrLEdAXvBoY"
+                    userDataModelLiveData.value = userDataModel
                 }
             }) {
 
@@ -37,6 +39,6 @@ open class CoreViewModel : ViewModel() {
     }
 
     fun getUserDataModel():LiveData<UserDataModel> {
-        return userDataModel
+        return userDataModelLiveData
     }
 }

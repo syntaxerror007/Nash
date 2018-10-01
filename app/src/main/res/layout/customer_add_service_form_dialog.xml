@@ -27,8 +27,23 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
-        android:id="@+id/editTextServiceName"
+        android:id="@+id/editTextServiceGroupName"
         app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:paddingLeft="@dimen/common_dp_8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:background="@drawable/white_background_with_default_border"
+        app:ShowBorders="true"
+        app:RevealEmptyText="Service Group Name" />
+
+    <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+        android:id="@+id/editTextServiceName"
+        app:layout_constraintTop_toBottomOf="@id/editTextServiceGroupName"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="@dimen/common_dp_16"
@@ -41,38 +56,9 @@
         app:ShowBorders="true"
         app:RevealEmptyText="Service Name" />
 
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/inputLayoutPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_dp_8"
-        android:paddingLeft="@dimen/common_dp_16"
-        android:paddingRight="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_32"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/Guideline3"
-        app:layout_constraintTop_toBottomOf="@id/editTextServiceName">
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/editTextPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_dp_8"
-            android:hint="Price" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/Guideline3"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutServiceName" />
-
     <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
         android:id="@+id/editTextTherapist"
-        app:layout_constraintLeft_toRightOf="@id/Guideline3"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextServiceName"
         app:layout_constrainedWidth="true"
@@ -85,6 +71,26 @@
         android:background="@drawable/white_background_with_default_border"
         app:ShowBorders="true"
         app:RevealEmptyText="Therapist Name" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/inputLayoutPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:paddingLeft="@dimen/common_dp_16"
+        android:paddingRight="@dimen/common_dp_16"
+        android:paddingBottom="@dimen/common_dp_32"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextTherapist">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editTextPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:hint="Price" />
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:id="@+id/divider"
@@ -102,6 +108,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:text="@string/text_button_cancel"
         android:textAllCaps="true"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/frameLayoutButton"
         app:layout_constraintTop_toBottomOf="@id/divider" />
@@ -123,6 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_button_register"
+            android:textColor="@color/white"
             android:textAllCaps="true" />
 
         <ProgressBar

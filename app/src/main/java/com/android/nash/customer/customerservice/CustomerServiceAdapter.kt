@@ -20,9 +20,9 @@ class CustomerServiceAdapter(val list : List<CustomerServiceDataModel>) : Recycl
     class CustomerServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(customerServiceDataModel: CustomerServiceDataModel) = with(itemView) {
             textViewCustomerServiceDate.text = customerServiceDataModel.treatmentDate.convertToString()
-            textViewCustomerServiceName.text = customerServiceDataModel.service.serviceName
+            textViewCustomerServiceName.text = customerServiceDataModel.serviceName
             textViewCustomerServicePrice.text = customerServiceDataModel.price.convertToPrice()
-            textViewCustomerServiceTherapist.text = customerServiceDataModel.therapist.therapistName
+            textViewCustomerServiceTherapist.text = customerServiceDataModel.therapistName
             checkBoxCustomerServiceReminder.isChecked = customerServiceDataModel.hasReminded
             checkBoxCustomerServiceReminder.isClickable = false
         }

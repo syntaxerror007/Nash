@@ -2,7 +2,6 @@ package com.android.nash.user.register
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import com.android.nash.R
 import com.android.nash.core.dialog.CoreDialog
 import com.android.nash.data.UserDataModel
@@ -18,7 +17,7 @@ class UserRegisterDialog(context: Context, userCallback: UserRegisterCallback) :
 
     private fun registerUser() {
         if (verifyUserInput()) {
-            userRegisterCallback.onUserCreated(UserDataModel(username = editTextUsername.text.toString()), editTextPassword.text.toString())
+            userRegisterCallback.onUserCreated(UserDataModel(username = editTextUsername.text.toString(), locationUUID = "-LMgdupDuqrLEdAXvBoY"), editTextPassword.text.toString())
             dismiss()
         }
     }

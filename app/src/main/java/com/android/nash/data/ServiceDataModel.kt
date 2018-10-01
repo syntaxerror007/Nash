@@ -31,6 +31,10 @@ data class ServiceDataModel(var uuid: String = "", var serviceName: String = "",
         }
     }
 
+    override fun toString(): String {
+        return serviceName
+    }
+
     override fun describeContents(): Int {
         return 0
     }
