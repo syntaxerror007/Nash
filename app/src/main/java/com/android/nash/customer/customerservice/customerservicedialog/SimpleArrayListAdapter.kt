@@ -26,7 +26,7 @@ class SimpleArrayListAdapter<T>(private val mContext: Context, private var mData
 
     override fun getItemId(position: Int): Long {
         return if (position > 0)
-            mData[position]!!.hashCode().toLong()
+            mData[position - 1]!!.hashCode().toLong()
         else
             -1
     }

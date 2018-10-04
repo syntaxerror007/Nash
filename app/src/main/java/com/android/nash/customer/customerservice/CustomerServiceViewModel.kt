@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerServiceDialogFormData
 import com.android.nash.data.*
+import com.android.nash.provider.CustomerServiceProvider
 import com.android.nash.provider.LocationProvider
 import com.android.nash.provider.ServiceProvider
 import com.android.nash.provider.TherapistProvider
@@ -18,9 +19,11 @@ class CustomerServiceViewModel : CoreViewModel() {
     private val isLoading = MutableLiveData<Boolean>()
     private val therapistsLiveData = MutableLiveData<List<TherapistDataModel>>()
     private val serviceGroupsLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
+    private val totalServicePriceLiveData = MutableLiveData<Int>()
 
     private val mLocationProvider = LocationProvider()
     private val mTherapistProvider = TherapistProvider()
+    private val mCustomerServiceProvider = CustomerServiceProvider()
 
     fun getCustomerServiceLiveData(): LiveData<List<CustomerServiceDataModel>> = customerServiceLiveData
     fun getCustomerLiveData(): LiveData<CustomerDataModel> = customerLiveData
@@ -28,8 +31,7 @@ class CustomerServiceViewModel : CoreViewModel() {
     fun isLoading(): LiveData<Boolean> = isLoading
     fun getServiceGroups(): LiveData<List<ServiceGroupDataModel>> = serviceGroupsLiveData
     fun getTherapistLiveData(): LiveData<List<TherapistDataModel>> = therapistsLiveData
-    fun getTherapist(serviceUUID: String): List<TherapistDataModel>? =
-            therapistsLiveData.value?.asSequence()?.filter { therapistDataModel -> therapistDataModel.assignmentSet.contains(serviceUUID) }?.toList()
+    fun getTotalServicePriceLiveData(): LiveData<Int> = totalServicePriceLiveData
 
     fun setCustomerDataModel(customerDataModel: CustomerDataModel) {
         customerLiveData.value = customerDataModel
@@ -41,12 +43,18 @@ class CustomerServiceViewModel : CoreViewModel() {
 
     fun addNewService(customerServiceDataModel: CustomerServiceDataModel) {
         isLoading.value = true
+
+        val disposable = mCustomerServiceProvider.insertCustomerService(customerServiceDataModel).doOnComplete {
+            isLoading.value = false
+            isAddServiceSuccess.value = true
+        }.subscribe()
     }
 
     fun getFormData(): CustomerServiceDialogFormData {
         val customerServiceDialogFormData = CustomerServiceDialogFormData()
         customerServiceDialogFormData.servicesGroups = serviceGroupsLiveData.value
         customerServiceDialogFormData.therapists = therapistsLiveData.value
+        customerServiceDialogFormData.customerUUID = customerLiveData.value?.uuid
         return customerServiceDialogFormData
     }
 
@@ -76,6 +84,16 @@ class CustomerServiceViewModel : CoreViewModel() {
 
     fun setLoading(isLoading: Boolean) {
         this.isLoading.value = isLoading
+    }
+
+    fun getCustomerServices() {
+        val disposable = mCustomerServiceProvider.getCustomerService(customerLiveData.value?.uuid).doOnNext {
+            customerServiceLiveData.value = it
+        }.subscribe({
+            totalServicePriceLiveData.value = it.sumBy { it.price.toInt() }
+        }) {
+            it.printStackTrace()
+        }
     }
 
 }

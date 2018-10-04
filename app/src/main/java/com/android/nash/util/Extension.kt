@@ -45,11 +45,21 @@ fun NashDate.convertToString(): String {
     return formatter.format(calendar.time)
 }
 
+fun Calendar.toNashDate(): NashDate {
+    return NashDate(
+            this.get(Calendar.DAY_OF_MONTH),
+            this.get(Calendar.MONTH),
+            this.get(Calendar.YEAR),
+            this.get(Calendar.HOUR),
+            this.get(Calendar.MINUTE))
+}
+
 fun AppCompatActivity.dismissKeyboard() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     if (imm.isAcceptingText)
         imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
 }
+
 fun Dialog.dismissKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     if (imm.isAcceptingText)
@@ -68,7 +78,15 @@ fun Long.convertToPrice(): String {
     val symbol = DecimalFormatSymbols()
     symbol.decimalSeparator = ','
     symbol.groupingSeparator = '.'
-    val decimalFormat =  DecimalFormat("#,###.###", symbol)
+    val decimalFormat = DecimalFormat("#,###.###", symbol)
+    return "Rp. ${decimalFormat.format(this)}"
+}
+
+fun Int.convertToPrice(): String {
+    val symbol = DecimalFormatSymbols()
+    symbol.decimalSeparator = ','
+    symbol.groupingSeparator = '.'
+    val decimalFormat = DecimalFormat("#,###.###", symbol)
     return "Rp. ${decimalFormat.format(this)}"
 }
 

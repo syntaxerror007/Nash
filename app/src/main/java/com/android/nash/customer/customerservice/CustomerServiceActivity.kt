@@ -8,7 +8,9 @@ import com.android.nash.R
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormDialog
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormListener
 import com.android.nash.data.CustomerServiceDataModel
+import com.android.nash.util.convertToPrice
 import kotlinx.android.synthetic.main.customer_service_activity.*
+import kotlinx.android.synthetic.main.layout_service_customer_footer.*
 import org.parceler.Parcels
 
 class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), CustomerAddServiceFormListener {
@@ -74,8 +76,16 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
         })
 
         getViewModel().getUserDataModel().observe(this, Observer {
-            if (it != null)
+            if (it != null) {
                 getViewModel().initData()
+                getViewModel().getCustomerServices()
+            }
+        })
+
+        getViewModel().getTotalServicePriceLiveData().observe(this, Observer {
+            if (it != null) {
+                textViewTotalValue.text = it.convertToPrice()
+            }
         })
     }
 
@@ -96,10 +106,5 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
     override fun onCancel() {
         if (addServiceDialog.isShowing)
             addServiceDialog.dismiss()
-    }
-
-    override fun onServiceSelected(serviceUUID: String) {
-        if (addServiceDialog.isShowing)
-            addServiceDialog.setTherapistData(getViewModel().getTherapist(serviceUUID))
     }
 }

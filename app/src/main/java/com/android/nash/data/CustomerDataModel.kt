@@ -3,7 +3,7 @@ package com.android.nash.data
 import com.google.firebase.database.Exclude
 import org.parceler.Parcel
 
-@Parcel
+@Parcel(value = Parcel.Serialization.BEAN)
 data class CustomerDataModel(
         var uuid: String = "",
         var customerName: String = "",

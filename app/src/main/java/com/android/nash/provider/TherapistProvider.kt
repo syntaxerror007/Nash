@@ -45,7 +45,7 @@ class TherapistProvider {
                 .toList()
     }
 
-    private fun getTherapist(therapistUUID: String): Single<TherapistDataModel> {
+    fun getTherapist(therapistUUID: String): Single<TherapistDataModel> {
         return RxFirebaseDatabase.data(mTherapistReference.child(therapistUUID)).map {
             it.getValue(TherapistDataModel::class.java)
         }

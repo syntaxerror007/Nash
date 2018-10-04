@@ -15,8 +15,6 @@ import io.reactivex.Observable
 class CustomerProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mCustomerDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_DB)
-    private val mCustomerServiceDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_SERVICE_DB)
-    private val mServiceTransactionDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(SERVICE_TRANSACTION_DB)
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
 
@@ -41,20 +39,6 @@ class CustomerProvider {
         return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerName").startAt("%$inputtedText%").endAt("$inputtedText\uf8ff")).flatMapObservable {
             if (it.exists())
                 Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) })
-            else
-                Observable.just(listOf())
-        }
-    }
-
-    fun insertCustomerService(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
-        uuid = getKey(mServiceTransactionDatabaseRef)
-        return RxFirebaseDatabase.setValue(mCustomerServiceDatabaseRef.child(customerUUID).child(uuid), customerServiceDataModel)
-    }
-
-    fun getCustomerService(customerUUID: String): Observable<List<CustomerServiceDataModel>> {
-        return RxFirebaseDatabase.data(mCustomerServiceDatabaseRef.child(customerUUID)).flatMapObservable {
-            if (it.exists())
-                Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
             else
                 Observable.just(listOf())
         }

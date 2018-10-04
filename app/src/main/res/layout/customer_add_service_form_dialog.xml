@@ -4,17 +4,19 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="300dp"
     android:layout_marginBottom="@dimen/common_dp_8">
 
     <TextView
         android:id="@+id/dialogTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/common_dp_16"
         android:paddingTop="@dimen/common_dp_8"
         android:text="@string/text_customer_add_service_title"
         android:textSize="20sp"
-        app:layout_constraintRight_toLeftOf="@+id/buttonClose" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/buttonClose"
@@ -51,6 +53,7 @@
         android:paddingLeft="@dimen/common_dp_8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/common_dp_8"
         android:background="@drawable/white_background_with_default_border"
         app:ShowBorders="true"
@@ -68,6 +71,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:layout_marginLeft="@dimen/common_dp_16"
         android:layout_marginTop="@dimen/common_dp_8"
+        android:visibility="gone"
         android:background="@drawable/white_background_with_default_border"
         app:ShowBorders="true"
         app:RevealEmptyText="Therapist Name" />
@@ -80,6 +84,7 @@
         android:paddingLeft="@dimen/common_dp_16"
         android:paddingRight="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_32"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextTherapist">
