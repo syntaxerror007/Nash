@@ -37,10 +37,18 @@ class CustomerReminderActivity : CoreActivity<CustomerReminderViewModel>() {
                 hideLoadingDialog()
             }
         })
+
+        getViewModel().isDataChanged().observe(this, Observer {
+            if (it != null && it) {
+                getViewModel().getToRemindCustomer(System.currentTimeMillis())
+            }
+        })
     }
 
 
     private fun observeCustomerService(it: List<CustomerServiceDataModel>) {
-        recyclerViewService.adapter = CustomerReminderAdapter(it)
+        recyclerViewService.adapter = CustomerReminderAdapter(it) { customerServiceDataModel, isChecked ->
+            getViewModel().setCustomerHasReminded(customerServiceDataModel, isChecked)
+        }
     }
 }

@@ -17,6 +17,7 @@ data class CustomerServiceDataModel(
         @get:Exclude var serviceGroup: ServiceGroupDataModel = ServiceGroupDataModel(),
         @get:Exclude var service: ServiceDataModel = ServiceDataModel(),
         @get:Exclude var therapist: TherapistDataModel = TherapistDataModel(),
+        @get:Exclude var customerDataModel: CustomerDataModel = CustomerDataModel(),
         var price: Long = 0,
         var hasReminded: Boolean = false
 )

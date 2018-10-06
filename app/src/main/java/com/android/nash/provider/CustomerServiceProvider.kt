@@ -1,9 +1,6 @@
 package com.android.nash.provider
 
-import com.android.nash.data.CustomerServiceDataModel
-import com.android.nash.data.ServiceDataModel
-import com.android.nash.data.ServiceGroupDataModel
-import com.android.nash.data.TherapistDataModel
+import com.android.nash.data.*
 import com.android.nash.util.CUSTOMER_SERVICE_DB
 import com.android.nash.util.SERVICE_TRANSACTION_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
@@ -11,6 +8,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function4
 
 class CustomerServiceProvider {
@@ -19,6 +17,7 @@ class CustomerServiceProvider {
     private val mServiceTransactionDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(SERVICE_TRANSACTION_DB)
     private val mServiceProvider = ServiceProvider()
     private val mTherapistProvider = TherapistProvider()
+    private val mCustomerProvider = CustomerProvider()
 
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
@@ -65,6 +64,13 @@ class CustomerServiceProvider {
             }
         }.flatMapIterable { it }
                 .flatMap {
+                    Observable.zip(Observable.just(it), mCustomerProvider.getCustomerByUUID(it.customerUUID),
+                            BiFunction { customerServiceDataModel: CustomerServiceDataModel, customerDataModel: CustomerDataModel ->
+                                customerServiceDataModel.customerDataModel = customerDataModel
+                                customerServiceDataModel
+                            })
+                }
+                .flatMap {
                     it.therapist = findTherapist(therapists, it)!!
                     it.serviceGroup = findServiceGroup(serviceGroups, it)!!
                     it.service = findService(it)!!
@@ -89,5 +95,9 @@ class CustomerServiceProvider {
         return serviceGroups.find { serviceGroupDataModel ->
             it.serviceGroupUUID == serviceGroupDataModel.uuid
         }
+    }
+
+    fun setCustomerHasReminded(customerServiceDataModel: CustomerServiceDataModel, checked: Boolean): Completable {
+        return RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID).child(customerServiceDataModel.uuid).child("hasReminded"), (checked))
     }
 }

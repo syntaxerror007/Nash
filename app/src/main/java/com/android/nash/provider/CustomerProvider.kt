@@ -19,6 +19,12 @@ class CustomerProvider {
         return RxFirebaseDatabase.setValue(mCustomerDatabaseRef.child(uuid), customerDataModel)
     }
 
+    fun getCustomerByUUID(uuid: String): Observable<CustomerDataModel> =
+            RxFirebaseDatabase.data(mCustomerDatabaseRef.child(uuid))
+                    .flatMapObservable {
+                        Observable.just(it.getValue(CustomerDataModel::class.java))
+                    }
+
     fun updateCustomer(customerDataModel: CustomerDataModel): Completable = with(customerDataModel) {
         val oldUUID = uuid
         customerDataModel.uuid = getKey(mCustomerDatabaseRef)

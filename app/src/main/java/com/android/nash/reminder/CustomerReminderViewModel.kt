@@ -17,6 +17,7 @@ class CustomerReminderViewModel : CoreViewModel() {
     private val serviceGroupsLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
     private val customerServiceLiveData = MutableLiveData<List<CustomerServiceDataModel>>()
     private val isLoading = MutableLiveData<Boolean>()
+    private val isDataChanged = MutableLiveData<Boolean>()
 
     private val mCustomerServiceProvider = CustomerServiceProvider()
     private val mLocationProvider = LocationProvider()
@@ -25,8 +26,7 @@ class CustomerReminderViewModel : CoreViewModel() {
 
     fun getCustomerServiceLiveData(): LiveData<List<CustomerServiceDataModel>> = customerServiceLiveData
     fun isLoading(): LiveData<Boolean> = isLoading
-    fun getServiceGroups(): LiveData<List<ServiceGroupDataModel>> = serviceGroupsLiveData
-    fun getTherapistLiveData(): LiveData<List<TherapistDataModel>> = therapistsLiveData
+    fun isDataChanged(): LiveData<Boolean> = isDataChanged
 
 
     fun getToRemindCustomer(currentTimestamp: Long) {
@@ -61,5 +61,13 @@ class CustomerReminderViewModel : CoreViewModel() {
         if (getUserDataModel().value != null)
             return mTherapistProvider.getTherapistFromLocation(getUserDataModel().value!!.locationUUID).toObservable()
         return Observable.just(mutableListOf())
+    }
+
+    fun setCustomerHasReminded(customerServiceDataModel: CustomerServiceDataModel, checked: Boolean) {
+        isLoading.value = true
+        val disposableCompletableObserver = mCustomerServiceProvider.setCustomerHasReminded(customerServiceDataModel, checked).doOnComplete {
+            isLoading.value = false
+            isDataChanged.value = true
+        }.subscribe()
     }
 }

@@ -112,17 +112,17 @@ class CustomerAddServiceFormDialog(context: Context) : CoreDialog<CustomerAddSer
                 mListener.onSubmit(CustomerServiceDataModel(
                         customerUUID = if (getViewModel().customerUUID != null) getViewModel().customerUUID!! else "",
                         locationUUID = getViewModel().locationUUID!!,
-                        therapist = selectedTherapist,
-                        service = selectedService,
-                        serviceUUID = selectedService.uuid,
-                        serviceGroup = selectedServiceGroup,
                         serviceGroupUUID = selectedServiceGroup.uuid,
+                        serviceUUID = selectedService.uuid,
                         therapistUUID = selectedTherapist.uuid,
-                        price = price,
                         treatmentDate = treatmentDate,
                         toRemindDate = toRemindDate,
-                        toRemindDateTimestamp = toRemindCalendar.time.time
-                        ))
+                        toRemindDateTimestamp = toRemindCalendar.time.time,
+                        serviceGroup = selectedServiceGroup,
+                        service = selectedService,
+                        therapist = selectedTherapist,
+                        price = price
+                ))
             }
         }
     }
