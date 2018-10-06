@@ -20,14 +20,11 @@ class CustomerServiceProvider {
     private val mServiceProvider = ServiceProvider()
     private val mTherapistProvider = TherapistProvider()
 
+
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
     fun insertCustomerTransaction(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
         uuid = getKey(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID))
         RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID).child(uuid), customerServiceDataModel)
-    }
-
-    fun insertCustomerService(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
-        RxFirebaseDatabase.setValue(mCustomerServiceDatabaseRef.child(customerUUID).child(uuid), customerServiceDataModel)
     }
 
     fun getCustomerService(customerUUID: String?, locationUUID: String?): Observable<List<CustomerServiceDataModel>> =
@@ -59,13 +56,38 @@ class CustomerServiceProvider {
                 Observable.just(listOf())
             }
 
-    fun getCustomerServiceToRemind(timestamp: Long, locationUUID: String): Observable<List<CustomerServiceDataModel>> {
+    fun getCustomerServiceToRemind(timestamp: Long, locationUUID: String, therapists: List<TherapistDataModel>, serviceGroups: List<ServiceGroupDataModel>): Observable<List<CustomerServiceDataModel>> {
         return RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID).orderByChild("toRemindDateTimestamp").endAt(timestamp.toDouble())).flatMapObservable {
             if (it.exists()) {
                 return@flatMapObservable Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
             } else {
                 return@flatMapObservable Observable.just(listOf<CustomerServiceDataModel>())
             }
+        }.flatMapIterable { it }
+                .flatMap {
+                    it.therapist = findTherapist(therapists, it)!!
+                    it.serviceGroup = findServiceGroup(serviceGroups, it)!!
+                    it.service = findService(it)!!
+                    Observable.just(it)
+                }.toList().toObservable()
+
+    }
+
+    private fun findService(it: CustomerServiceDataModel): ServiceDataModel? {
+        return it.serviceGroup.services.find { serviceDataModel ->
+            it.serviceUUID == serviceDataModel.uuid
+        }
+    }
+
+    private fun findTherapist(therapists: List<TherapistDataModel>, it: CustomerServiceDataModel): TherapistDataModel? {
+        return therapists.find { therapistDataModel ->
+            it.therapistUUID == therapistDataModel.uuid
+        }
+    }
+
+    private fun findServiceGroup(serviceGroups: List<ServiceGroupDataModel>, it: CustomerServiceDataModel): ServiceGroupDataModel? {
+        return serviceGroups.find { serviceGroupDataModel ->
+            it.serviceGroupUUID == serviceGroupDataModel.uuid
         }
     }
 }

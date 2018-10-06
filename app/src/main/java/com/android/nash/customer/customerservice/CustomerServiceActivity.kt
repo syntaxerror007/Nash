@@ -92,7 +92,6 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
         })
     }
 
-
     private fun observeCustomerService(it: List<CustomerServiceDataModel>) {
         recyclerViewService.adapter = CustomerServiceAdapter(it)
     }
