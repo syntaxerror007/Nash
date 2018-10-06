@@ -21,6 +21,7 @@ data class CustomerDataModel(
         var hadSurgeryInfo: String = "",
         var knowNashFrom: String = "",
         var knowNashFromInfo: String = "",
+        var customerLowerCase: String = "",
         @get:Exclude var services:List<ServiceDataModel> = listOf(),
         @get:Exclude var isNeedToBeReminded: Boolean = false
 )

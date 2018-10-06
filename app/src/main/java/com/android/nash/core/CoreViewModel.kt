@@ -8,7 +8,9 @@ import com.android.nash.util.USER_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.jakewharton.rxrelay2.PublishRelay
 
 open class CoreViewModel : ViewModel() {
     internal val user: MutableLiveData<FirebaseUser> = MutableLiveData()
@@ -16,6 +18,8 @@ open class CoreViewModel : ViewModel() {
     internal val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     internal var mDatabaseReference: DatabaseReference
+    internal val autoCompletePublishSubject = PublishRelay.create<String>()
+
     init {
         val loggedInUser = mAuth.currentUser
         user.value = loggedInUser
@@ -40,5 +44,9 @@ open class CoreViewModel : ViewModel() {
 
     fun getUserDataModel():LiveData<UserDataModel> {
         return userDataModelLiveData
+    }
+
+    fun onSearchFormTextChanged(s: String) {
+        autoCompletePublishSubject.accept(s.trim())
     }
 }

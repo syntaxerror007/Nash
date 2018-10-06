@@ -3,8 +3,8 @@ package com.android.nash.customer.customerservice
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import com.android.nash.core.activity.CoreActivity
 import com.android.nash.R
+import com.android.nash.core.activity.CoreActivity
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormDialog
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormListener
 import com.android.nash.data.CustomerServiceDataModel
@@ -57,8 +57,11 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
         })
 
         getViewModel().isAddServiceSuccess().observe(this, Observer {
-            if (addServiceDialog.isShowing)
-                addServiceDialog.dismiss()
+            if (it != null && it) {
+                if (addServiceDialog.isShowing)
+                    addServiceDialog.dismiss()
+                getViewModel().getCustomerServices()
+            }
         })
 
         getViewModel().getServiceGroups().observe(this, Observer {

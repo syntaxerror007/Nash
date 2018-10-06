@@ -6,21 +6,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
-import com.android.nash.core.CoreViewModel
-import com.android.nash.login.LoginActivity
-import com.google.firebase.auth.FirebaseUser
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import com.android.nash.R
+import com.android.nash.core.CoreViewModel
 import com.android.nash.core.loading_dialog.LoadingDialog
 import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
-import com.android.nash.location.register.RegisterLocationActivity
+import com.android.nash.login.LoginActivity
 import com.android.nash.service.ServiceListActivity
 import com.android.nash.util.setVisible
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.core_activity.*
 
 
@@ -94,6 +97,33 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         mDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
         setBackEnabled(false)
         setDrawerItemClickListener()
+
+        editTextSearch.setOnTouchListener(OnTouchListener { _, event ->
+            val DRAWABLE_RIGHT = 2
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (event.rawX >= editTextSearch.right - editTextSearch.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+                    hideSearchForm()
+                    return@OnTouchListener true
+                }
+            }
+            false
+        })
+
+        editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable) {
+                getViewModel().onSearchFormTextChanged(editTextSearch.text.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+        })
 
         drawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
@@ -188,5 +218,21 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+
+    fun showSearchForm() {
+        editTextSearch.setVisible(true)
+        hidePrimaryButton()
+    }
+
+    private fun hidePrimaryButton() {
+        imageViewPrimaryButton.setVisible(false)
+    }
+
+    fun hideSearchForm() {
+        editTextSearch.setVisible(false)
+        editTextSearch.text = null
+        showPrimaryButton()
     }
 }

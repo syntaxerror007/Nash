@@ -4,8 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import com.android.nash.core.activity.CoreActivity
 import com.android.nash.R
+import com.android.nash.core.activity.CoreActivity
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
 import kotlinx.android.synthetic.main.customer_list_activity.*
@@ -17,7 +17,13 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.customer_list_activity)
+        title = "Customer"
+        hideSearchForm()
+        setPrimaryButtonClick {
+            showSearchForm()
+        }
         observeLiveData()
+        getViewModel().listenOnTextChanged()
         getViewModel().getAllCustomer()
     }
 

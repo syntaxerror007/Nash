@@ -5,15 +5,15 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.widget.Toast
-import com.android.nash.core.activity.CoreActivity
 import com.android.nash.R
+import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.yesnocheckbox.MultiCheckCheckGroupData
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.data.NashDate
 import com.android.nash.util.DateUtil
 import com.android.nash.util.convertToString
 import kotlinx.android.synthetic.main.customer_new_form_activity.*
-import java.util.Calendar
+import java.util.*
 
 class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
     override fun onCreateViewModel(): CustomerNewFormViewModel = ViewModelProviders.of(this).get(CustomerNewFormViewModel::class.java)
@@ -86,6 +86,7 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         }
 
         customerDataModel.customerName = editTextCustomerName.text.toString()
+        customerDataModel.customerLowerCase = editTextCustomerName.text.toString().toLowerCase()
         customerDataModel.customerDateOfBirth = DateUtil.convertShownDateToNashDate(editTextBirthDate.text.toString())
         customerDataModel.customerAddress = editTextAddress.text.toString()
         customerDataModel.customerEmail = editTextEmail.text.toString()

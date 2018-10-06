@@ -7,10 +7,10 @@ import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.customer.customersearch.CustomerListActivity
-import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.customer.newcustomer.CustomerNewFormActivity
 import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
+import com.android.nash.reminder.CustomerReminderActivity
 import kotlinx.android.synthetic.main.home_activity.*
 
 class HomeActivity : CoreActivity<HomeViewModel>() {
@@ -34,7 +34,7 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
     }
 
     private fun gotoReminder() {
-
+        startActivity(Intent(this, CustomerReminderActivity::class.java))
     }
 
     private fun gotoNewCustomer() {

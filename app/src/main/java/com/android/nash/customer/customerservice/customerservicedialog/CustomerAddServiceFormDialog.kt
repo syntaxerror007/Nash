@@ -3,8 +3,8 @@ package com.android.nash.customer.customerservice.customerservicedialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.android.nash.core.dialog.CoreDialog
 import com.android.nash.R
+import com.android.nash.core.dialog.CoreDialog
 import com.android.nash.data.CustomerServiceDataModel
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
@@ -105,7 +105,8 @@ class CustomerAddServiceFormDialog(context: Context) : CoreDialog<CustomerAddSer
                 val price = editTextPrice.text.toString().toLong()
                 val treatmentDate = Calendar.getInstance().toNashDate()
                 val toRemindCalendar = Calendar.getInstance()
-                toRemindCalendar.add(Calendar.DAY_OF_MONTH, selectedService.reminder)
+                toRemindCalendar.set(Calendar.DAY_OF_MONTH, 7)
+//                toRemindCalendar.add(Calendar.DAY_OF_MONTH, selectedService.reminder)
                 val toRemindDate = toRemindCalendar.toNashDate()
 
                 mListener.onSubmit(CustomerServiceDataModel(
@@ -119,7 +120,8 @@ class CustomerAddServiceFormDialog(context: Context) : CoreDialog<CustomerAddSer
                         therapistUUID = selectedTherapist.uuid,
                         price = price,
                         treatmentDate = treatmentDate,
-                        toRemindDate = toRemindDate
+                        toRemindDate = toRemindDate,
+                        toRemindDateTimestamp = toRemindCalendar.time.time
                         ))
             }
         }

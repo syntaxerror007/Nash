@@ -1,12 +1,8 @@
 package com.android.nash.provider
 
 import com.android.nash.data.CustomerDataModel
-import com.android.nash.data.CustomerServiceDataModel
 import com.android.nash.util.CUSTOMER_DB
-import com.android.nash.util.CUSTOMER_SERVICE_DB
-import com.android.nash.util.SERVICE_TRANSACTION_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
-import com.facebook.stetho.inspector.protocol.module.Database
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Completable
@@ -36,7 +32,7 @@ class CustomerProvider {
     }
 
     fun searchCustomer(inputtedText: String): Observable<List<CustomerDataModel>> {
-        return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerName").startAt("%$inputtedText%").endAt("$inputtedText\uf8ff")).flatMapObservable {
+        return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerLowerCase").startAt(inputtedText.toLowerCase()).endAt("${inputtedText.toLowerCase()}\uf8ff")).flatMapObservable {
             if (it.exists())
                 Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) })
             else

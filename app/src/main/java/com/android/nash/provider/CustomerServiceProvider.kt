@@ -5,9 +5,7 @@ import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.data.TherapistDataModel
 import com.android.nash.util.CUSTOMER_SERVICE_DB
-import com.android.nash.util.LOCATION_THERAPIST_DB
 import com.android.nash.util.SERVICE_TRANSACTION_DB
-import com.android.nash.util.THERAPIST_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -23,14 +21,18 @@ class CustomerServiceProvider {
     private val mTherapistProvider = TherapistProvider()
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
-    fun insertCustomerService(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
-        uuid = getKey(mCustomerServiceDatabaseRef.child(customerUUID))
-        return RxFirebaseDatabase.setValue(mCustomerServiceDatabaseRef.child(customerUUID).child(uuid), customerServiceDataModel)
+    fun insertCustomerTransaction(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
+        uuid = getKey(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID))
+        RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID).child(uuid), customerServiceDataModel)
     }
 
-    fun getCustomerService(customerUUID: String?): Observable<List<CustomerServiceDataModel>> =
+    fun insertCustomerService(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
+        RxFirebaseDatabase.setValue(mCustomerServiceDatabaseRef.child(customerUUID).child(uuid), customerServiceDataModel)
+    }
+
+    fun getCustomerService(customerUUID: String?, locationUUID: String?): Observable<List<CustomerServiceDataModel>> =
             if (customerUUID != null) {
-                RxFirebaseDatabase.data(mCustomerServiceDatabaseRef.child(customerUUID)).flatMapObservable {
+                RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID!!).orderByChild("customerUUID").equalTo(customerUUID)).flatMapObservable {
                     if (it.exists())
                         Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
                     else
@@ -57,4 +59,13 @@ class CustomerServiceProvider {
                 Observable.just(listOf())
             }
 
+    fun getCustomerServiceToRemind(timestamp: Long, locationUUID: String): Observable<List<CustomerServiceDataModel>> {
+        return RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID).orderByChild("toRemindDateTimestamp").endAt(timestamp.toDouble())).flatMapObservable {
+            if (it.exists()) {
+                return@flatMapObservable Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
+            } else {
+                return@flatMapObservable Observable.just(listOf<CustomerServiceDataModel>())
+            }
+        }
+    }
 }

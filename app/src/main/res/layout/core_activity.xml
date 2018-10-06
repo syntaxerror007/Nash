@@ -44,11 +44,26 @@
                     android:paddingRight="@dimen/common_dp_16"
                     android:layout_marginRight="@dimen/common_dp_16"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:background="@drawable/white_background_with_default_border"
                     android:visibility="gone"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="@dimen/common_dp_8"
+                    android:paddingRight="@dimen/common_dp_8"
+                    android:paddingTop="@dimen/common_dp_4"
+                    android:paddingBottom="@dimen/common_dp_4"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="@dimen/common_dp_16"
+                    android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+                    android:visibility="gone"
+                    tools:text="test test" />
 
                 <ImageView
                     android:id="@+id/imageViewPrimaryButton"
