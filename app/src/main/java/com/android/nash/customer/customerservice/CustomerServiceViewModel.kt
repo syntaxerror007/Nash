@@ -39,10 +39,6 @@ class CustomerServiceViewModel : CoreViewModel() {
         customerLiveData.value = customerDataModel
     }
 
-    fun loadServiceFromCustomer() {
-
-    }
-
     fun addNewService(customerServiceDataModel: CustomerServiceDataModel) {
         isLoading.value = true
 
@@ -71,7 +67,9 @@ class CustomerServiceViewModel : CoreViewModel() {
         val disposable = Observable.zip(getAllTherapist(), getAllServiceGroup(), BiFunction { therapists: List<TherapistDataModel>, serviceGroups: List<ServiceGroupDataModel> ->
             therapistsLiveData.value = therapists
             serviceGroupsLiveData.value = serviceGroups
-        }).subscribe()
+        }).subscribe({}) {
+            it.printStackTrace()
+        }
     }
 
     private fun getAllServiceGroup(): Observable<MutableList<ServiceGroupDataModel>> {

@@ -1,13 +1,16 @@
 package com.android.nash.provider
 
 import com.android.nash.data.*
-import com.android.nash.util.*
+import com.android.nash.util.LOCATION_DB
+import com.android.nash.util.LOCATION_SERVICE_GROUP_DB
+import com.android.nash.util.LOCATION_USER_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 
@@ -18,6 +21,7 @@ class LocationProvider {
     private val mLocationServiceGroupReference = mFirebaseDatabase.getReference(LOCATION_SERVICE_GROUP_DB)
     private val mLocationUserReference = mFirebaseDatabase.getReference(LOCATION_USER_DB)
     private val mTherapistProvider = TherapistProvider()
+    private val mUserProvider = UserProvider()
 
 
     fun getKey(databaseReference: DatabaseReference): String {
@@ -38,6 +42,7 @@ class LocationProvider {
                 insertSelectedServiceGroup(selectedServiceGroupRef, selectedServiceGroup, assignmentTherapistMap)
             }
         }.continueWith {
+            mUserProvider.updateUserLocation(locationDataModel.user.id, locationUUID).subscribe()
             mLocationUserReference.child(locationUUID).child(locationDataModel.user.id).setValue(true)
         }.addOnCompleteListener(onCompleteListener)
     }

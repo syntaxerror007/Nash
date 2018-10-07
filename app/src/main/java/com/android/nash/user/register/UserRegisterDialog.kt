@@ -17,7 +17,7 @@ class UserRegisterDialog(context: Context, userCallback: UserRegisterCallback) :
 
     private fun registerUser() {
         if (verifyUserInput()) {
-            userRegisterCallback.onUserCreated(UserDataModel(username = editTextUsername.text.toString(), locationUUID = "-LMgdupDuqrLEdAXvBoY"), editTextPassword.text.toString())
+            userRegisterCallback.onUserCreated(UserDataModel(username = editTextUsername.text.toString()), editTextPassword.text.toString())
             dismiss()
         }
     }

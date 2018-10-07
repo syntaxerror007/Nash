@@ -1,16 +1,13 @@
 package com.android.nash.provider
 
-import com.android.nash.data.LocationDataModel
 import com.android.nash.data.UserDataModel
-import com.android.nash.util.LOCATION_DB
 import com.android.nash.util.USER_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import io.reactivex.Completable
 import io.reactivex.Observable
-import javax.inject.Inject
 
 class UserProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -32,5 +29,9 @@ class UserProvider {
         return RxFirebaseDatabase.data(mDatabaseReference.child(it)).flatMapObservable {
             return@flatMapObservable Observable.just(it.getValue(UserDataModel::class.java))
         }
+    }
+
+    fun updateUserLocation(userUUID: String, locationUUID: String): Completable {
+        return RxFirebaseDatabase.setValue(mDatabaseReference.child(userUUID).child("locationUUID"), locationUUID)
     }
 }

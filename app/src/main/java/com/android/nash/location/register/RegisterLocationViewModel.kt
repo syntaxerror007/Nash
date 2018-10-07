@@ -247,4 +247,8 @@ class RegisterLocationViewModel : CoreViewModel() {
             serviceGroupListLiveData.value = serviceGroupList
         }
     }
+
+    fun setLoading(isLoading: Boolean) {
+        this.isLoading.value = isLoading
+    }
 }

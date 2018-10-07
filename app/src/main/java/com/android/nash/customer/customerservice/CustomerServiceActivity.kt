@@ -9,6 +9,7 @@ import com.android.nash.customer.customerservice.customerservicedialog.CustomerA
 import com.android.nash.customer.customerservice.customerservicedialog.CustomerAddServiceFormListener
 import com.android.nash.data.CustomerServiceDataModel
 import com.android.nash.util.convertToPrice
+import com.android.nash.util.setVisible
 import kotlinx.android.synthetic.main.customer_service_activity.*
 import kotlinx.android.synthetic.main.layout_service_customer_footer.*
 import org.parceler.Parcels
@@ -38,8 +39,7 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
     private fun observeViewModel() {
         getViewModel().getCustomerLiveData().observe(this, Observer {
             if (it != null) {
-                getViewModel().loadServiceFromCustomer()
-                setCustomerDataToUI()
+                setTitle("${it.customerName} - Services")
             }
         })
 
@@ -93,13 +93,12 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
     }
 
     private fun observeCustomerService(it: List<CustomerServiceDataModel>) {
+        if (it.isEmpty()) {
+            recyclerViewHeader.setVisible(false)
+            recyclerViewFooter.setVisible(false)
+        }
         recyclerViewService.adapter = CustomerServiceAdapter(it)
     }
-
-    private fun setCustomerDataToUI() {
-
-    }
-
 
     override fun onSubmit(customerServiceDataModel: CustomerServiceDataModel) {
         getViewModel().addNewService(customerServiceDataModel)

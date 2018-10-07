@@ -28,7 +28,6 @@ open class CoreViewModel : ViewModel() {
             val disposable = RxFirebaseDatabase.data(mDatabaseReference.child(loggedInUser.uid)).subscribe({
                 if (it.exists()) {
                     val userDataModel = it.getValue(UserDataModel::class.java)
-                    userDataModel!!.locationUUID = "-LNrBWkyvQhlYOSZ3ANT"
                     userDataModelLiveData.value = userDataModel
                 }
             }) {

@@ -14,15 +14,13 @@ import com.android.nash.service.adapter.ServiceItemCallback
 import com.android.nash.service.dialog.list.ServiceListCallback
 import com.android.nash.service.dialog.list.ServiceListDialog
 import com.android.nash.service.form.ServiceCallback
-import com.android.nash.service.form.service.ServiceFormDialog
-import com.android.nash.therapist.register.RegisterTherapistDialog
 import com.android.nash.therapist.TherapistListAdapter
 import com.android.nash.therapist.assignment.TherapistAssignmentCallback
 import com.android.nash.therapist.assignment.TherapistAssignmentDialog
+import com.android.nash.therapist.register.RegisterTherapistDialog
 import com.android.nash.therapist.register.TherapistRegisterCallback
 import com.android.nash.user.register.UserRegisterCallback
 import com.android.nash.user.register.UserRegisterDialog
-import com.android.nash.util.dismissKeyboard
 import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.location_register_activity.*
 import org.parceler.Parcels
@@ -43,10 +41,14 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         if (intent.extras != null) {
             locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
         }
+        getViewModel().setLoading(true)
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
         setToolbarRightButtonVisible(true)
         setToolbarRightButtonText("Save Configuration")
+        getViewModel().getUserDataModel().observe(this, Observer {
+            getViewModel().setLoading(false)
+        })
         setToolbarRightOnClickListener(View.OnClickListener { onToolbarRightButtonClicked() })
         getViewModel().getAllServices()
         initData()
