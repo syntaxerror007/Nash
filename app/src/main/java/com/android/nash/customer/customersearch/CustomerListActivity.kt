@@ -20,9 +20,6 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         setContentView(R.layout.customer_list_activity)
         setTitle("Customer")
         hideSearchForm()
-        button.setOnClickListener {
-            getViewModel().loadMore()
-        }
         setPrimaryButtonClick {
             showSearchForm()
         }
@@ -51,7 +48,7 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
 
         recyclerViewCustomer.addOnScrollListener(object : EndlessOnScrollListener() {
             override fun onLoadMore() {
-//                getViewModel().loadMore()
+                getViewModel().loadMore()
             }
         })
     }
