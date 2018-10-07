@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.core.recyclerview.EndlessOnScrollListener
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
 import kotlinx.android.synthetic.main.customer_list_activity.*
@@ -17,8 +18,11 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.customer_list_activity)
-        title = "Customer"
+        setTitle("Customer")
         hideSearchForm()
+        button.setOnClickListener {
+            getViewModel().loadMore()
+        }
         setPrimaryButtonClick {
             showSearchForm()
         }
@@ -29,6 +33,13 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
 
     private fun observeLiveData() {
         getViewModel().getCustomerLiveData().observe(this, Observer { initRecyclerViewCustomer(it!!) })
+        getViewModel().isLoadingLiveData().observe(this, Observer {
+            if (it != null && it) {
+                showLoadingDialog()
+            } else {
+                hideLoadingDialog()
+            }
+        })
     }
 
     private fun initRecyclerViewCustomer(it: List<CustomerDataModel>) {
@@ -37,5 +48,11 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
             bundle.putParcelable("customerDataModel", Parcels.wrap(it))
             startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
         }
+
+        recyclerViewCustomer.addOnScrollListener(object : EndlessOnScrollListener() {
+            override fun onLoadMore() {
+//                getViewModel().loadMore()
+            }
+        })
     }
 }

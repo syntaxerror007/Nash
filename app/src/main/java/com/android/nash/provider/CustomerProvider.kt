@@ -5,12 +5,14 @@ import com.android.nash.util.CUSTOMER_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import io.reactivex.Completable
 import io.reactivex.Observable
 
 class CustomerProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mCustomerDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_DB)
+    val totalItemPerPage = 50
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
 
@@ -33,12 +35,27 @@ class CustomerProvider {
 
     fun deleteCustomer(uuid: String): Completable = RxFirebaseDatabase.removeValue(mCustomerDatabaseRef.child(uuid))
 
-    fun getAllCustomer(): Observable<List<CustomerDataModel>> {
-        return searchCustomer("")
+    fun getAllCustomer() = getAllCustomer(null)
+
+    fun getAllCustomer(lastLoadedItemUUID: String?): Observable<List<CustomerDataModel>> {
+        val ref: Query = if (lastLoadedItemUUID == null) {
+            mCustomerDatabaseRef.limitToFirst(totalItemPerPage)
+        } else {
+            mCustomerDatabaseRef.orderByChild("uuid").startAt(lastLoadedItemUUID).limitToFirst(totalItemPerPage)
+        }
+        return RxFirebaseDatabase.data(ref).flatMapObservable {
+            if (it.exists()) {
+                val temp = it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) }
+                if (lastLoadedItemUUID != null)
+                    return@flatMapObservable Observable.fromArray(temp.drop(1))
+                Observable.fromArray(temp)
+            } else
+                Observable.just(listOf())
+        }
     }
 
     fun searchCustomer(inputtedText: String): Observable<List<CustomerDataModel>> {
-        return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerLowerCase").startAt(inputtedText.toLowerCase()).endAt("${inputtedText.toLowerCase()}\uf8ff")).flatMapObservable {
+        return RxFirebaseDatabase.data(mCustomerDatabaseRef.orderByChild("customerLowerCase").startAt(inputtedText.toLowerCase()).endAt("${inputtedText.toLowerCase()}\uf8ff").limitToFirst(100)).flatMapObservable {
             if (it.exists())
                 Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) })
             else

@@ -12,16 +12,25 @@ import java.util.concurrent.TimeUnit
 class CustomerListViewModel : CoreViewModel() {
     private val mCustomerProvider = CustomerProvider()
     private val customersLiveData = MutableLiveData<List<CustomerDataModel>>()
-    private var customers = listOf<CustomerDataModel>()
+    private var customers = mutableListOf<CustomerDataModel>()
 
-    fun getCustomerLiveData() : LiveData<List<CustomerDataModel>> {
-        return customersLiveData
-    }
+    private val isLoadingLiveData = MutableLiveData<Boolean>()
+    private val isLoadMore = MutableLiveData<Boolean>()
+    private val isLoadFinish = MutableLiveData<Boolean>()
+
+    private val lastLoadedItem = MutableLiveData<String>()
+
+    fun isLoadingLiveData(): LiveData<Boolean> = isLoadingLiveData
+
+    fun getCustomerLiveData(): LiveData<List<CustomerDataModel>> = customersLiveData
 
     fun getAllCustomer() {
+        isLoadingLiveData.value = true
         val disposable = mCustomerProvider.getAllCustomer().subscribe {
-            customers = it
+            isLoadingLiveData.value = false
+            customers = it.toMutableList()
             customersLiveData.value = customers
+            lastLoadedItem.value = it.last().uuid
         }
     }
 
@@ -29,12 +38,40 @@ class CustomerListViewModel : CoreViewModel() {
         val disposable = autoCompletePublishSubject
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
-                .switchMap { mCustomerProvider.searchCustomer(it) }
+                .switchMap {
+                    if (it.isEmpty()) {
+                        mCustomerProvider.getAllCustomer()
+                    } else {
+                        mCustomerProvider.searchCustomer(it)
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
-                    customers = result
-                    customersLiveData.value = customers
+                    if (result.isNotEmpty()) {
+                        isLoadFinish.value = false
+                        customers = result.toMutableList()
+                        customersLiveData.value = customers
+                        lastLoadedItem.value = result.last().uuid
+                    } else {
+                        isLoadFinish.value = true
+                    }
                 }, { _: Throwable -> })
+    }
+
+    fun loadMore() {
+        isLoadMore.value = true
+        if (isLoadFinish.value == null || isLoadFinish.value!!.not()) {
+            val disposable = mCustomerProvider.getAllCustomer(lastLoadedItem.value).filter { t: List<CustomerDataModel> -> t.isNotEmpty() }.subscribe {
+                if (it.isNotEmpty()) {
+                    isLoadMore.value = false
+                    customers.addAll(it)
+                    customersLiveData.value = customers
+                    lastLoadedItem.value = it.last().uuid
+                } else {
+                    isLoadFinish.value = true
+                }
+            }
+        }
     }
 }
