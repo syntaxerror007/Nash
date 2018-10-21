@@ -13,6 +13,7 @@ data class CustomerServiceDataModel(
         var therapistUUID: String = "",
         var treatmentDate: NashDate = NashDate(),
         val toRemindDate: NashDate = NashDate(),
+        val treatmentDateTimestamp: Long = 0,
         val toRemindDateTimestamp: Long = 0,
         @get:Exclude var serviceGroup: ServiceGroupDataModel = ServiceGroupDataModel(),
         @get:Exclude var service: ServiceDataModel = ServiceDataModel(),

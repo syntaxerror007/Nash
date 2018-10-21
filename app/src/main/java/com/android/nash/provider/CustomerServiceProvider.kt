@@ -28,7 +28,7 @@ class CustomerServiceProvider {
 
     fun getCustomerService(customerUUID: String?, locationUUID: String?): Observable<List<CustomerServiceDataModel>> =
             if (customerUUID != null) {
-                RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID!!).orderByChild("customerUUID").equalTo(customerUUID)).flatMapObservable {
+                RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID!!).orderByChild("treatmentDateTimestamp").equalTo(customerUUID)).flatMapObservable {
                     if (it.exists())
                         Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
                     else

@@ -45,6 +45,15 @@ fun NashDate.convertToString(): String {
     return formatter.format(calendar.time)
 }
 
+
+fun NashDate.convertToCalendar(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.MONTH, this.month - 1)
+    calendar.set(Calendar.DAY_OF_MONTH, this.day)
+    calendar.set(this.year, this.month - 1, this.day, 0, 0)
+    return calendar
+}
+
 fun Calendar.toNashDate(): NashDate {
     return NashDate(
             this.get(Calendar.DAY_OF_MONTH),

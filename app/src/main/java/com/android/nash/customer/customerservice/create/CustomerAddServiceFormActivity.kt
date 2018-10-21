@@ -11,6 +11,7 @@ import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.data.*
 import com.android.nash.util.DateUtil
+import com.android.nash.util.convertToCalendar
 import com.android.nash.util.convertToString
 import com.android.nash.util.toNashDate
 import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
@@ -148,6 +149,7 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                 val selectedTherapist = editTextTherapist.selectedItem as TherapistDataModel
                 val price = editTextPrice.text.toString().toLong()
                 val treatmentDate = DateUtil.convertShownDateToNashDate(editTextServiceDate.text.toString())
+                val treatmentDateCalendar = treatmentDate.convertToCalendar()
                 val toRemindCalendar = Calendar.getInstance()
                 val lashType = editTextLashType.text.toString()
                 toRemindCalendar.add(Calendar.DAY_OF_MONTH, selectedService.reminder)
@@ -160,6 +162,7 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                         serviceUUID = selectedService.uuid,
                         therapistUUID = selectedTherapist.uuid,
                         treatmentDate = treatmentDate,
+                        treatmentDateTimestamp = treatmentDateCalendar.timeInMillis,
                         toRemindDate = toRemindDate,
                         lashType = lashType,
                         toRemindDateTimestamp = toRemindCalendar.time.time,

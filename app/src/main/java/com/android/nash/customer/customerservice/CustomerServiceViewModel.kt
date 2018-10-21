@@ -17,7 +17,6 @@ import io.reactivex.functions.BiFunction
 class CustomerServiceViewModel : CoreViewModel() {
     private val customerLiveData = MutableLiveData<CustomerDataModel>()
     private val customerServiceLiveData = MutableLiveData<List<CustomerServiceDataModel>>()
-    private val isAddServiceSuccess = MutableLiveData<Boolean>()
     private val isLoading = MutableLiveData<Boolean>()
     private val therapistsLiveData = MutableLiveData<List<TherapistDataModel>>()
     private val serviceGroupsLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
