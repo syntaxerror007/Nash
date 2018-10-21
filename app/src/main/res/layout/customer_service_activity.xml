@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
         layout="@layout/layout_service_customer_header"/>
 
     <android.support.v7.widget.RecyclerView
@@ -34,6 +35,7 @@
         app:layout_constraintTop_toBottomOf="@id/recyclerViewService"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
         layout="@layout/layout_service_customer_footer"/>
 
     <android.support.v7.widget.AppCompatButton

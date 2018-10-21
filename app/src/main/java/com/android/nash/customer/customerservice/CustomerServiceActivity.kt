@@ -96,6 +96,9 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>(), Custom
         if (it.isEmpty()) {
             recyclerViewHeader.setVisible(false)
             recyclerViewFooter.setVisible(false)
+        } else {
+            recyclerViewHeader.setVisible(true)
+            recyclerViewFooter.setVisible(true)
         }
         recyclerViewService.adapter = CustomerServiceAdapter(it)
     }

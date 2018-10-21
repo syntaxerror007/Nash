@@ -200,8 +200,8 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
 
     override fun setContentView(resId: Int) {
         super.setContentView(R.layout.core_activity)
-        layoutInflater.inflate(resId, coreContainer, true)
         setupToolbar()
+        layoutInflater.inflate(resId, coreContainer, true)
     }
 
     fun getViewModel():T {
