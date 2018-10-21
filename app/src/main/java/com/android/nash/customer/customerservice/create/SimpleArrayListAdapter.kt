@@ -1,11 +1,14 @@
-package com.android.nash.customer.customerservice.customerservicedialog
+package com.android.nash.customer.customerservice.create
 
-import android.text.TextUtils
-import com.android.nash.R
 import android.content.Context
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
+import com.android.nash.R
 import gr.escsoft.michaelprimez.searchablespinner.interfaces.ISpinnerSelectedView
 
 

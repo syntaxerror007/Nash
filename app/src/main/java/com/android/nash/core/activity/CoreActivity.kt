@@ -160,11 +160,25 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
                 R.id.menu_customer -> { gotoCustomerPage() }
                 R.id.menu_service -> { gotoServicePage() }
                 R.id.menu_setting -> { gotoSettingPage() }
+                R.id.menu_logout -> {
+                    doLogout()
+                }
             }
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
             true
         }
+    }
+
+    fun doLogout() {
+        getViewModel().doLogout().doOnComplete {
+            gotoLoginPage()
+        }.subscribe()
+    }
+
+    private fun gotoLoginPage() {
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     private fun gotoSettingPage() {

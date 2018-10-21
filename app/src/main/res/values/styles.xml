@@ -15,6 +15,7 @@
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
+
     </style>
     <style name="NashButton" parent="android:style/Widget.Button">
         <item name="android:textSize">18sp</item>

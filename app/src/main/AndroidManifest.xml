@@ -53,6 +53,9 @@
         <activity
             android:name="com.android.nash.reminder.CustomerReminderActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.android.nash.customer.customerservice.create.CustomerAddServiceFormActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

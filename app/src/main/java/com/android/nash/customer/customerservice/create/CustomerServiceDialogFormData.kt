@@ -1,4 +1,4 @@
-package com.android.nash.customer.customerservice.customerservicedialog
+package com.android.nash.customer.customerservice.create
 
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.data.TherapistDataModel

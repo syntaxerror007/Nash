@@ -24,6 +24,7 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
         layoutSearch.setOnClickListener { gotoSearchActivity() }
         layoutNewCustomer.setOnClickListener { gotoNewCustomer() }
         layoutReminder.setOnClickListener { gotoReminder() }
+        btnLogout.setOnClickListener { doLogout() }
     }
 
     private fun onUserLoaded(userDataModel: UserDataModel) {

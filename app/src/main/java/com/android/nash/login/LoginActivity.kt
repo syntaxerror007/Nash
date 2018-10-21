@@ -19,6 +19,7 @@ class LoginActivity : CoreActivity<LoginViewModel>(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
+        hideToolbar()
         getViewModel().getLoadingState().observe(this, Observer { observeLoadingState(it) })
         getViewModel().getPasswordError().observe(this, Observer { observePasswordError(it) })
         getViewModel().getUsernameError().observe(this, Observer { observeUsernameError(it) })

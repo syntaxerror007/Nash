@@ -8,18 +8,18 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.android.nash.data.NashDate
 import com.android.nash.util.DateUtil.Companion.DATE_FORMAT_SHOWN
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import java.text.SimpleDateFormat
-import java.util.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 fun ImageView.loadUrl(url: CharSequence?, @DrawableRes placeholder: Int) {
@@ -40,7 +40,7 @@ fun NashDate.convertToString(): String {
     val calendar = Calendar.getInstance()
 
     calendar.set(Calendar.DAY_OF_MONTH, this.day)
-    calendar.set(Calendar.MONTH, this.month)
+    calendar.set(Calendar.MONTH, this.month - 1)
     calendar.set(Calendar.YEAR, this.year)
     return formatter.format(calendar.time)
 }
@@ -48,7 +48,7 @@ fun NashDate.convertToString(): String {
 fun Calendar.toNashDate(): NashDate {
     return NashDate(
             this.get(Calendar.DAY_OF_MONTH),
-            this.get(Calendar.MONTH),
+            this.get(Calendar.MONTH) + 1,
             this.get(Calendar.YEAR),
             this.get(Calendar.HOUR),
             this.get(Calendar.MINUTE))

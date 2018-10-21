@@ -5,12 +5,14 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.android.nash.data.UserDataModel
 import com.android.nash.util.USER_DB
+import com.androidhuman.rxfirebase2.auth.rxSignOut
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.Completable
 
 open class CoreViewModel : ViewModel() {
     internal val user: MutableLiveData<FirebaseUser> = MutableLiveData()
@@ -48,4 +50,6 @@ open class CoreViewModel : ViewModel() {
     fun onSearchFormTextChanged(s: String) {
         autoCompletePublishSubject.accept(s.trim())
     }
+
+    fun doLogout(): Completable = mAuth.rxSignOut()
 }

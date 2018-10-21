@@ -110,7 +110,6 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         customerDataModel.hadSurgeryInfo = hadEyeSurgeryResult.additionalData
 
 
-        // TODO CONFIRM THIS
         customerDataModel.knowNashFrom = knowNashResult.selectedItems[0]
         customerDataModel.knowNashFromInfo = knowNashResult.additionalData
 

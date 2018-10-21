@@ -12,7 +12,7 @@ class DateUtil {
             val date = format.parse(shownDate)
             val calendar = Calendar.getInstance()
             calendar.time = date
-            return NashDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
+            return NashDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
         }
 
         fun convertNashDateToCalendar(nashDate : NashDate): Calendar {

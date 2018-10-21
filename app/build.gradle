@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.androidhuman.rxfirebase2:firebase-auth-kotlin:16.0.2.0'
+    implementation 'com.androidhuman.rxfirebase2:firebase-auth:16.0.2.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'com.androidhuman.rxfirebase2:firebase-database:16.0.1.0'
