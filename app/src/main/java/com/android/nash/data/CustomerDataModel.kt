@@ -19,7 +19,7 @@ data class CustomerDataModel(
         var wearContactLensInfo: String = "",
         var hadSurgery: Boolean = false,
         var hadSurgeryInfo: String = "",
-        var knowNashFrom: String = "",
+        @get:Exclude var knowNashFrom: MutableList<String> = mutableListOf(),
         var knowNashFromInfo: String = "",
         var customerLowerCase: String = "",
         @get:Exclude var services:List<ServiceDataModel> = listOf(),

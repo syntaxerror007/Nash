@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.view.View
 import android.widget.CheckBox
@@ -69,4 +68,19 @@ class MultiCheckCheckGroup : LinearLayout {
         return multiCheckResultData
     }
 
+    fun setChecked(checked: Boolean) {
+        optionsCheckBox.forEach {
+            it.isChecked = checked && it.text.toString().equals("YES", true)
+        }
+    }
+
+    fun setChecked(checkedItems: List<String>) {
+        optionsCheckBox.forEach {
+            it.isChecked = checkedItems.contains(it.text)
+        }
+    }
+
+    fun setAdditionalInfo(additionalInfo: String) {
+        editTextAdditionalInfo.setText(additionalInfo)
+    }
 }

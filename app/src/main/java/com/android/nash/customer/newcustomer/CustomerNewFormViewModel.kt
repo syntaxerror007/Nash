@@ -12,6 +12,8 @@ class CustomerNewFormViewModel : CoreViewModel() {
     private val isLoading = MutableLiveData<Boolean>()
     private val isSuccess = MutableLiveData<Boolean>()
     private val errorMessage = MutableLiveData<String>()
+    private var customerDataModelLiveData: CustomerDataModel? = null
+
 
     fun isLoading() : LiveData<Boolean> {
         return isLoading
@@ -24,6 +26,8 @@ class CustomerNewFormViewModel : CoreViewModel() {
     fun getErrorMessage(): LiveData<String> {
         return errorMessage
     }
+
+    fun getCustomerLiveData(): CustomerDataModel? = customerDataModelLiveData
 
 
     fun insertCustomer(customerDataModel: CustomerDataModel) {
@@ -39,5 +43,10 @@ class CustomerNewFormViewModel : CoreViewModel() {
                 errorMessage.value = e.localizedMessage.toString()
             }
         })
+    }
+
+
+    fun setCustomerDataModel(customerDataModel: CustomerDataModel) {
+        customerDataModelLiveData = customerDataModel
     }
 }

@@ -17,7 +17,8 @@ class CustomerProvider {
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
 
     fun insertCustomer(customerDataModel: CustomerDataModel): Completable = with(customerDataModel) {
-        uuid = getKey(mCustomerDatabaseRef)
+        if (uuid.isBlank())
+            uuid = getKey(mCustomerDatabaseRef)
         return RxFirebaseDatabase.setValue(mCustomerDatabaseRef.child(uuid), customerDataModel)
     }
 

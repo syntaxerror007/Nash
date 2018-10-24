@@ -13,6 +13,7 @@ import com.android.nash.data.NashDate
 import com.android.nash.util.DateUtil
 import com.android.nash.util.convertToString
 import kotlinx.android.synthetic.main.customer_new_form_activity.*
+import org.parceler.Parcels
 import java.util.*
 
 class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
@@ -24,8 +25,34 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         setTitle(R.string.text_new_customer_form_title)
         observeViewModel()
         setupMultiCheckGroups()
+        val customerDataModel: CustomerDataModel? = Parcels.unwrap(intent.extras?.getParcelable("customerDataModel"))
+        if (customerDataModel != null) {
+            getViewModel().setCustomerDataModel(customerDataModel)
+            setTitle("Edit Customer - ${customerDataModel.customerName}")
+            setDataToForm(customerDataModel)
+        }
         setupCalendarDialog()
         buttonSave.setOnClickListener { saveCustomer() }
+    }
+
+    private fun setDataToForm(customerDataModel: CustomerDataModel) {
+        editTextCustomerName.setText(customerDataModel.customerName)
+        editTextBirthDate.setText(customerDataModel.customerDateOfBirth.convertToString())
+        editTextAddress.setText(customerDataModel.customerAddress)
+        editTextEmail.setText(customerDataModel.customerEmail)
+        editTextPhoneNumber.setText(customerDataModel.customerPhone)
+        checkBoxAgreeTnC.isChecked = true
+        hasEyelashBeforeMCG.setChecked(customerDataModel.hasExtensions)
+        haveAllergyMCG.setChecked(customerDataModel.hasAllergy)
+        wearContactLensMCG.setChecked(customerDataModel.wearContactLens)
+        hadEyeSurgeryMCG.setChecked(customerDataModel.hadSurgery)
+        knowNashMCG.setChecked(customerDataModel.knowNashFrom)
+
+        hasEyelashBeforeMCG.setAdditionalInfo(customerDataModel.hasExtensionsInfo)
+        haveAllergyMCG.setAdditionalInfo(customerDataModel.hasAllergyInfo)
+        wearContactLensMCG.setAdditionalInfo(customerDataModel.wearContactLensInfo)
+        hadEyeSurgeryMCG.setAdditionalInfo(customerDataModel.hadSurgeryInfo)
+        knowNashMCG.setAdditionalInfo(customerDataModel.knowNashFromInfo)
     }
 
     private fun observeViewModel() {
@@ -59,7 +86,8 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
     }
 
     private fun saveCustomer() {
-        val customerDataModel = CustomerDataModel()
+
+        val customerDataModel = if (getViewModel().getCustomerLiveData() != null) getViewModel().getCustomerLiveData() else CustomerDataModel()
         if (!isValid(editTextCustomerName.text.toString())) {
             editTextCustomerName.error = "Please put customer name"
             return
@@ -84,6 +112,8 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         if (!checkBoxAgreeTnC.isChecked) {
             return
         }
+
+        customerDataModel!!
 
         customerDataModel.customerName = editTextCustomerName.text.toString()
         customerDataModel.customerLowerCase = editTextCustomerName.text.toString().toLowerCase()
@@ -110,7 +140,7 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         customerDataModel.hadSurgeryInfo = hadEyeSurgeryResult.additionalData
 
 
-        customerDataModel.knowNashFrom = knowNashResult.selectedItems[0]
+        customerDataModel.knowNashFrom = knowNashResult.selectedItems
         customerDataModel.knowNashFromInfo = knowNashResult.additionalData
 
 
