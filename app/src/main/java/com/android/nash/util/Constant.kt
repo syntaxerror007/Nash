@@ -13,6 +13,7 @@ const val SERVICE_NAME_DB = "services_name"
 const val LOCATION_SERVICE_GROUP_DB = "location_service_group"
 const val LOCATION_THERAPIST_DB = "location_therapist"
 const val LOCATION_USER_DB = "location_user"
+const val LOCATION_THERAPIST_ASSIGNMENT_DB = "location_therapist_assignment"
 const val COMPANY_NAME = "nash"
 
 

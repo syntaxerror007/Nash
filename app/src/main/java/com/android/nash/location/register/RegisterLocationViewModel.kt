@@ -29,6 +29,7 @@ class RegisterLocationViewModel : CoreViewModel() {
     private val availableTherapists: MutableList<TherapistDataModel> = mutableListOf()
     private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
     private val serviceGroupListLiveData = MutableLiveData<List<ServiceGroupDataModel>>()
+    private val availableServiceGroupList = MutableLiveData<List<ServiceGroupDataModel>>()
     private val availableTherapistsLiveData: MutableLiveData<MutableList<TherapistDataModel>> = MutableLiveData()
     private val totalServiceSelectedLiveData: MutableLiveData<Int> = MutableLiveData()
     private val therapistAssignmentMapLiveDataModel: MutableLiveData<MutableMap<String, List<TherapistDataModel>>> = MutableLiveData()
@@ -55,7 +56,7 @@ class RegisterLocationViewModel : CoreViewModel() {
     }
 
     fun getServiceGrouplist(): LiveData<List<ServiceGroupDataModel>> {
-        return serviceGroupListLiveData
+        return availableServiceGroupList
     }
 
     fun getTherapistAssignmentLiveData(): LiveData<MutableMap<String, List<TherapistDataModel>>> {
@@ -118,25 +119,23 @@ class RegisterLocationViewModel : CoreViewModel() {
 
     private fun doRegisterLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
         val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
-        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, therapistAssignmentMapLiveDataModel.value!!, onCompleteListener)
+        locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value, availableTherapistsLiveData.value, therapistAssignmentMapLiveDataModel.value, onCompleteListener)
     }
 
     private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
         val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
-        locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value!!, availableTherapistsLiveData.value!!, therapistAssignmentMapLiveDataModel.value!!, onCompleteListener)
+        locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value, availableTherapistsLiveData.value, therapistAssignmentMapLiveDataModel.value, onCompleteListener)
     }
 
     fun getAllServices() {
         val disposable = ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable {
-                    it
-                }.flatMap {
+                .flatMapIterable { it }.flatMap {
                     ServiceProvider().getServiceFromServiceGroup(it)
                 }.toList()
                 .subscribe({
                     serviceGroupList.clear()
                     serviceGroupList.addAll(it)
-                    serviceGroupListLiveData.value = serviceGroupList
+                    availableServiceGroupList.value = serviceGroupList
                 }) {
                     it.printStackTrace()
                 }
@@ -244,7 +243,6 @@ class RegisterLocationViewModel : CoreViewModel() {
             }
 
             availableTherapistsLiveData.value = availableTherapists
-            serviceGroupListLiveData.value = serviceGroupList
         }
     }
 

@@ -21,7 +21,6 @@ class ServiceFormDialog(context: Context, serviceCallback: ServiceCallback, serv
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_form_dialog)
         if (isEditPriceOnly) {
-            editTextPrice.setText("${prevServiceDataModel?.price}")
             editTextServiceName.setText(prevServiceDataModel?.serviceName)
             editTextReminder.setText("${prevServiceDataModel?.reminder}")
             editTextServiceName.isEnabled = false
@@ -39,13 +38,11 @@ class ServiceFormDialog(context: Context, serviceCallback: ServiceCallback, serv
 
     private fun registerServiceToServiceGroup() {
         val serviceName = editTextServiceName.text.toString()
-        val price = editTextPrice.text.toString()
         val reminder = editTextReminder.text.toString()
-        val serviceDataModel = ServiceDataModel(uuid = "", serviceName = serviceName, price = price.toLong(), reminder = reminder.toInt(), shouldFreeText = false)
+        val serviceDataModel = ServiceDataModel(uuid = "", serviceName = serviceName, reminder = reminder.toInt(), shouldFreeText = false)
         if (!isEditPriceOnly) {
             serviceCallback.onServiceCreated(serviceDataModel = serviceDataModel, serviceGroupDataModel = serviceGroupDataModel, groupPosition = groupPosition, position = position)
         } else {
-            prevServiceDataModel?.price = editTextPrice.text.toString().toLong()
             serviceGroupDataModel?.services?.set(position, prevServiceDataModel!!)
             serviceCallback.onEditService(prevServiceDataModel, serviceGroupDataModel, groupPosition, position)
         }

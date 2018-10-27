@@ -20,28 +20,33 @@ class TherapistProvider {
         return databaseReference.push().key!!
     }
 
-    fun insertTherapistListToLocation(locationUUID: String, therapists: List<TherapistDataModel>) {
+    fun insertTherapistListToLocation(locationUUID: String, therapists: List<TherapistDataModel>?) {
         mLocationTherapistReference.child(locationUUID)
-        therapists.forEach {
+        therapists?.forEach {
             insertTherapistToLocation(locationUUID, it)
-
         }
     }
 
-    fun insertTherapistToLocation(locationUUID:String, therapistDataModel: TherapistDataModel) {
-        mLocationTherapistReference.child(locationUUID)
+    private fun insertTherapistToLocation(locationUUID: String, therapistDataModel: TherapistDataModel) {
+        val locationRef = mLocationTherapistReference.child(locationUUID)
         val uuid = getKey(mTherapistReference)
         therapistDataModel.uuid = uuid
         mTherapistReference.child(uuid).setValue(therapistDataModel).continueWith {
-            mLocationTherapistReference.child(uuid).setValue(true)
+            locationRef.child(uuid).setValue(true)
         }
     }
 
     fun getTherapistFromLocation(locationUUID: String): Single<MutableList<TherapistDataModel>> {
         return RxFirebaseDatabase.data(mLocationTherapistReference.child(locationUUID)).toObservable()
-                .flatMap { Observable.fromArray(it.children.map { it.key!! }) }
+                .flatMap {
+                    Observable.fromArray(it.children.map {
+                        it.key!!
+                    })
+                }
                 .flatMapIterable { it }
-                .flatMap { getTherapist(it).toObservable() }
+                .flatMap {
+                    getTherapist(it).toObservable()
+                }
                 .toList()
     }
 
@@ -52,9 +57,13 @@ class TherapistProvider {
     }
 
 
-    fun updateTherapist(locationUUID: String, therapists: MutableList<TherapistDataModel>) {
-        therapists.forEach {
-            mLocationTherapistReference.child(locationUUID).child(it.uuid).setValue(true)
+    fun updateTherapist(locationUUID: String, therapists: MutableList<TherapistDataModel>?) {
+        therapists?.forEach {
+            if (it.uuid.isBlank()) {
+                insertTherapistToLocation(locationUUID, it)
+            } else {
+                mLocationTherapistReference.child(locationUUID).child(it.uuid).setValue(true)
+            }
         }
     }
 

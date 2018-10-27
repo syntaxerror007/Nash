@@ -18,6 +18,7 @@ import android.view.View.OnTouchListener
 import com.android.nash.R
 import com.android.nash.core.CoreViewModel
 import com.android.nash.core.loading_dialog.LoadingDialog
+import com.android.nash.customer.customersearch.CustomerListActivity
 import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
 import com.android.nash.login.LoginActivity
@@ -191,7 +192,8 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     }
 
     private fun gotoCustomerPage() {
-
+        startActivity(Intent(this, CustomerListActivity::class.java))
+        finish()
     }
 
     private fun gotoLocationPage() {

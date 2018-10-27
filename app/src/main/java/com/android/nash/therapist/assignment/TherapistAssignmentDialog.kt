@@ -27,5 +27,8 @@ class TherapistAssignmentDialog(context: Context, serviceDataModel: ServiceDataM
 
     private fun setData() {
         therapistSelector.setItems(listTherapist.mapNotNull { it.therapistName })
+        val selectedAssignment = listTherapist.filter { it.assignmentSet.contains(serviceDataModel?.uuid) }.map { it.therapistName }.toList()
+        if (selectedAssignment.isNotEmpty())
+            therapistSelector.setSelection(selectedAssignment)
     }
 }

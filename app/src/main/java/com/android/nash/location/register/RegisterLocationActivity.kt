@@ -25,11 +25,12 @@ import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.location_register_activity.*
 import org.parceler.Parcels
 
-class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback, TherapistAssignmentCallback {
+class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback, TherapistAssignmentCallback {
 
     private lateinit var serviceDialog: Dialog
     private lateinit var serviceGroupAdapter: ServiceGroupAdapter
-    private lateinit var firebaseApp: FirebaseApp
+    private lateinit var therapistAssignmentDialog: Dialog
+    private var firebaseApp: FirebaseApp? = null
     private var locationDataModel: LocationDataModel? = null
 
     override fun onCreateViewModel(): RegisterLocationViewModel {
@@ -38,14 +39,13 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent.extras != null) {
-            locationDataModel = Parcels.unwrap(intent.extras.getParcelable("locationDataModel"))
-        }
+        locationDataModel = Parcels.unwrap(intent.extras?.getParcelable("locationDataModel"))
         getViewModel().setLoading(true)
         setContentView(R.layout.location_register_activity)
         setTitle("Location")
         setToolbarRightButtonVisible(true)
         setToolbarRightButtonText("Save Configuration")
+        setBackEnabled(true)
         getViewModel().getUserDataModel().observe(this, Observer {
             getViewModel().setLoading(false)
         })
@@ -63,8 +63,7 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         editTextPhoneNumber.setText(locationDataModel?.phoneNumber)
         if (locationDataModel != null) {
             locationDataModel!!.selectedServices.forEach {
-                it.services.forEach {serviceDataModel ->
-                    val therapistAssignmentMap = mutableMapOf<String, List<TherapistDataModel>>()
+                it.services.forEach { serviceDataModel ->
                     val therapistAssigned = mutableListOf<TherapistDataModel>()
                     locationDataModel!!.therapists.filter {
                         serviceDataModel.assignedTherapistSet.contains(it.uuid)
@@ -86,9 +85,9 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         val firebaseOptions = FirebaseApp.getInstance()!!.options
         firebaseApp = FirebaseApp.initializeApp(this, firebaseOptions, "secondaryFirebaseApp")
         if (locationDataModel == null) {
-            getViewModel().registerLocation(firebaseApp, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+            getViewModel().registerLocation(firebaseApp!!, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
         } else {
-            getViewModel().updateLocation(firebaseApp, locationDataModel!!.uuid, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
+            getViewModel().updateLocation(firebaseApp!!, locationDataModel!!.uuid, editTextLocationName.text.toString(), editTextLocationAddress.text.toString(), editTextPhoneNumber.text.toString())
         }
     }
 
@@ -152,7 +151,8 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
-        TherapistAssignmentDialog(this, serviceDataModel, getViewModel().availableTherapistsLiveData().value!!, this).show()
+        therapistAssignmentDialog = TherapistAssignmentDialog(this, serviceDataModel, getViewModel().availableTherapistsLiveData().value!!, this)
+        therapistAssignmentDialog.show()
     }
 
     override fun onEditService(prevServiceDataModel: ServiceDataModel?, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
@@ -187,12 +187,14 @@ class RegisterLocationActivity: CoreActivity<RegisterLocationViewModel>(), UserR
         if (isLoading) {
             showLoadingDialog()
         } else {
-            firebaseApp.delete()
+            firebaseApp?.delete()
             hideLoadingDialog()
         }
     }
 
     override fun onTherapistAssigned(serviceDataModel: ServiceDataModel?, assignedTherapist: List<TherapistDataModel>) {
+        if (therapistAssignmentDialog.isShowing)
+            therapistAssignmentDialog.dismiss()
         getViewModel().assignTherapistToService(serviceDataModel, assignedTherapist)
     }
 }

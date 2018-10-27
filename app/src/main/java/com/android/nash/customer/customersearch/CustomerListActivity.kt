@@ -43,7 +43,11 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         recyclerViewCustomer.adapter = CustomerListAdapter(it) {
             val bundle = Bundle()
             bundle.putParcelable("customerDataModel", Parcels.wrap(it))
-            startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
+            if (getViewModel().getUserDataModel().value?.userType.equals("ADMIN")) {
+
+            } else {
+                startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
+            }
         }
 
         recyclerViewCustomer.addOnScrollListener(object : EndlessOnScrollListener() {
