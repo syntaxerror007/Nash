@@ -53,7 +53,10 @@ class CustomerServiceProvider {
                             )
                         }
                         .toList()
-                        .toObservable()
+                        .flatMapObservable {
+                            it.reverse()
+                            Observable.just(it)
+                        }
             } else {
                 Observable.just(listOf())
             }
