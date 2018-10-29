@@ -49,6 +49,7 @@
     <string name="text_common_continue">Continue</string>
     <string name="no_selection"></string>
     <string name="text_service_date">Service Date</string>
+    <string name="text_title_location">Location</string>
     <array name="list_know_nash_options">
         <item name="text_social_media">Social Media</item>
         <item name="text_signage">Signage</item>

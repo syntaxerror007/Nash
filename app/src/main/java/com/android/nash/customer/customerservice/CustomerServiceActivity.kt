@@ -1,5 +1,6 @@
 package com.android.nash.customer.customerservice
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -28,6 +29,15 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
             val bundle = Bundle()
             bundle.putParcelable("customerFormData", Parcels.wrap(getViewModel().getFormData()))
             startActivityForResult(Intent(this@CustomerServiceActivity, CustomerAddServiceFormActivity::class.java).putExtras(bundle), 1)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                getViewModel().getCustomerServices()
+            }
         }
     }
 

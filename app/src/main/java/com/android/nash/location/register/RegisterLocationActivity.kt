@@ -79,6 +79,8 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
             onFinishServiceClick(locationDataModel!!.selectedServices)
             onUserCreated(locationDataModel!!.user, null)
         }
+
+        getViewModel().error().observe(this, Observer { Toast.makeText(this, it, Toast.LENGTH_LONG).show() })
     }
 
     private fun onToolbarRightButtonClicked() {

@@ -63,6 +63,8 @@ class RegisterLocationViewModel : CoreViewModel() {
         return therapistAssignmentMapLiveDataModel
     }
 
+    fun error(): LiveData<String> = error
+
     fun registerLocation(firebaseApp: FirebaseApp, locationName: String, locationAddress: String, locationPhoneNumber: String) {
         isLoading.value = true
         if (!isFormValid(locationName, locationAddress, locationPhoneNumber)) {
@@ -84,36 +86,41 @@ class RegisterLocationViewModel : CoreViewModel() {
 
     private fun registerUser(firebaseApp: FirebaseApp, onCompleteListener: OnCompleteListener<Void>) {
         val secondaryFirebaseAuth = FirebaseAuth.getInstance(firebaseApp)
-        val username = toRegisterUserDataModel.value!!.username
 
-        secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", toRegisterUserPassword.value!!).addOnCompleteListener { it ->
-            secondaryFirebaseAuth.signOut()
-            if (it.isSuccessful) {
-                val createdUserUid = it.result.user.uid
-                val userDataModel = UserDataModel()
-                userDataModel.username = username
-                userDataModel.id = createdUserUid
-                userDataModel.userType = "CASHIER"
+        if (toRegisterUserDataModel.value != null) {
+            val username = toRegisterUserDataModel.value!!.username
 
-                UserProvider().insertUser(userDataModel).addOnCompleteListener {
-                    toRegisterUserDataModel.value = userDataModel
-                    onCompleteListener.onComplete(it)
-                }
-            } else {
-                isLoading.value = false
-                var errorMessage: String? = null
-                if (it.exception != null) {
-                    errorMessage = when {
-                        it.exception is FirebaseAuthException -> {
-                            (it.exception as FirebaseAuthException).message
+            secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", toRegisterUserPassword.value!!).addOnCompleteListener { it ->
+                secondaryFirebaseAuth.signOut()
+                if (it.isSuccessful) {
+                    val createdUserUid = it.result.user.uid
+                    val userDataModel = UserDataModel()
+                    userDataModel.username = username
+                    userDataModel.id = createdUserUid
+                    userDataModel.userType = "CASHIER"
+
+                    UserProvider().insertUser(userDataModel).addOnCompleteListener {
+                        toRegisterUserDataModel.value = userDataModel
+                        onCompleteListener.onComplete(it)
+                    }
+                } else {
+                    isLoading.value = false
+                    var errorMessage: String? = null
+                    if (it.exception != null) {
+                        errorMessage = when {
+                            it.exception is FirebaseAuthException -> {
+                                (it.exception as FirebaseAuthException).message
+                            }
+                            it.exception is FirebaseNetworkException -> {
+                                (it.exception as FirebaseNetworkException).message
+                            }
+                            else -> null
                         }
-                        it.exception is FirebaseNetworkException -> {
-                            (it.exception as FirebaseNetworkException).message
-                        }
-                        else -> null
                     }
                 }
             }
+        } else {
+            error.value = "Please input user first"
         }
     }
 

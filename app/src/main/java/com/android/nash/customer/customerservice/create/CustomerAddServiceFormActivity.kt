@@ -34,6 +34,8 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
         setContentView(R.layout.customer_add_service_form_activity)
 
         getViewModel().setFormData(Parcels.unwrap(intent.extras?.getParcelable("customerFormData")))
+
+        setTitle("Add New Treatment - ${getViewModel().customerName}")
         setOnClickListener()
         getViewModel().isLoading().observe(this, Observer {
             if (it != null && it) {

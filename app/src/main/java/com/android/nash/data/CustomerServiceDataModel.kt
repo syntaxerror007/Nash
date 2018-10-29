@@ -19,6 +19,7 @@ data class CustomerServiceDataModel(
         @get:Exclude var service: ServiceDataModel = ServiceDataModel(),
         @get:Exclude var therapist: TherapistDataModel = TherapistDataModel(),
         @get:Exclude var customerDataModel: CustomerDataModel = CustomerDataModel(),
+        @get:Exclude var locationName: String = "",
         var price: Long = 0,
         var hasReminded: Boolean = false,
         var lashType: String = ""

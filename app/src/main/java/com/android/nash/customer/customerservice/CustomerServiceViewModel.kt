@@ -70,13 +70,15 @@ class CustomerServiceViewModel : CoreViewModel() {
     }
 
     fun getCustomerServices() {
+        isLoading.value = true
         val disposable = mCustomerServiceProvider.getCustomerService(customerLiveData.value?.uuid, getUserDataModel().value?.locationUUID).doOnNext {
             customerServiceLiveData.value = it
-        }.subscribe({
+        }.doOnComplete { isLoading.value = false }
+
+                .subscribe({
             totalServicePriceLiveData.value = it.sumBy { it.price.toInt() }
         }) {
             it.printStackTrace()
         }
     }
-
 }

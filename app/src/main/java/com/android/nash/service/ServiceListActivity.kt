@@ -90,7 +90,8 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
-
+        serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, groupPosition, childPosition, serviceDataModel = serviceGroupDataModel.services[childPosition])
+        serviceDialog.show()
     }
 
     override fun onItemDelete(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
@@ -99,5 +100,11 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
 
     override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
         getViewModel().insertService(serviceGroupDataModel= serviceGroupDataModel, serviceDataModel = serviceDataModel)
+    }
+
+    override fun onEditService(prevServiceDataModel: ServiceDataModel?, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {
+        getViewModel().updateService(prevServiceDataModel, serviceGroupDataModel, position)
+        if (serviceDialog.isShowing)
+            serviceDialog.dismiss()
     }
 }

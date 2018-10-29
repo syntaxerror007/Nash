@@ -26,8 +26,9 @@ class CustomerListViewModel : CoreViewModel() {
 
     fun getAllCustomer() {
         isLoadingLiveData.value = true
-        val disposable = mCustomerProvider.getAllCustomer().subscribe {
+        val disposable = mCustomerProvider.getAllCustomer().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
             isLoadingLiveData.value = false
+            isLoadMore.value = false
             customers = it.toMutableList()
             customersLiveData.value = customers
             lastLoadedItem.value = it.last().uuid
@@ -60,8 +61,8 @@ class CustomerListViewModel : CoreViewModel() {
     }
 
     fun loadMore() {
-        isLoadMore.value = true
-        if (isLoadFinish.value == null || isLoadFinish.value!!.not()) {
+        if ((isLoadFinish.value == null || isLoadFinish.value!!.not()) && isLoadMore.value!!.not()) {
+            isLoadMore.value = true
             val disposable = mCustomerProvider.getAllCustomer(lastLoadedItem.value).filter { t: List<CustomerDataModel> -> t.isNotEmpty() }.subscribe {
                 if (it.isNotEmpty()) {
                     isLoadMore.value = false

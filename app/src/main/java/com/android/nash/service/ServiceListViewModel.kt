@@ -68,8 +68,7 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun loadAllService() {
-
-        ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+        val disposable = ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable {
                     it
                 }.flatMap {
@@ -104,6 +103,13 @@ class ServiceListViewModel : CoreViewModel() {
                 loadAllService()
             }
         })
+    }
+
+    fun updateService(prevServiceDataModel: ServiceDataModel?, serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
+        if (prevServiceDataModel != null && serviceGroupDataModel != null) {
+            serviceProvider.updateService(prevServiceDataModel)
+            serviceGroupDataModel.services[position] = prevServiceDataModel
+        }
     }
 
 }

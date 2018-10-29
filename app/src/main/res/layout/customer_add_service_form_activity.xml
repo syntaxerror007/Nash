@@ -117,6 +117,7 @@
 
     <View
         android:id="@+id/divider"
+        android:layout_marginTop="@dimen/common_dp_4"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_dp_1"
         android:background="@color/gray"

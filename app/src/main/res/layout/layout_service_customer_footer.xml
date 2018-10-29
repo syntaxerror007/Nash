@@ -22,6 +22,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline1"
         android:layout_width="0dp"
@@ -33,19 +34,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="0.4" />
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75"/>
+        app:layout_constraintGuide_percent="0.6" />
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9"/>
+        app:layout_constraintGuide_percent="0.8" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewTotalValueLabel"
@@ -54,8 +55,8 @@
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/guideline2"
-        app:layout_constraintRight_toLeftOf="@id/guideline3"
+        app:layout_constraintLeft_toLeftOf="@id/guideline3"
+        app:layout_constraintRight_toLeftOf="@id/guideline4"
         android:textAllCaps="true"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
@@ -66,9 +67,11 @@
         android:id="@+id/textViewTotalValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:paddingRight="@dimen/common_dp_16"
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/guideline3"
-        app:layout_constraintLeft_toRightOf="@id/guideline4"/>
+        app:layout_constraintLeft_toLeftOf="@id/guideline4"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

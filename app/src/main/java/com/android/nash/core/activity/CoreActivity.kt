@@ -50,12 +50,15 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     }
 
     fun showLoadingDialog() {
-        loadingDialog.show()
+        if (!loadingDialog.isShowing)
+            loadingDialog.show()
     }
 
     fun hideLoadingDialog() {
-        loadingDialog.dismiss()
+        if (loadingDialog.isShowing)
+            loadingDialog.dismiss()
     }
+
     fun setTitle(title: String) {
         toolbarTitle.text = title
     }
@@ -157,10 +160,18 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     fun setDrawerItemClickListener() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_location -> { gotoLocationPage() }
-                R.id.menu_customer -> { gotoCustomerPage() }
-                R.id.menu_service -> { gotoServicePage() }
-                R.id.menu_setting -> { gotoSettingPage() }
+                R.id.menu_location -> {
+                    gotoLocationPage()
+                }
+                R.id.menu_customer -> {
+                    gotoCustomerPage()
+                }
+                R.id.menu_service -> {
+                    gotoServicePage()
+                }
+                R.id.menu_setting -> {
+                    gotoSettingPage()
+                }
                 R.id.menu_logout -> {
                     doLogout()
                 }
@@ -220,7 +231,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         layoutInflater.inflate(resId, coreContainer, true)
     }
 
-    fun getViewModel():T {
+    fun getViewModel(): T {
         return viewModel
     }
 

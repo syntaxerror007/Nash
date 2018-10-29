@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function4
+import io.reactivex.functions.Function5
 
 class CustomerServiceProvider {
     val mFirebaseDatabase = FirebaseDatabase.getInstance()
@@ -17,34 +17,37 @@ class CustomerServiceProvider {
     private val mServiceTransactionDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(SERVICE_TRANSACTION_DB)
     private val mServiceProvider = ServiceProvider()
     private val mTherapistProvider = TherapistProvider()
+    private val mLocationProvider = LocationProvider()
     private val mCustomerProvider = CustomerProvider()
 
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
     fun insertCustomerTransaction(customerServiceDataModel: CustomerServiceDataModel): Completable = with(customerServiceDataModel) {
-        uuid = getKey(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID))
-        RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID).child(uuid), customerServiceDataModel)
+        uuid = getKey(mServiceTransactionDatabaseRef.child(customerServiceDataModel.customerUUID))
+        RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.customerUUID).child(uuid), customerServiceDataModel)
     }
 
     fun getCustomerService(customerUUID: String?, locationUUID: String?): Observable<List<CustomerServiceDataModel>> =
             if (customerUUID != null) {
-                RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID!!).orderByChild("treatmentDateTimestamp").equalTo(customerUUID)).flatMapObservable {
+                RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(customerUUID).orderByChild("treatmentDateTimestamp")).toObservable().concatMap {
                     if (it.exists())
                         Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
                     else
                         Observable.just(listOf())
                 }
-                        .flatMapIterable { it }
-                        .flatMap {
+                        .concatMapIterable { it }
+                        .concatMap {
                             Observable.zip(
                                     Observable.just(it),
                                     mServiceProvider.getServiceGroupWithoutServiceFromUUID(it.serviceGroupUUID),
                                     mServiceProvider.getServiceFromUUID(it.serviceUUID).toObservable(),
                                     mTherapistProvider.getTherapist(it.therapistUUID).toObservable(),
-                                    Function4<CustomerServiceDataModel, ServiceGroupDataModel, ServiceDataModel, TherapistDataModel, CustomerServiceDataModel> { customerServiceDataModel, serviceGroupDataModel, serviceDataModel, therapistDataModel ->
+                                    mLocationProvider.getLocationName(it.locationUUID).toObservable(),
+                                    Function5<CustomerServiceDataModel, ServiceGroupDataModel, ServiceDataModel, TherapistDataModel, String, CustomerServiceDataModel> { customerServiceDataModel, serviceGroupDataModel, serviceDataModel, therapistDataModel, locationName ->
                                         customerServiceDataModel.serviceGroup = serviceGroupDataModel
                                         customerServiceDataModel.service = serviceDataModel
                                         customerServiceDataModel.therapist = therapistDataModel
+                                        customerServiceDataModel.locationName = locationName
                                         customerServiceDataModel
                                     }
                             )

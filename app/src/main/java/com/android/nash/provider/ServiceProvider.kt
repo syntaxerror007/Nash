@@ -1,7 +1,5 @@
 package com.android.nash.provider
 
-import android.app.Service
-import android.util.Log
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.util.SERVICE_DB
@@ -12,7 +10,8 @@ import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
-import io.reactivex.*
+import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 
 class ServiceProvider {
@@ -136,6 +135,10 @@ class ServiceProvider {
         }
     }
 
+    fun deleteServiceGroup(serviceGroupUUID: String) {
+
+    }
+
     fun updateServiceGroup(oldServiceGroupName: String, serviceGroupDataModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {
         val newUuid = getKey(mServiceGroupDatabaseReference)
         serviceGroupDataModel.uuid = newUuid
@@ -149,14 +152,6 @@ class ServiceProvider {
         }.addOnCompleteListener(onCompleteListener)
     }
 
-    fun findServiceGroup(uuid: String): Observable<ServiceGroupDataModel> {
-        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference.child(uuid)).map {
-            val serviceGroupDataModel = it.getValue(ServiceGroupDataModel::class.java)
-            serviceGroupDataModel?.serviceKeys = it.child("services").children.map { it.key!! }.toList()
-            return@map serviceGroupDataModel
-        }.flatMapObservable { getServiceFromServiceGroup(it) }
-    }
-
     private fun findService(uuid: String): Observable<ServiceDataModel> {
         return RxFirebaseDatabase.data(mServiceReference.child(uuid)).map { it.getValue(ServiceDataModel::class.java)!! }.toObservable()
     }
@@ -168,6 +163,12 @@ class ServiceProvider {
             serviceGroupDataModel.services = it
             serviceGroupDataModel.items = it
             return@flatMapObservable Observable.just(serviceGroupDataModel)
+        }
+    }
+
+    fun updateService(prevServiceDataModel: ServiceDataModel?) {
+        if (prevServiceDataModel != null) {
+            mServiceReference.child(prevServiceDataModel.uuid).setValue(prevServiceDataModel)
         }
     }
 }

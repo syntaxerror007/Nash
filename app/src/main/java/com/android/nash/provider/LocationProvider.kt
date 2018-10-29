@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
@@ -64,6 +65,7 @@ class LocationProvider {
                 mTherapistProvider.updateTherapist(locationUUID, therapists)
             }
         }.continueWith {
+            mUserProvider.updateUserLocation(locationDataModel.user.id, locationUUID).subscribe()
             mLocationUserReference.child(locationUUID).child(locationDataModel.user.id).setValue(true)
         }.addOnCompleteListener(onCompleteListener)
     }
@@ -209,6 +211,12 @@ class LocationProvider {
             }
         }) {
 
+        }
+    }
+
+    fun getLocationName(locationUUID: String): Single<String> {
+        return RxFirebaseDatabase.data(mDatabaseReference.child(locationUUID).child("locationName")).map {
+            it.getValue(String::class.java)
         }
     }
 }
