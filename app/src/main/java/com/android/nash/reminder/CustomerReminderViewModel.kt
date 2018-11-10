@@ -59,7 +59,7 @@ class CustomerReminderViewModel : CoreViewModel() {
 
     private fun getAllTherapist(): Observable<MutableList<TherapistDataModel>> {
         if (getUserDataModel().value != null)
-            return mTherapistProvider.getTherapistFromLocation(getUserDataModel().value!!.locationUUID).toObservable()
+            return mTherapistProvider.getAllTherapist()
         return Observable.just(mutableListOf())
     }
 

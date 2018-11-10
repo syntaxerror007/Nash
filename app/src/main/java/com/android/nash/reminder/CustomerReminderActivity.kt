@@ -14,6 +14,8 @@ class CustomerReminderActivity : CoreActivity<CustomerReminderViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.customer_reminder_activity)
+
+        setTitle("Reminder")
         observeViewModel()
     }
 

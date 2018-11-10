@@ -36,7 +36,7 @@ class TherapistProvider {
         }
     }
 
-    fun getTherapistFromLocation(locationUUID: String): Single<MutableList<TherapistDataModel>> {
+    fun getTherapistFromLocation(locationUUID: String): Observable<MutableList<TherapistDataModel>> {
         return RxFirebaseDatabase.data(mLocationTherapistReference.child(locationUUID)).toObservable()
                 .flatMap {
                     Observable.fromArray(it.children.map {
@@ -47,7 +47,18 @@ class TherapistProvider {
                 .flatMap {
                     getTherapist(it).toObservable()
                 }
-                .toList()
+                .toList().toObservable()
+    }
+
+    fun getAllTherapist(): Observable<MutableList<TherapistDataModel>> {
+        return RxFirebaseDatabase.data(mTherapistReference).flatMapObservable {
+            if (it.exists()) {
+                return@flatMapObservable Observable.fromArray(it.children.mapNotNull { it.getValue(TherapistDataModel::class.java) }.toMutableList())
+            } else {
+                return@flatMapObservable Observable.just(mutableListOf<TherapistDataModel>())
+            }
+        }
+
     }
 
     fun getTherapist(therapistUUID: String): Single<TherapistDataModel> {
@@ -58,13 +69,16 @@ class TherapistProvider {
 
 
     fun updateTherapist(locationUUID: String, therapists: MutableList<TherapistDataModel>?) {
-        therapists?.forEach {
-            if (it.uuid.isBlank()) {
-                insertTherapistToLocation(locationUUID, it)
-            } else {
-                mLocationTherapistReference.child(locationUUID).child(it.uuid).setValue(true)
+        val disposable = RxFirebaseDatabase.removeValue(mLocationTherapistReference.child(locationUUID)).subscribe {
+            therapists?.forEach {
+                if (it.uuid.isBlank()) {
+                    insertTherapistToLocation(locationUUID, it)
+                } else {
+                    mLocationTherapistReference.child(locationUUID).child(it.uuid).setValue(true)
+                }
             }
         }
+
     }
 
     fun removeTherapistFromLocation(uuid: String): Task<Void> = mLocationTherapistReference.child(uuid).removeValue()

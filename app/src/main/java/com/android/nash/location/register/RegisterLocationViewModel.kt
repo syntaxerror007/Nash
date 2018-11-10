@@ -129,8 +129,8 @@ class RegisterLocationViewModel : CoreViewModel() {
         locationProvider.insertLocation(locationDataModel, serviceGroupListLiveData.value, availableTherapistsLiveData.value, therapistAssignmentMapLiveDataModel.value, onCompleteListener)
     }
 
-    private fun doUpdateLocation(locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
-        val locationDataModel = LocationDataModel(locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
+    private fun doUpdateLocation(locationUUID: String, locationName: String, locationAddress: String, locationPhoneNumber: String, onCompleteListener: OnCompleteListener<Task<Void>>) {
+        val locationDataModel = LocationDataModel(uuid = locationUUID, locationName = locationName, locationAddress = locationAddress, phoneNumber = locationPhoneNumber, user = toRegisterUserDataModel.value!!, totalServices = totalServiceSelectedLiveData.value!!)
         locationProvider.updateLocation(locationDataModel, serviceGroupListLiveData.value, availableTherapistsLiveData.value, therapistAssignmentMapLiveDataModel.value, onCompleteListener)
     }
 
@@ -223,14 +223,10 @@ class RegisterLocationViewModel : CoreViewModel() {
     }
 
     private fun doUpdateLocation(locationUUID: String, locationName: String, locationAddress: String, locationPhoneNumber: String) {
-        doUpdateLocation(locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
+        doUpdateLocation(locationUUID, locationName, locationAddress, locationPhoneNumber, OnCompleteListener { it ->
             if (it.isSuccessful) {
-                locationProvider.removeLocation(locationUUID, OnCompleteListener { it2 ->
-                    if (it2.isSuccessful) {
-                        isLoading.value = false
-                        isSuccess.value = true
-                    }
-                })
+                isLoading.value = false
+                isSuccess.value = true
             }
         })
     }
@@ -240,8 +236,8 @@ class RegisterLocationViewModel : CoreViewModel() {
             therapistAssignmentMap[serviceDataModel.uuid] = assignedTherapists
             therapistAssignmentMapLiveDataModel.value = therapistAssignmentMap
             serviceDataModel.numTherapist = assignedTherapists.size
-            assignedTherapists.forEach {assignedTherapist ->
-                availableTherapists.forEach {availableTherapist ->
+            assignedTherapists.forEach { assignedTherapist ->
+                availableTherapists.forEach { availableTherapist ->
                     if (availableTherapist.therapistName == assignedTherapist.therapistName) {
                         availableTherapist.assignmentSet.add(serviceDataModel.uuid)
                         availableTherapist.job = availableTherapist.assignmentSet.size

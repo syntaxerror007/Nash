@@ -61,7 +61,7 @@ class CustomerServiceViewModel : CoreViewModel() {
 
     private fun getAllTherapist(): Observable<MutableList<TherapistDataModel>> {
         if (getUserDataModel().value != null)
-            return mTherapistProvider.getTherapistFromLocation(getUserDataModel().value!!.locationUUID).toObservable()
+            return mTherapistProvider.getTherapistFromLocation(getUserDataModel().value!!.locationUUID)
         return Observable.just(mutableListOf())
     }
 

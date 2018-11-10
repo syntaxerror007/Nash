@@ -152,7 +152,7 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                 val price = editTextPrice.text.toString().toLong()
                 val treatmentDate = DateUtil.convertShownDateToNashDate(editTextServiceDate.text.toString())
                 val treatmentDateCalendar = treatmentDate.convertToCalendar()
-                val toRemindCalendar = Calendar.getInstance()
+                val toRemindCalendar = treatmentDateCalendar.clone() as Calendar
                 val lashType = editTextLashType.text.toString()
                 toRemindCalendar.add(Calendar.DAY_OF_MONTH, selectedService.reminder)
                 val toRemindDate = toRemindCalendar.toNashDate()
@@ -167,7 +167,7 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                         treatmentDateTimestamp = treatmentDateCalendar.timeInMillis,
                         toRemindDate = toRemindDate,
                         lashType = lashType,
-                        toRemindDateTimestamp = toRemindCalendar.time.time,
+                        toRemindDateTimestamp = toRemindCalendar.timeInMillis,
                         serviceGroup = selectedServiceGroup,
                         service = selectedService,
                         therapist = selectedTherapist,

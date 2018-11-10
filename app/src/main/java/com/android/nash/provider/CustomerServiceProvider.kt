@@ -3,6 +3,7 @@ package com.android.nash.provider
 import com.android.nash.data.*
 import com.android.nash.util.CUSTOMER_SERVICE_DB
 import com.android.nash.util.SERVICE_TRANSACTION_DB
+import com.android.nash.util.SERVICE_TRANSACTION_TIMESTAMP_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -15,6 +16,7 @@ class CustomerServiceProvider {
     val mFirebaseDatabase = FirebaseDatabase.getInstance()
     private val mCustomerServiceDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_SERVICE_DB)
     private val mServiceTransactionDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(SERVICE_TRANSACTION_DB)
+    private val mServiceToRemindTimestampDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(SERVICE_TRANSACTION_TIMESTAMP_DB)
     private val mServiceProvider = ServiceProvider()
     private val mTherapistProvider = TherapistProvider()
     private val mLocationProvider = LocationProvider()
@@ -62,13 +64,36 @@ class CustomerServiceProvider {
             }
 
     fun getCustomerServiceToRemind(timestamp: Long, locationUUID: String, therapists: List<TherapistDataModel>, serviceGroups: List<ServiceGroupDataModel>): Observable<List<CustomerServiceDataModel>> {
-        return RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(locationUUID).orderByChild("toRemindDateTimestamp").endAt(timestamp.toDouble())).flatMapObservable {
+        return RxFirebaseDatabase.data(mServiceTransactionDatabaseRef).flatMapObservable {
+            if (it.exists()) {
+                return@flatMapObservable Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.key })
+            } else {
+                return@flatMapObservable Observable.just(listOf<String>())
+            }
+        }
+                .flatMapIterable { it }
+                .flatMap {
+                    getCustomerServiceDataModel(it, timestamp, therapists, serviceGroups)
+                }
+                .flatMapIterable { it }
+                .map { it }
+                .toList()
+                .map {
+                    it.sortedWith(kotlin.Comparator { cust1, cust2 ->
+                        (cust2.toRemindDateTimestamp - cust1.toRemindDateTimestamp).toInt()
+                    })
+                }.toObservable()
+    }
+
+    private fun getCustomerServiceDataModel(customerUUID: String, timestamp: Long, therapists: List<TherapistDataModel>, serviceGroups: List<ServiceGroupDataModel>): Observable<MutableList<CustomerServiceDataModel>>? {
+        return RxFirebaseDatabase.data(mServiceTransactionDatabaseRef.child(customerUUID)).flatMapObservable {
             if (it.exists()) {
                 return@flatMapObservable Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerServiceDataModel::class.java) })
             } else {
                 return@flatMapObservable Observable.just(listOf<CustomerServiceDataModel>())
             }
         }.flatMapIterable { it }
+                .filter { it.toRemindDateTimestamp < timestamp && it.hasReminded.not() }
                 .flatMap {
                     Observable.zip(Observable.just(it), mCustomerProvider.getCustomerByUUID(it.customerUUID),
                             BiFunction { customerServiceDataModel: CustomerServiceDataModel, customerDataModel: CustomerDataModel ->
@@ -82,7 +107,6 @@ class CustomerServiceProvider {
                     it.service = findService(it)!!
                     Observable.just(it)
                 }.toList().toObservable()
-
     }
 
     private fun findService(it: CustomerServiceDataModel): ServiceDataModel? {
@@ -104,6 +128,6 @@ class CustomerServiceProvider {
     }
 
     fun setCustomerHasReminded(customerServiceDataModel: CustomerServiceDataModel, checked: Boolean): Completable {
-        return RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.locationUUID).child(customerServiceDataModel.uuid).child("hasReminded"), (checked))
+        return RxFirebaseDatabase.setValue(mServiceTransactionDatabaseRef.child(customerServiceDataModel.customerUUID).child(customerServiceDataModel.uuid).child("hasReminded"), (checked))
     }
 }
