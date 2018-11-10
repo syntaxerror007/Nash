@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerCustomerDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/common_dp_16">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerNameLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Customer Name"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline1"
+            app:layout_constraintTop_toBottomOf="@+id/customerNameLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerPhoneLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Customer Phone"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline1"
+            app:layout_constraintTop_toBottomOf="@id/customerName" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline1"
+            app:layout_constraintTop_toBottomOf="@id/customerPhoneLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerEmailLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Customer Email"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline1"
+            app:layout_constraintTop_toBottomOf="@id/customerPhone" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/guideline1"
+            app:layout_constraintTop_toBottomOf="@id/customerEmailLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerAddressLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Customer Address"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@id/guideline1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="@id/guideline1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customerAddressLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerDateOfBirthLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Date of Birth"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@id/guideline1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customerAddress" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/customerDateOfBirth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="@id/guideline1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customerDateOfBirthLabel" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_dp_1"
+            android:layout_marginTop="@dimen/common_dp_16"
+            android:layout_marginBottom="@dimen/common_dp_8"
+            app:layout_constraintTop_toBottomOf="@id/customerEmail"
+            android:background="@color/gray" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hasEyelashBeforeLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:text="Has Eyelash Before"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hasEyelashBefore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hasEyelashBeforeLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hasEyelashBeforeAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hasEyelashBefore" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/wearContactLensLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Wear Contact Lens"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hasEyelashBeforeAdditional" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/wearContactLens"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wearContactLensLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/wearContactLensAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wearContactLens" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/haveAllergyLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Has Allergy"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wearContactLensAdditional" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/haveAllergy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/haveAllergyLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/haveAllergyAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/haveAllergy" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hadEyeSurgeryLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Had Eye Surgery"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/haveAllergyAdditional" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hadEyeSurgery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hadEyeSurgeryLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/hadEyeSurgeryAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hadEyeSurgery" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/knowNashLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_8"
+            android:text="Know Nash From"
+            android:textSize="@dimen/common_sp_20"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hadEyeSurgeryAdditional" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/knowNash"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/knowNashLabel" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/knowNashAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_dp_4"
+            android:textSize="@dimen/common_sp_18"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/knowNash" />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerServiceList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/common_dp_8"
+        android:visibility="gone">
+
+        <include
+            android:id="@+id/recyclerViewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_dp_16"
+            android:layout_marginRight="@dimen/common_dp_16"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="gone"
+            layout="@layout/layout_service_customer_header" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_dp_16"
+            android:layout_marginRight="@dimen/common_dp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewHeader"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+        <include
+            android:id="@+id/recyclerViewFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_dp_16"
+            android:layout_marginRight="@dimen/common_dp_16"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewService"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="gone"
+            layout="@layout/layout_service_customer_footer" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

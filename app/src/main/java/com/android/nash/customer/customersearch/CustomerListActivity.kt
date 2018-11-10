@@ -7,6 +7,7 @@ import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.recyclerview.EndlessOnScrollListener
+import com.android.nash.customer.customerdetail.CustomerDetailActivity
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
 import kotlinx.android.synthetic.main.customer_list_activity.*
@@ -44,7 +45,7 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
             val bundle = Bundle()
             bundle.putParcelable("customerDataModel", Parcels.wrap(it))
             if (getViewModel().getUserDataModel().value?.userType.equals("ADMIN")) {
-
+                startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
             } else {
                 startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
             }
