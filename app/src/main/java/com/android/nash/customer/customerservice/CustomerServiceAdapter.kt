@@ -10,20 +10,21 @@ import com.android.nash.util.convertToString
 import com.android.nash.util.inflate
 import kotlinx.android.synthetic.main.layout_service_customer_item.view.*
 
-class CustomerServiceAdapter(val list : List<CustomerServiceDataModel>) : RecyclerView.Adapter<CustomerServiceAdapter.CustomerServiceViewHolder>() {
+class CustomerServiceAdapter(val list: List<CustomerServiceDataModel>, private val onItemClick: (CustomerServiceDataModel) -> Unit) : RecyclerView.Adapter<CustomerServiceAdapter.CustomerServiceViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerServiceViewHolder = CustomerServiceViewHolder(parent.inflate(R.layout.layout_service_customer_item))
 
     override fun getItemCount(): Int = list.size
 
-    override fun onBindViewHolder(holder: CustomerServiceViewHolder, position: Int) = holder.bind(list[position])
+    override fun onBindViewHolder(holder: CustomerServiceViewHolder, position: Int) = holder.bind(list[position], onItemClick)
 
     class CustomerServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(customerServiceDataModel: CustomerServiceDataModel) = with(itemView) {
+        fun bind(customerServiceDataModel: CustomerServiceDataModel, onItemClick: (CustomerServiceDataModel) -> Unit) = with(itemView) {
             textViewCustomerServiceDate.text = customerServiceDataModel.treatmentDate.convertToString()
             textViewCustomerServiceName.text = customerServiceDataModel.service.serviceName
             textViewCustomerServicePrice.text = customerServiceDataModel.price.convertToPrice()
             textViewCustomerServiceTherapist.text = customerServiceDataModel.therapist.therapistName
             textViewCustomerServiceLocation.text = customerServiceDataModel.locationName
+            setOnClickListener { onItemClick.invoke(customerServiceDataModel) }
         }
     }
 }

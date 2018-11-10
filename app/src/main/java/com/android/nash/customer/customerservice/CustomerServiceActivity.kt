@@ -83,6 +83,10 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
             recyclerViewHeader.setVisible(true)
             recyclerViewFooter.setVisible(true)
         }
-        recyclerViewService.adapter = CustomerServiceAdapter(it)
+        recyclerViewService.adapter = CustomerServiceAdapter(it) {
+            it.customerDataModel = getViewModel().getCustomerLiveData().value!!
+            val dialog = CustomerServiceDetailDialog(this, it)
+            dialog.show()
+        }
     }
 }

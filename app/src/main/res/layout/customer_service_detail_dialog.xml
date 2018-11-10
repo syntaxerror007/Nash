@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/common_dp_16">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Service Information"
+        android:textSize="20sp"
+        android:paddingTop="@dimen/common_dp_8"
+        android:paddingLeft="@dimen/common_dp_16"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/buttonClose" />
+
+    <ImageView
+        android:id="@+id/buttonClose"
+        android:layout_width="@dimen/common_dp_32"
+        android:layout_height="@dimen/common_dp_32"
+        android:paddingTop="@dimen/common_dp_8"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:layout_marginRight="@dimen/common_dp_16"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_dp_1"
+        android:layout_marginTop="@dimen/common_dp_16"
+        android:layout_marginBottom="@dimen/common_dp_8"
+        app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+        android:background="@color/gray" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/customerNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_20"
+        android:layout_marginTop="@dimen/common_dp_4"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        android:text="Customer Name" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/customerName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        android:textSize="@dimen/common_sp_18"
+        app:layout_constraintTop_toBottomOf="@+id/customerNameLabel"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/customerPhoneLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/customerName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        android:textSize="@dimen/common_sp_20"
+        android:text="Customer Phone" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/customerPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/customerPhoneLabel"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/locationLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/customerPhone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        android:textSize="@dimen/common_sp_20"
+        android:textStyle="bold"
+        android:text="Treatment Location" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/locationLabel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guideline1" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/serviceNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@+id/location"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        android:textSize="@dimen/common_sp_20"
+        android:textStyle="bold"
+        android:text="Service Name" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/serviceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@+id/serviceNameLabel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/therapistNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_sp_20"
+        android:text="Therapist Name" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/therapistName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/therapistNameLabel"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/treatmentDateLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/therapistName"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_sp_20"
+        android:text="Treatment Date" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/treatmentDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/treatmentDateLabel"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/toRemindDateLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/treatmentDate"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_sp_20"
+        android:text="To Remind Date" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/toRemindDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/toRemindDateLabel"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/priceLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/toRemindDate"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_sp_20"
+        android:text="Price" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/common_sp_18"
+        android:layout_marginTop="@dimen/common_dp_4"
+        app:layout_constraintTop_toBottomOf="@id/priceLabel"
+        app:layout_constraintLeft_toLeftOf="@id/guideline1"
+        app:layout_constraintRight_toRightOf="parent" />
+</android.support.constraint.ConstraintLayout>
