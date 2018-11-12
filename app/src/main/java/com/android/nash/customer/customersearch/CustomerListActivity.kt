@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.recyclerview.EndlessOnScrollListener
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.customer_list_activity.*
 import org.parceler.Parcels
 
 class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
+    private lateinit var customerListAdapter: CustomerListAdapter
     override fun onCreateViewModel(): CustomerListViewModel = ViewModelProviders.of(this).get(CustomerListViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +30,27 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         observeLiveData()
         getViewModel().listenOnTextChanged()
         getViewModel().getAllCustomer()
+
+        val mLayoutManager = LinearLayoutManager(this)
+        recyclerViewCustomer.layoutManager = mLayoutManager
+        recyclerViewCustomer.isNestedScrollingEnabled = true
+        recyclerViewCustomer.addOnScrollListener(object : EndlessOnScrollListener(mLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                getViewModel().loadMore()
+            }
+        })
+        customerListAdapter = CustomerListAdapter(mutableListOf()) { onCustomerItemClicked(it) }
+        recyclerViewCustomer.adapter = customerListAdapter
+    }
+
+    private fun onCustomerItemClicked(it: CustomerDataModel) {
+        val bundle = Bundle()
+        bundle.putParcelable("customerDataModel", Parcels.wrap(it))
+        if (getViewModel().getUserDataModel().value?.userType.equals("ADMIN")) {
+            startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
+        } else {
+            startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
+        }
     }
 
     private fun observeLiveData() {
@@ -41,20 +65,6 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     }
 
     private fun initRecyclerViewCustomer(it: List<CustomerDataModel>) {
-        recyclerViewCustomer.adapter = CustomerListAdapter(it) {
-            val bundle = Bundle()
-            bundle.putParcelable("customerDataModel", Parcels.wrap(it))
-            if (getViewModel().getUserDataModel().value?.userType.equals("ADMIN")) {
-                startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
-            } else {
-                startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
-            }
-        }
-
-        recyclerViewCustomer.addOnScrollListener(object : EndlessOnScrollListener() {
-            override fun onLoadMore() {
-                getViewModel().loadMore()
-            }
-        })
+        customerListAdapter.updateData(it)
     }
 }

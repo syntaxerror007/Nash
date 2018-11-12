@@ -57,7 +57,7 @@ class CustomerListViewModel : CoreViewModel() {
                     } else {
                         isLoadFinish.value = true
                     }
-                }, { _: Throwable -> })
+                }, { })
     }
 
     fun loadMore() {
