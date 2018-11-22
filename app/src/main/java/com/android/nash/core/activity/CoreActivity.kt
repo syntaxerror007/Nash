@@ -134,11 +134,11 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     }
 
     fun setPrimaryButtonImage(resId: Int) {
-        imageViewPrimaryButton.setImageDrawable(ContextCompat.getDrawable(this, resId))
+        imageViewPrimaryButton.background = ContextCompat.getDrawable(this, resId)
     }
 
     fun setSecondaryButtonImage(resId: Int) {
-        imageViewSecondaryButton.setImageDrawable(ContextCompat.getDrawable(this, resId))
+        imageViewSecondaryButton.background = ContextCompat.getDrawable(this, resId)
     }
 
     fun setPrimaryButtonClick(onClick: (view: View) -> Unit) {

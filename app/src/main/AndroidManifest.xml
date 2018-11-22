@@ -46,8 +46,7 @@
             android:screenOrientation="landscape" />
         <activity android:name="com.android.nash.customer.newcustomer.CustomerNewFormActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.android.nash.customer.customerservice.CustomerServiceActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name="com.android.nash.customer.customerservice.CustomerServiceActivity" />
         <activity android:name="com.android.nash.customer.customersearch.CustomerListActivity" />
         <activity
             android:name="com.android.nash.reminder.CustomerReminderActivity"

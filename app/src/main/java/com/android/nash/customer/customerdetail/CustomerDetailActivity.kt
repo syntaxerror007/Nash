@@ -1,9 +1,11 @@
 package com.android.nash.customer.customerdetail
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.util.convertToString
 import com.android.nash.util.setVisible
@@ -19,6 +21,28 @@ class CustomerDetailActivity : CoreActivity<CustomerDetailViewModel>() {
         setContentView(R.layout.customer_detail_activity)
         val customerServiceDataModel = Parcels.unwrap(intent.extras?.getParcelable("customerDataModel")) as CustomerDataModel
         setData(customerDataModel = customerServiceDataModel)
+        initToolbarButton()
+    }
+
+    private fun initToolbarButton() {
+        setPrimaryButtonImage(R.drawable.ic_menu)
+        setSecondaryButtonImage(R.drawable.ic_launcher_background)
+        showPrimaryButton()
+        showSecondaryButton()
+        setPrimaryButtonClick {
+
+        }
+
+        setSecondaryButtonClick {
+            navigateToCustomerServiceList()
+        }
+    }
+
+    private fun navigateToCustomerServiceList() {
+        val bundle = Bundle()
+        bundle.putParcelable("customerDataModel", Parcels.wrap(getViewModel().getCustomerData()))
+        startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
+        finish()
     }
 
     private fun setData(customerDataModel: CustomerDataModel) {
@@ -43,5 +67,6 @@ class CustomerDetailActivity : CoreActivity<CustomerDetailViewModel>() {
         knowNash.setVisible(customerDataModel.knowNashFrom.isNotEmpty())
         knowNashAdditional.text = customerDataModel.knowNashFromInfo
         knowNashAdditional.setVisible(customerDataModel.knowNashFromInfo.isNotEmpty())
+        getViewModel().setCustomerDataModel(customerDataModel)
     }
 }

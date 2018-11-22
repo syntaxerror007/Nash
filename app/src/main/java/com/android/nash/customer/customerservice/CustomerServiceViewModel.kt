@@ -81,4 +81,6 @@ class CustomerServiceViewModel : CoreViewModel() {
             it.printStackTrace()
         }
     }
+
+    fun getCustomerData(): CustomerDataModel = customerLiveData.value!!
 }

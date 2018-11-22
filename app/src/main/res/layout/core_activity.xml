@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:minHeight="?android:attr/actionBarSize"
-            app:contentInsetStartWithNavigation="0dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            app:contentInsetStartWithNavigation="0dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"

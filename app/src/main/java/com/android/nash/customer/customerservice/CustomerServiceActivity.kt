@@ -7,8 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.customer.customerdetail.CustomerDetailActivity
 import com.android.nash.customer.customerservice.create.CustomerAddServiceFormActivity
 import com.android.nash.data.CustomerServiceDataModel
+import com.android.nash.data.UserDataModel
 import com.android.nash.util.convertToPrice
 import com.android.nash.util.setVisible
 import kotlinx.android.synthetic.main.customer_service_activity.*
@@ -65,6 +67,7 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
             if (it != null) {
                 getViewModel().initData()
                 getViewModel().getCustomerServices()
+                initView(it)
             }
         })
 
@@ -73,6 +76,32 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
                 textViewTotalValue.text = it.convertToPrice()
             }
         })
+    }
+
+    private fun initView(it: UserDataModel) {
+        if (it.userType.equals("ADMIN", true)) {
+            initToolbarButton()
+        }
+    }
+
+    private fun initToolbarButton() {
+        setPrimaryButtonImage(R.drawable.ic_menu)
+        setSecondaryButtonImage(R.drawable.ic_launcher_background)
+        showPrimaryButton()
+        showSecondaryButton()
+        setPrimaryButtonClick {
+            navigateToCustomerDetail()
+        }
+
+        setSecondaryButtonClick {
+        }
+    }
+
+    private fun navigateToCustomerDetail() {
+        val bundle = Bundle()
+        bundle.putParcelable("customerDataModel", Parcels.wrap(getViewModel().getCustomerData()))
+        startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
+        finish()
     }
 
     private fun observeCustomerService(it: List<CustomerServiceDataModel>) {
