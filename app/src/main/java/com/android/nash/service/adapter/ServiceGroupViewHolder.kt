@@ -13,6 +13,7 @@ class ServiceGroupViewHolder(itemView: View?, isCompactMode: Boolean) : GroupVie
     private var titleTextView: TextView? = itemView?.groupTitleTextView
     private var chevron: ImageView? = itemView?.chevron
     private var buttonAddService: TextView? = itemView?.addServiceTextView
+    private var buttonDeleteService: TextView? = itemView?.deleteServiceTextView
     private var isExpanding = true
     private var isCompactMode = isCompactMode
 
@@ -25,6 +26,7 @@ class ServiceGroupViewHolder(itemView: View?, isCompactMode: Boolean) : GroupVie
         }
         buttonEdit?.setOnClickListener { serviceGroupListCallback?.onEditGroup(serviceGroupDataModel, position) }
         buttonAddService?.setOnClickListener { serviceGroupListCallback?.onAddService(serviceGroupDataModel, position) }
+        buttonDeleteService?.setOnClickListener { serviceGroupListCallback?.onDeleteServiceGroup(serviceGroupDataModel, position) }
         titleTextView?.text = serviceGroupDataModel?.serviceGroupName
         chevron?.setOnClickListener {
             animateChevron()

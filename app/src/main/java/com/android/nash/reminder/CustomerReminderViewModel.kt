@@ -45,6 +45,7 @@ class CustomerReminderViewModel : CoreViewModel() {
             customerServiceLiveData.value = it
             isLoading.value = false
         }) {
+            isLoading.value = false
             it.printStackTrace()
         }
     }

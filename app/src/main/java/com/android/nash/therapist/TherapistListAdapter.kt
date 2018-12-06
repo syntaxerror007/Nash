@@ -9,21 +9,22 @@ import com.android.nash.util.convertToString
 import com.android.nash.util.inflate
 import kotlinx.android.synthetic.main.layout_therapist_item.view.*
 
-class TherapistListAdapter(private val items: List<TherapistDataModel>, private val listener: (TherapistDataModel) -> Unit) : RecyclerView.Adapter<TherapistListAdapter.TherapistListViewHolder>() {
+class TherapistListAdapter(private val items: List<TherapistDataModel>, private val therapistListCallback: TherapistListCallback) : RecyclerView.Adapter<TherapistListAdapter.TherapistListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TherapistListViewHolder = TherapistListViewHolder(parent.inflate(R.layout.layout_therapist_item))
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: TherapistListViewHolder, position: Int) = holder.bind(items[position], listener)
+    override fun onBindViewHolder(holder: TherapistListViewHolder, position: Int) = holder.bind(items[position], therapistListCallback, position)
 
     class TherapistListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(therapistDataModel: TherapistDataModel, listener: (TherapistDataModel) -> Unit) = with(itemView) {
+        fun bind(therapistDataModel: TherapistDataModel, therapistListCallback: TherapistListCallback, position: Int) = with(itemView) {
             textViewTherapistName.text = therapistDataModel.therapistName
             textViewPhoneNumber.text = "Phone Number: ${therapistDataModel.phoneNumber}"
             textViewWorkSince.text = "Work Since: ${therapistDataModel.workSince.convertToString()}"
             textViewJobs.text = "Jobs: ${therapistDataModel.job}"
-            itemView.setOnClickListener { listener(therapistDataModel) }
+            buttonEdit.setOnClickListener { therapistListCallback.onTherapistEdit(therapistDataModel, position) }
+            buttonDelete.setOnClickListener { therapistListCallback.onTherapistDelete(therapistDataModel, position) }
         }
 
     }

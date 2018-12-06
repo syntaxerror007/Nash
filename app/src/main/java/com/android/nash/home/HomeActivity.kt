@@ -9,7 +9,6 @@ import com.android.nash.core.activity.CoreActivity
 import com.android.nash.customer.customersearch.CustomerListActivity
 import com.android.nash.customer.newcustomer.CustomerNewFormActivity
 import com.android.nash.data.UserDataModel
-import com.android.nash.location.list.LocationListActivity
 import com.android.nash.reminder.CustomerReminderActivity
 import com.android.nash.util.setVisible
 import kotlinx.android.synthetic.main.home_activity.*
@@ -32,7 +31,7 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
     private fun onUserLoaded(userDataModel: UserDataModel) {
         getViewModel().setLoading(false)
         if (userDataModel.userType == "ADMIN") {
-            startActivity(Intent(this, LocationListActivity::class.java))
+            startActivity(Intent(this, CustomerListActivity::class.java))
             finish()
         } else {
             homeContainer.setVisible(true)

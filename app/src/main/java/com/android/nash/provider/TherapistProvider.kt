@@ -7,8 +7,8 @@ import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.Single
 
 class TherapistProvider {
     val mFirebaseDatabase = FirebaseDatabase.getInstance()
@@ -61,9 +61,11 @@ class TherapistProvider {
 
     }
 
-    fun getTherapist(therapistUUID: String): Single<TherapistDataModel> {
-        return RxFirebaseDatabase.data(mTherapistReference.child(therapistUUID)).map {
-            it.getValue(TherapistDataModel::class.java)
+    fun getTherapist(therapistUUID: String): Maybe<TherapistDataModel> {
+        return RxFirebaseDatabase.data(mTherapistReference.child(therapistUUID)).flatMapMaybe {
+            if (it.exists())
+                return@flatMapMaybe Maybe.just(it.getValue(TherapistDataModel::class.java))
+            return@flatMapMaybe Maybe.empty<TherapistDataModel>()
         }
     }
 
@@ -71,10 +73,17 @@ class TherapistProvider {
     fun updateTherapist(locationUUID: String, therapists: MutableList<TherapistDataModel>?) {
         val disposable = RxFirebaseDatabase.removeValue(mLocationTherapistReference.child(locationUUID)).subscribe {
             therapists?.forEach {
-                if (it.uuid.isBlank()) {
+                val therapistUUID = it.uuid
+                if (therapistUUID.isBlank()) {
                     insertTherapistToLocation(locationUUID, it)
                 } else {
-                    mLocationTherapistReference.child(locationUUID).child(it.uuid).setValue(true)
+                    if (it.isDeleted) {
+                        RxFirebaseDatabase.removeValue(mTherapistReference.child(therapistUUID))
+                    } else {
+                        mTherapistReference.child(it.uuid).setValue(it).continueWith {
+                            mLocationTherapistReference.child(locationUUID).child(therapistUUID).setValue(true)
+                        }
+                    }
                 }
             }
         }

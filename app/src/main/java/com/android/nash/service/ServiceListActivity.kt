@@ -46,6 +46,18 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         })
         getViewModel().getInsertServiceError().observe(this, Observer { showErrorMessage(it!!) })
 
+        getViewModel().isLoading().observe(this, Observer { showLoading(it!!) })
+
+        getViewModel().isDataChanged().observe(this, Observer { getViewModel().loadAllService() })
+
+    }
+
+    private fun showLoading(it: Boolean) {
+        if (it) {
+            showLoadingDialog()
+        } else {
+            hideLoadingDialog()
+        }
     }
 
     override fun onCreateServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, newServiceGroupName: String) {
@@ -87,6 +99,10 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     override fun onAddService(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
         serviceDialog = ServiceFormDialog(this, this, serviceGroupDataModel, position, 0)
         serviceDialog.show()
+    }
+
+    override fun onDeleteServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
+        getViewModel().removeServiceGroup(serviceGroupDataModel)
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {

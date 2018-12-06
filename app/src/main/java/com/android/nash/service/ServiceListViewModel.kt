@@ -16,7 +16,13 @@ class ServiceListViewModel : CoreViewModel() {
     private val insertServiceGroupError = MutableLiveData<String>()
     private val insertServiceError = MutableLiveData<String>()
     private val serviceGroupList = mutableListOf<ServiceGroupDataModel>()
-    private val serviceProvider:ServiceProvider = ServiceProvider()
+    private val serviceProvider: ServiceProvider = ServiceProvider()
+    private val isLoading = MutableLiveData<Boolean>()
+    private val isDataChanged = MutableLiveData<Boolean>()
+
+    fun isLoading(): LiveData<Boolean> = isLoading
+
+    fun isDataChanged(): LiveData<Boolean> = isDataChanged
 
     fun getServiceGroupListLiveData(): LiveData<MutableList<ServiceGroupDataModel>> {
         return serviceGroupListLiveData
@@ -68,7 +74,9 @@ class ServiceListViewModel : CoreViewModel() {
     }
 
     fun loadAllService() {
-        val disposable = ServiceProvider().getAllServiceGroup().observeOn(AndroidSchedulers.mainThread())
+        val disposable = ServiceProvider().getAllServiceGroup().doOnSubscribe {
+            isLoading.value = true
+        }.observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable {
                     it
                 }.flatMap {
@@ -76,11 +84,13 @@ class ServiceListViewModel : CoreViewModel() {
                 }.toList()
                 .subscribe(
                         {
+                            isLoading.value = false
                             serviceGroupList.clear()
                             serviceGroupList.addAll(it)
                             serviceGroupListLiveData.value = serviceGroupList
                         }
                 ) {
+                    isLoading.value = true
                     it.printStackTrace()
                 }
     }
@@ -110,6 +120,15 @@ class ServiceListViewModel : CoreViewModel() {
             serviceProvider.updateService(prevServiceDataModel)
             serviceGroupDataModel.services[position] = prevServiceDataModel
         }
+    }
+
+    fun removeServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?) {
+        if (serviceGroupDataModel != null)
+            serviceProvider.deleteServiceGroup(serviceGroupDataModel.uuid)
+                    .doOnSubscribe { isLoading.value = true }.subscribe {
+                        isLoading.value = false
+                        isDataChanged.value = true
+                    }
     }
 
 }

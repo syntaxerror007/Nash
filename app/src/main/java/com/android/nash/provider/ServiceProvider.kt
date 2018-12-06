@@ -10,6 +10,7 @@ import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -57,9 +58,11 @@ class ServiceProvider {
         }
     }
 
-    fun getServiceGroupWithoutServiceFromUUID(uuid: String): Observable<ServiceGroupDataModel> {
-        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference.child(uuid)).flatMapObservable {
-            Observable.just(it.getValue(ServiceGroupDataModel::class.java))
+    fun getServiceGroupWithoutServiceFromUUID(uuid: String): Maybe<ServiceGroupDataModel> {
+        return RxFirebaseDatabase.data(mServiceGroupDatabaseReference.child(uuid)).flatMapMaybe {
+            if (it.exists())
+                return@flatMapMaybe Maybe.just(it.getValue(ServiceGroupDataModel::class.java))
+            return@flatMapMaybe Maybe.empty<ServiceGroupDataModel>()
         }
     }
 
@@ -135,8 +138,8 @@ class ServiceProvider {
         }
     }
 
-    fun deleteServiceGroup(serviceGroupUUID: String) {
-
+    fun deleteServiceGroup(serviceGroupUUID: String): Completable {
+        return RxFirebaseDatabase.removeValue(mServiceGroupDatabaseReference.child(serviceGroupUUID))
     }
 
     fun updateServiceGroup(oldServiceGroupName: String, serviceGroupDataModel: ServiceGroupDataModel, onCompleteListener: OnCompleteListener<Task<Void>>) {

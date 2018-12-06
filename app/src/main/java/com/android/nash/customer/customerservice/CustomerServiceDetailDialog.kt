@@ -23,11 +23,11 @@ class CustomerServiceDetailDialog(context: Context, private val customerServiceD
 
 
     private fun setData(customerServiceDataModel: CustomerServiceDataModel) {
-        customerName.text = customerServiceDataModel.customerDataModel.customerName
-        customerPhone.text = customerServiceDataModel.customerDataModel.customerPhone
+        customerName.text = customerServiceDataModel.customerDataModel?.customerName
+        customerPhone.text = customerServiceDataModel.customerDataModel?.customerPhone
         location.text = customerServiceDataModel.locationName
-        serviceName.text = customerServiceDataModel.service.serviceName
-        therapistName.text = customerServiceDataModel.therapist.therapistName
+        serviceName.text = customerServiceDataModel.service?.serviceName
+        therapistName.text = customerServiceDataModel.therapist?.therapistName
         treatmentDate.text = customerServiceDataModel.treatmentDate.convertToString()
         toRemindDate.text = customerServiceDataModel.toRemindDate.convertToString()
         price.text = "Rp. ${customerServiceDataModel.price.convertToPrice()}"

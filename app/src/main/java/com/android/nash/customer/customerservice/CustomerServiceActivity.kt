@@ -81,6 +81,7 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
     private fun initView(it: UserDataModel) {
         if (it.userType.equals("ADMIN", true)) {
             initToolbarButton()
+            buttonAddService.setVisible(false)
         }
     }
 

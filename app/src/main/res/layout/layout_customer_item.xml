@@ -6,22 +6,6 @@
     android:layout_marginTop="@dimen/common_dp_4"
     android:layout_marginBottom="@dimen/common_dp_4">
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/gray"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline1"
         android:layout_width="0dp"
@@ -51,7 +35,6 @@
         android:id="@+id/textViewCustomerName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -61,7 +44,6 @@
         android:id="@+id/textViewCustomerEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline1"
@@ -71,7 +53,6 @@
         android:id="@+id/textViewCustomerPhone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline2"
@@ -81,7 +62,6 @@
         android:id="@+id/textViewCustomerService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:paddingTop="@dimen/common_dp_16"
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline3"

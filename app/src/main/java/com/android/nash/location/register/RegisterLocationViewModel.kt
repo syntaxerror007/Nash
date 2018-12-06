@@ -252,4 +252,14 @@ class RegisterLocationViewModel : CoreViewModel() {
     fun setLoading(isLoading: Boolean) {
         this.isLoading.value = isLoading
     }
+
+    fun deleteTherapist(therapistDataModel: TherapistDataModel, position: Int) {
+        availableTherapists[position].isDeleted = true
+        availableTherapistsLiveData.value = availableTherapists
+    }
+
+    fun editTherapist(therapistDataModel: TherapistDataModel, position: Int) {
+        availableTherapists[position] = therapistDataModel
+        availableTherapistsLiveData.value = availableTherapists
+    }
 }

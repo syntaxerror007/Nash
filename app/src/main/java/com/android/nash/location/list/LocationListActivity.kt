@@ -1,6 +1,6 @@
 package com.android.nash.location.list
 
-import android.app.Dialog
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -49,17 +49,25 @@ class LocationListActivity : CoreActivity<LocationListViewModel>() {
     }
 
     private fun navigateToLocationDetail(it: LocationDataModel) {
-        val intent = Intent(this, RegisterLocationActivity::class.java)
         val bundle = Bundle()
         bundle.putParcelable("locationDataModel", Parcels.wrap(it))
-        startActivity(intent.putExtras(bundle))
+        startActivityForResult(Intent(this, RegisterLocationActivity::class.java).putExtras(bundle), 1)
     }
 
     private fun navigateToNewLocationForm() {
-        startActivity(Intent(this, RegisterLocationActivity::class.java))
+        startActivityForResult(Intent(this, RegisterLocationActivity::class.java), 1)
     }
 
     override fun onCreateViewModel(): LocationListViewModel {
         return ViewModelProviders.of(this).get(LocationListViewModel::class.java)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                getViewModel().getAllLocation()
+            }
+        }
     }
 }

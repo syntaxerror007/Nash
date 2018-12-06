@@ -14,13 +14,17 @@ import kotlinx.android.synthetic.main.register_therapist_dialog.*
 import java.util.*
 
 
-
-class RegisterTherapistDialog(context: Context, therapistRegisterCallback: TherapistRegisterCallback) : CoreDialog<RegisterTherapistViewModel>(context) {
+class RegisterTherapistDialog(context: Context, therapistRegisterCallback: TherapistRegisterCallback, private var therapistDataModel: TherapistDataModel? = null, private var position: Int = 0) : CoreDialog<RegisterTherapistViewModel>(context) {
     private var therapistCallback: TherapistRegisterCallback = therapistRegisterCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_therapist_dialog)
+        if (therapistDataModel != null) {
+            editTextTherapistName.setText(therapistDataModel?.therapistName)
+            editTextPhoneNumber.setText(therapistDataModel?.phoneNumber)
+            editTextWorkSince.setText(therapistDataModel?.workSince?.convertToString())
+        }
         initDialogSize()
         setListener()
     }
@@ -50,10 +54,21 @@ class RegisterTherapistDialog(context: Context, therapistRegisterCallback: Thera
         val workSince = editTextWorkSince.text.toString()
 
         if (isDataValid(therapistName, phoneNumber, workSince)) {
-            val therapistDataModel = TherapistDataModel(therapistName = therapistName, phoneNumber = phoneNumber, workSince = DateUtil.convertShownDateToNashDate(workSince), job = 0)
-            therapistCallback.onTherapistRegister(therapistDataModel)
-            dismissKeyboard()
-            dismiss()
+            if (therapistDataModel != null) {
+                therapistDataModel?.therapistName = therapistName
+                therapistDataModel?.phoneNumber = phoneNumber
+                therapistDataModel?.workSince = DateUtil.convertShownDateToNashDate(workSince)
+                therapistCallback.onTherapistRegister(therapistDataModel!!, position)
+                dismissKeyboard()
+                dismiss()
+
+            } else {
+                val therapistDataModel = TherapistDataModel(therapistName = therapistName, phoneNumber = phoneNumber, workSince = DateUtil.convertShownDateToNashDate(workSince), job = 0)
+                therapistCallback.onTherapistRegister(therapistDataModel, position)
+                dismissKeyboard()
+                dismiss()
+            }
+
         }
 
     }

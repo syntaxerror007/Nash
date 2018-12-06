@@ -41,7 +41,7 @@ class CustomerServiceProvider {
                         .concatMap {
                             Observable.zip(
                                     Observable.just(it),
-                                    mServiceProvider.getServiceGroupWithoutServiceFromUUID(it.serviceGroupUUID),
+                                    mServiceProvider.getServiceGroupWithoutServiceFromUUID(it.serviceGroupUUID).toObservable(),
                                     mServiceProvider.getServiceFromUUID(it.serviceUUID).toObservable(),
                                     mTherapistProvider.getTherapist(it.therapistUUID).toObservable(),
                                     mLocationProvider.getLocationName(it.locationUUID).toObservable(),
@@ -102,15 +102,21 @@ class CustomerServiceProvider {
                             })
                 }
                 .flatMap {
-                    it.therapist = findTherapist(therapists, it)!!
-                    it.serviceGroup = findServiceGroup(serviceGroups, it)!!
-                    it.service = findService(it)!!
+                    val therapist = findTherapist(therapists, it)
+                    if (therapist != null)
+                        it.therapist = therapist
+                    val serviceGroup = findServiceGroup(serviceGroups, it)
+                    if (serviceGroup != null)
+                        it.serviceGroup = serviceGroup
+                    val service = findService(it)
+                    if (service != null)
+                        it.service = service
                     Observable.just(it)
                 }.toList().toObservable()
     }
 
     private fun findService(it: CustomerServiceDataModel): ServiceDataModel? {
-        return it.serviceGroup.services.find { serviceDataModel ->
+        return it.serviceGroup?.services?.find { serviceDataModel ->
             it.serviceUUID == serviceDataModel.uuid
         }
     }

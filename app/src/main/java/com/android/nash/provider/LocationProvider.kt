@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -155,7 +156,7 @@ class LocationProvider {
                 .flatMap { Observable.fromArray(it.children.map { it.key!! }) }
                 .flatMapIterable { it }
                 .flatMap {
-                    Observable.zip(getServiceGroupFromUUID(it), getSelectedServicesFromServiceGroupUUID(locationUUID, it),
+                    Observable.zip(getServiceGroupFromUUID(it).toObservable(), getSelectedServicesFromServiceGroupUUID(locationUUID, it),
                             BiFunction { serviceGroup: ServiceGroupDataModel, services: MutableList<ServiceDataModel> ->
                                 serviceGroup.services = services
                                 Observable.just(serviceGroup)
@@ -201,7 +202,7 @@ class LocationProvider {
                 })
     }
 
-    private fun getServiceGroupFromUUID(serviceGroupUUID: String): Observable<ServiceGroupDataModel> {
+    private fun getServiceGroupFromUUID(serviceGroupUUID: String): Maybe<ServiceGroupDataModel> {
         return ServiceProvider().getServiceGroupWithoutServiceFromUUID(serviceGroupUUID)
     }
 

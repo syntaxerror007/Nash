@@ -34,6 +34,23 @@
         app:layout_constraintRight_toLeftOf="@+id/addServiceTextView"/>
 
     <TextView
+        android:id="@+id/deleteServiceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bordered_default_color"
+        android:paddingBottom="@dimen/common_dp_4"
+        android:paddingLeft="@dimen/common_dp_8"
+        android:paddingRight="@dimen/common_dp_8"
+        android:paddingTop="@dimen/common_dp_4"
+        android:layout_marginRight="@dimen/common_dp_4"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/addServiceTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/text_delete_service_group"
+        tools:text="Delete Service Group" />
+
+    <TextView
         android:id="@+id/addServiceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -78,7 +78,8 @@ class CustomerServiceViewModel : CoreViewModel() {
                 .subscribe({
             totalServicePriceLiveData.value = it.sumBy { it.price.toInt() }
         }) {
-            it.printStackTrace()
+                    isLoading.value = false
+                    it.printStackTrace()
         }
     }
 

@@ -19,9 +19,9 @@ class CustomerReminderAdapter(val list: List<CustomerServiceDataModel>, private 
     class CustomerReminderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(customerServiceDataModel: CustomerServiceDataModel, onReminded: (CustomerServiceDataModel, Boolean) -> Unit) = with(itemView) {
             textViewCustomerServiceDate.text = customerServiceDataModel.treatmentDate.convertToString()
-            textViewCustomerService.text = customerServiceDataModel.service.serviceName
-            textViewCustomerName.text = customerServiceDataModel.customerDataModel.customerName
-            textViewCustomerPhone.text = customerServiceDataModel.customerDataModel.customerPhone
+            textViewCustomerService.text = customerServiceDataModel.service?.serviceName
+            textViewCustomerName.text = customerServiceDataModel.customerDataModel?.customerName
+            textViewCustomerPhone.text = customerServiceDataModel.customerDataModel?.customerPhone
             checkBoxHasReminded.isChecked = customerServiceDataModel.hasReminded
             checkBoxHasReminded.setOnCheckedChangeListener { _, isChecked ->
                 onReminded.invoke(customerServiceDataModel, isChecked)

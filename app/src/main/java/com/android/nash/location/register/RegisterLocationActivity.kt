@@ -1,8 +1,10 @@
 package com.android.nash.location.register
 
+import android.app.Activity
 import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -15,6 +17,7 @@ import com.android.nash.service.dialog.list.ServiceListCallback
 import com.android.nash.service.dialog.list.ServiceListDialog
 import com.android.nash.service.form.ServiceCallback
 import com.android.nash.therapist.TherapistListAdapter
+import com.android.nash.therapist.TherapistListCallback
 import com.android.nash.therapist.assignment.TherapistAssignmentCallback
 import com.android.nash.therapist.assignment.TherapistAssignmentDialog
 import com.android.nash.therapist.register.RegisterTherapistDialog
@@ -25,7 +28,7 @@ import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.location_register_activity.*
 import org.parceler.Parcels
 
-class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback, TherapistAssignmentCallback {
+class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), UserRegisterCallback, TherapistRegisterCallback, ServiceListCallback, ServiceItemCallback, ServiceCallback, TherapistAssignmentCallback, TherapistListCallback {
 
     private lateinit var serviceDialog: Dialog
     private lateinit var serviceGroupAdapter: ServiceGroupAdapter
@@ -123,8 +126,12 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
         serviceGroupAdapter.notifyDataSetChanged()
     }
 
-    override fun onTherapistRegister(therapistDataModel: TherapistDataModel) {
-        getViewModel().registerTherapist(therapistDataModel)
+    override fun onTherapistRegister(therapistDataModel: TherapistDataModel, position: Int) {
+        if (therapistDataModel.uuid.isEmpty()) {
+            getViewModel().registerTherapist(therapistDataModel)
+        } else {
+            getViewModel().editTherapist(therapistDataModel, position)
+        }
     }
 
     override fun onUserCreated(userDataModel: UserDataModel, password: String?) {
@@ -145,6 +152,9 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
         getViewModel().isSuccess().observe(this, Observer {
             if (it != null && it) {
                 Toast.makeText(this, "Successfully add new Location", Toast.LENGTH_LONG).show()
+                val intent = Intent()
+                intent.putExtra("isSuccess", true)
+                setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
 
@@ -153,7 +163,7 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
-        therapistAssignmentDialog = TherapistAssignmentDialog(this, serviceDataModel, getViewModel().availableTherapistsLiveData().value!!, this)
+        therapistAssignmentDialog = TherapistAssignmentDialog(this, serviceDataModel, getViewModel().availableTherapistsLiveData().value!!.filter { !it.isDeleted }, this)
         therapistAssignmentDialog.show()
     }
 
@@ -166,12 +176,9 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
 
 
     private fun processTherapistsList(therapists: List<TherapistDataModel>?) {
-        recyclerViewTherapist.adapter = TherapistListAdapter(therapists!!) { onTherapistItemClicked() }
+        recyclerViewTherapist.adapter = TherapistListAdapter(therapists!!.filter { !it.isDeleted }, this)
     }
 
-    private fun onTherapistItemClicked() {
-
-    }
 
     private fun processPhoneNumberError(it: String?) {
         editTextPhoneNumber.error = it
@@ -192,6 +199,16 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
             firebaseApp?.delete()
             hideLoadingDialog()
         }
+    }
+
+
+    override fun onTherapistEdit(therapistDataModel: TherapistDataModel, position: Int) {
+        val registerTherapistDialog = RegisterTherapistDialog(this, this, therapistDataModel, position)
+        registerTherapistDialog.show()
+    }
+
+    override fun onTherapistDelete(therapistDataModel: TherapistDataModel, position: Int) {
+        getViewModel().deleteTherapist(therapistDataModel, position)
     }
 
     override fun onTherapistAssigned(serviceDataModel: ServiceDataModel?, assignedTherapist: List<TherapistDataModel>) {
