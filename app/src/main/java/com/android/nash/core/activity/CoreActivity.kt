@@ -17,7 +17,9 @@ import android.view.View
 import android.view.View.OnTouchListener
 import com.android.nash.R
 import com.android.nash.core.CoreViewModel
-import com.android.nash.core.loading_dialog.LoadingDialog
+import com.android.nash.core.dialog.confirmation.ConfirmationDialog
+import com.android.nash.core.dialog.confirmation.ConfirmationDialogViewModel
+import com.android.nash.core.dialog.loading.LoadingDialog
 import com.android.nash.customer.customersearch.CustomerListActivity
 import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
@@ -35,6 +37,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     private lateinit var viewModel: T
     private var backEnabled = false
     private lateinit var loadingDialog: Dialog
+    private var confirmationDialog: ConfirmationDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -261,5 +264,20 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         editTextSearch.setVisible(false)
         editTextSearch.text = null
         showPrimaryButton()
+    }
+
+
+    fun showConfirmationDialog(viewModel: ConfirmationDialogViewModel) {
+        if (confirmationDialog == null || !confirmationDialog!!.isShowing) {
+            confirmationDialog = ConfirmationDialog(this)
+            confirmationDialog?.setData(viewModel)
+            confirmationDialog?.show()
+        }
+    }
+
+    fun hideConfirmationDialog() {
+        if (confirmationDialog != null && confirmationDialog!!.isShowing) {
+            confirmationDialog?.dismiss()
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.android.nash.core.loading_dialog
+package com.android.nash.core.dialog.loading
 
 import android.content.Context
 import android.os.Bundle

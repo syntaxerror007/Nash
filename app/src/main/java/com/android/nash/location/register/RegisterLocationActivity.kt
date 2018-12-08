@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.core.dialog.confirmation.ConfirmationDialogViewModel
 import com.android.nash.data.*
 import com.android.nash.service.adapter.ServiceGroupAdapter
 import com.android.nash.service.adapter.ServiceItemCallback
@@ -208,7 +209,17 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
     }
 
     override fun onTherapistDelete(therapistDataModel: TherapistDataModel, position: Int) {
-        getViewModel().deleteTherapist(therapistDataModel, position)
+        val confirmationDialogViewModel = ConfirmationDialogViewModel(
+                "",
+                getString(R.string.text_confirmation_dialog_delete_message, therapistDataModel.therapistName),
+                getString(R.string.text_common_yes),
+                getString(R.string.text_common_no), {
+            hideConfirmationDialog()
+        }, {
+            getViewModel().deleteTherapist(therapistDataModel, position)
+            hideConfirmationDialog()
+        })
+        showConfirmationDialog(confirmationDialogViewModel)
     }
 
     override fun onTherapistAssigned(serviceDataModel: ServiceDataModel?, assignedTherapist: List<TherapistDataModel>) {

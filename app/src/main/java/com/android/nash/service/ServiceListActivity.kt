@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.core.dialog.confirmation.ConfirmationDialogViewModel
 import com.android.nash.data.ServiceDataModel
 import com.android.nash.data.ServiceGroupDataModel
 import com.android.nash.service.adapter.ServiceGroupAdapter
@@ -102,7 +103,18 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onDeleteServiceGroup(serviceGroupDataModel: ServiceGroupDataModel?, position: Int) {
-        getViewModel().removeServiceGroup(serviceGroupDataModel)
+
+        val confirmationDialogViewModel = ConfirmationDialogViewModel(
+                "",
+                getString(R.string.text_confirmation_dialog_delete_message, serviceGroupDataModel?.serviceGroupName),
+                getString(R.string.text_common_yes),
+                getString(R.string.text_common_no), {
+            hideConfirmationDialog()
+        }, {
+            getViewModel().removeServiceGroup(serviceGroupDataModel)
+            hideConfirmationDialog()
+        })
+        showConfirmationDialog(confirmationDialogViewModel)
     }
 
     override fun onItemEdit(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
@@ -111,7 +123,17 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
     }
 
     override fun onItemDelete(serviceGroupDataModel: ServiceGroupDataModel, serviceDataModel: ServiceDataModel?, groupPosition: Int, childPosition: Int) {
-        getViewModel().removeService(serviceGroupDataModel, serviceDataModel)
+        val confirmationDialogViewModel = ConfirmationDialogViewModel(
+                "",
+                getString(R.string.text_confirmation_dialog_delete_message, serviceDataModel?.serviceName),
+                getString(R.string.text_common_yes),
+                getString(R.string.text_common_no), {
+            hideConfirmationDialog()
+        }, {
+            getViewModel().removeService(serviceGroupDataModel, serviceDataModel)
+            hideConfirmationDialog()
+        })
+        showConfirmationDialog(confirmationDialogViewModel)
     }
 
     override fun onServiceCreated(serviceDataModel: ServiceDataModel, serviceGroupDataModel: ServiceGroupDataModel?, groupPosition: Int, position: Int) {

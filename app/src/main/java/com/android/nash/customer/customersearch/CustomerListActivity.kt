@@ -3,6 +3,7 @@ package com.android.nash.customer.customersearch
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.android.nash.core.recyclerview.EndlessOnScrollListener
 import com.android.nash.customer.customerdetail.CustomerDetailActivity
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
+import com.android.nash.util.ADMIN_TYPE
 import kotlinx.android.synthetic.main.customer_list_activity.*
 import org.parceler.Parcels
 
@@ -60,6 +62,14 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
                 showLoadingDialog()
             } else {
                 hideLoadingDialog()
+            }
+        })
+
+        getViewModel().getUserDataModel().observe(this, Observer {
+            requestedOrientation = if (it != null && it.userType == ADMIN_TYPE) {
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            } else {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
         })
     }

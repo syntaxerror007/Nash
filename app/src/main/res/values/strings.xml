@@ -57,4 +57,7 @@
         <item name="text_relatives">Friends/family/recommendations</item>
         <item name="text_others">Others</item>
     </array>
+    <string name="text_confirmation_dialog_delete_message"><![CDATA[Are you sure you want to delete <b>%1$s</b> data?]]></string>
+    <string name="text_common_no">No</string>
+    <string name="text_common_yes">Yes</string>
 </resources>

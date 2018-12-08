@@ -56,12 +56,12 @@ class LocationProvider {
         val locationRef = mDatabaseReference.child(locationDataModel.uuid)
         locationRef.setValue(locationDataModel).continueWith {
             if (it.isSuccessful) {
-                val selectedServiceGroupRef = mLocationServiceGroupReference.child(locationDataModel.uuid)
-                updateSelectedServiceGroup(selectedServiceGroupRef, mLocationTherapistAssignment.child(locationDataModel.uuid), selectedServiceGroup, assignmentTherapistMap)
+                mTherapistProvider.updateTherapist(locationDataModel.uuid, therapists)
             }
         }.continueWith {
             if (it.isSuccessful) {
-                mTherapistProvider.updateTherapist(locationDataModel.uuid, therapists)
+                val selectedServiceGroupRef = mLocationServiceGroupReference.child(locationDataModel.uuid)
+                updateSelectedServiceGroup(selectedServiceGroupRef, mLocationTherapistAssignment.child(locationDataModel.uuid), selectedServiceGroup, assignmentTherapistMap)
             }
         }.continueWith {
             mUserProvider.updateUserLocation(locationDataModel.user.id, locationDataModel.uuid).subscribe()

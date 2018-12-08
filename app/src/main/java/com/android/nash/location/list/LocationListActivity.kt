@@ -8,7 +8,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatDialog
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
-import com.android.nash.core.loading_dialog.LoadingDialog
+import com.android.nash.core.dialog.confirmation.ConfirmationDialogViewModel
+import com.android.nash.core.dialog.loading.LoadingDialog
 import com.android.nash.data.LocationDataModel
 import com.android.nash.location.register.RegisterLocationActivity
 import kotlinx.android.synthetic.main.location_list_activity.*
@@ -45,7 +46,17 @@ class LocationListActivity : CoreActivity<LocationListViewModel>() {
     }
 
     private fun deleteLocation(it: LocationDataModel) {
-        getViewModel().deleteLocation(it)
+        val confirmationDialogViewModel = ConfirmationDialogViewModel(
+                "",
+                getString(R.string.text_confirmation_dialog_delete_message, it.locationName),
+                getString(R.string.text_common_yes),
+                getString(R.string.text_common_no), {
+            hideConfirmationDialog()
+        }, {
+            getViewModel().deleteLocation(it)
+            hideConfirmationDialog()
+        })
+        showConfirmationDialog(confirmationDialogViewModel)
     }
 
     private fun navigateToLocationDetail(it: LocationDataModel) {
