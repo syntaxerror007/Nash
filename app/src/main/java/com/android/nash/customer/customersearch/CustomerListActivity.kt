@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.recyclerview.EndlessOnScrollListener
@@ -16,6 +18,7 @@ import com.android.nash.data.CustomerDataModel
 import com.android.nash.util.ADMIN_TYPE
 import kotlinx.android.synthetic.main.customer_list_activity.*
 import org.parceler.Parcels
+import java.io.File
 
 class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     private lateinit var customerListAdapter: CustomerListAdapter
@@ -43,12 +46,24 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         })
         customerListAdapter = CustomerListAdapter(mutableListOf()) { onCustomerItemClicked(it) }
         recyclerViewCustomer.adapter = customerListAdapter
+
+        buttonDownload.setOnClickListener { downloadAsCSV() }
+    }
+
+    private fun downloadAsCSV() {
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test.csv")
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        Log.d("MO", file.absolutePath)
+
+        getViewModel().downloadCustomer(file = file)
     }
 
     private fun onCustomerItemClicked(it: CustomerDataModel) {
         val bundle = Bundle()
         bundle.putParcelable("customerDataModel", Parcels.wrap(it))
-        if (getViewModel().getUserDataModel().value?.userType.equals("ADMIN")) {
+        if (getViewModel().getUserDataModel().value?.userType.equals(ADMIN_TYPE)) {
             startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
         } else {
             startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))

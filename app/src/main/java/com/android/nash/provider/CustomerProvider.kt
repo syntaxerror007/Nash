@@ -39,7 +39,7 @@ class CustomerProvider {
     fun getAllCustomer() = getAllCustomer(null)
 
     fun getAllCustomer(lastLoadedItemUUID: String?): Observable<List<CustomerDataModel>> {
-        val ref: Query = if (lastLoadedItemUUID == null) {
+        val ref: Query = if (lastLoadedItemUUID.isNullOrEmpty()) {
             mCustomerDatabaseRef.limitToFirst(totalItemPerPage)
         } else {
             mCustomerDatabaseRef.orderByChild("uuid").startAt(lastLoadedItemUUID).limitToFirst(totalItemPerPage)

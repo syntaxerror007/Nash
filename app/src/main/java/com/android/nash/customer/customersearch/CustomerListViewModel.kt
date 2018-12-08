@@ -5,8 +5,13 @@ import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.provider.CustomerProvider
+import com.android.nash.util.convertToString
+import de.siegmar.fastcsv.writer.CsvWriter
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 class CustomerListViewModel : CoreViewModel() {
@@ -74,5 +79,37 @@ class CustomerListViewModel : CoreViewModel() {
                 }
             }
         }
+    }
+
+    fun downloadCustomer(file: File) {
+        var lastLoadedCustomerUUID = ""
+        var isLoadFinish = false
+
+        val disposable = mCustomerProvider.getAllCustomer(lastLoadedCustomerUUID).flatMap {
+            if (it.isEmpty()) {
+                isLoadFinish = true
+            }
+            var csvWriter = CsvWriter()
+            try {
+                if (it.isEmpty()) {
+                    isLoadFinish = true
+                }
+                val temp = it.map {
+                    arrayOf(it.uuid, it.customerName, it.customerEmail, it.customerPhone, it.customerAddress, it.customerDateOfBirth.convertToString())
+                }
+                csvWriter.write(file, StandardCharsets.UTF_8, temp)
+                lastLoadedCustomerUUID = it.last().uuid
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+
+            }
+            return@flatMap Observable.just(it)
+        }
+                .subscribe({
+
+                }) {
+                    it.printStackTrace()
+                }
     }
 }

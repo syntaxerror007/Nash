@@ -49,6 +49,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
+    implementation 'de.siegmar:fastcsv:1.0.3'
 
     implementation('com.rengwuxian.materialedittext:library:2.1.4'){
         exclude group: 'com.android.support'
@@ -61,8 +62,8 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
 
     testImplementation 'junit:junit:4.12'

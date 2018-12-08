@@ -24,4 +24,8 @@ data class CustomerDataModel(
         var customerLowerCase: String = "",
         @get:Exclude var services:List<ServiceDataModel> = listOf(),
         @get:Exclude var isNeedToBeReminded: Boolean = false
-)
+) {
+    override fun toString(): String {
+        return "CustomerDataModel [id=$uuid, customerName=$customerName, customerEmail=$customerEmail]"
+    }
+}
