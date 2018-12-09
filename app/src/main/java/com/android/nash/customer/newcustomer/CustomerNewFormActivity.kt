@@ -25,6 +25,7 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         setTitle(R.string.text_new_customer_form_title)
         observeViewModel()
         setupMultiCheckGroups()
+        setBackEnabled(true)
         val customerDataModel: CustomerDataModel? = Parcels.unwrap(intent.extras?.getParcelable("customerDataModel"))
         if (customerDataModel != null) {
             getViewModel().setCustomerDataModel(customerDataModel)

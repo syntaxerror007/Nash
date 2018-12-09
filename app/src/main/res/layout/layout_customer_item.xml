@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="@dimen/common_dp_4"
     android:layout_marginBottom="@dimen/common_dp_4">
 
@@ -11,25 +11,28 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2"/>
+        app:layout_constraintGuide_percent="0.2" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.45"/>
+        app:layout_constraintGuide_percent="0.45" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7"/>
+        app:layout_constraintGuide_percent="0.7" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85"/>
+        app:layout_constraintGuide_percent="0.85" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewCustomerName"
@@ -39,7 +42,8 @@
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/guideline1"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewCustomerEmail"
         android:layout_width="0dp"
@@ -48,7 +52,8 @@
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline1"
         app:layout_constraintRight_toLeftOf="@id/guideline2"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewCustomerPhone"
         android:layout_width="0dp"
@@ -57,7 +62,8 @@
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline2"
         app:layout_constraintRight_toLeftOf="@id/guideline3"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textViewCustomerService"
         android:layout_width="wrap_content"
@@ -66,29 +72,34 @@
         android:paddingBottom="@dimen/common_dp_16"
         app:layout_constraintLeft_toLeftOf="@id/guideline3"
         app:layout_constraintRight_toLeftOf="@id/guideline4"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <ImageView
-        android:id="@+id/imageViewNeedToRemind"
-        android:layout_width="@dimen/common_dp_16"
-        android:layout_height="@dimen/common_dp_16"
-        android:paddingTop="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_16"
-        app:layout_constraintLeft_toLeftOf="@id/guideline4"
-        app:layout_constraintRight_toLeftOf="@+id/imageViewDetail"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@android:drawable/alert_light_frame"/>
-    <ImageView
-        android:id="@+id/imageViewDetail"
-        android:layout_width="@dimen/common_dp_16"
-        android:layout_height="@dimen/common_dp_16"
-        android:paddingTop="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_16"
-        app:layout_constraintLeft_toLeftOf="@id/imageViewNeedToRemind"
+        app:layout_constraintLeft_toRightOf="@id/guideline4"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@android:drawable/alert_light_frame"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageViewNeedToRemind"
+            android:layout_width="@dimen/common_dp_16"
+            android:layout_height="@dimen/common_dp_16"
+            android:layout_margin="@dimen/common_dp_4"
+            app:srcCompat="@drawable/ic_view"
+            android:gravity="center_vertical" />
+
+        <ImageView
+            android:id="@+id/imageViewDetail"
+            android:layout_width="@dimen/common_dp_16"
+            android:layout_height="@dimen/common_dp_16"
+            android:layout_margin="@dimen/common_dp_4"
+            android:gravity="center_vertical"
+            android:tint="@color/gray"
+            app:srcCompat="@drawable/ic_view" />
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

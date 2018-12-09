@@ -28,6 +28,7 @@ class CustomerListAdapter(val data: MutableList<CustomerDataModel> = mutableList
             textViewCustomerEmail.text = customerServiceDataModel.customerEmail
             textViewCustomerPhone.text = customerServiceDataModel.customerPhone
             textViewCustomerService.text = "${customerServiceDataModel.services.size}"
+            imageViewDetail.setVisible(true)
             imageViewNeedToRemind.setVisible(customerServiceDataModel.isNeedToBeReminded)
             setOnClickListener { onItemClickListener(customerServiceDataModel) }
         }
