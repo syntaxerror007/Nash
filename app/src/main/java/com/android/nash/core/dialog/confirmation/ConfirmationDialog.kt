@@ -12,6 +12,7 @@ class ConfirmationDialog(context: Context) : CoreDialog<ConfirmationDialogViewMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_confirmation_dialog)
+//        initDialogSize()
         btnNo.text = getViewModel().noMessage
         btnYes.text = getViewModel().yesMessage
         dialogTitle.text = getViewModel().dialogTitle

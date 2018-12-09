@@ -71,8 +71,10 @@
                     android:layout_margin="@dimen/common_dp_16"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:padding="@dimen/common_dp_4"
                     android:visibility="gone"
-                    android:background="@android:drawable/ic_menu_search" />
+                    android:tint="@color/white"
+                    app:srcCompat="@drawable/ic_search" />
                 <ImageView
                     android:id="@+id/imageViewSecondaryButton"
                     android:layout_width="@dimen/common_dp_32"
@@ -80,7 +82,9 @@
                     android:layout_margin="@dimen/common_dp_16"
                     android:layout_toLeftOf="@id/imageViewPrimaryButton"
                     android:visibility="gone"
-                    android:background="@android:drawable/ic_menu_search" />
+                    android:tint="@color/white"
+                    android:padding="@dimen/common_dp_4"
+                    app:srcCompat="@drawable/ic_search" />
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 

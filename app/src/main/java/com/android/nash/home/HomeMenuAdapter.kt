@@ -50,7 +50,6 @@ class HomeMenuAdapter(val items: List<String>, val context: Context, val onClick
     class HomeHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageViewHeader = itemView.findViewById<ImageView>(R.id.imageViewHeader)
         fun bind() {
-
         }
     }
 

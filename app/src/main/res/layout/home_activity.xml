@@ -1,117 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/homeContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:scaleY="0.7"
+        android:background="@drawable/ic_home_banner"
+        android:layout_marginLeft="@dimen/common_dp_64"
+        android:layout_marginRight="@dimen/common_dp_64"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/GuidelineVertical"
-        app:layout_constraintRight_toRightOf="parent"/>
-    <android.support.constraint.Guideline
-        android:id="@+id/GuidelineVertical"
-        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
-        android:orientation="horizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <LinearLayout
-        android:id="@+id/layoutSearch"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/Guideline3"
-        app:layout_constraintTop_toBottomOf="@id/GuidelineVertical"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingTop="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_16"
-        android:paddingLeft="@dimen/common_dp_8"
-        android:paddingRight="@dimen/common_dp_8"
-        android:background="@drawable/white_background_with_default_border"
-        android:layout_margin="@dimen/common_dp_8">
-        <ImageView
-            android:id="@+id/imageViewSearch"
-            android:layout_width="@dimen/common_dp_64"
-            android:layout_height="@dimen/common_dp_64"/>
-        <TextView
-            android:id="@+id/textViewSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/common_dp_32"
-            android:textSize="@dimen/common_sp_24"
-            android:text="@string/text_search"/>
-    </LinearLayout>
-    <android.support.constraint.Guideline
-        android:id="@+id/Guideline3"
-        app:layout_constraintTop_toBottomOf="@id/GuidelineVertical"
-        android:orientation="vertical"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <LinearLayout
-        android:id="@+id/layoutNewCustomer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintLeft_toRightOf="@id/Guideline3"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/GuidelineVertical"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingTop="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_16"
-        android:paddingLeft="@dimen/common_dp_8"
-        android:paddingRight="@dimen/common_dp_8"
-        android:layout_margin="@dimen/common_dp_8"
-        android:background="@drawable/white_background_with_default_border">
-        <ImageView
-            android:id="@+id/imageViewNewCustomer"
-            android:layout_width="@dimen/common_dp_64"
-            android:layout_height="@dimen/common_dp_64"/>
-        <TextView
-            android:id="@+id/textViewNewCustomer"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/common_dp_32"
-            android:textSize="@dimen/common_sp_24"
-            android:text="@string/text_new_customer"/>
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/containerFirstRow" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerFirstRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_dp_16"
+        app:layout_constraintBottom_toTopOf="@+id/layoutReminder"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
+        app:layout_constraintVertical_bias="1">
+
+        <LinearLayout
+            android:id="@+id/layoutSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_dp_32"
+            android:layout_marginRight="@dimen/common_dp_16"
+            android:layout_marginTop="@dimen/common_dp_16"
+            android:background="@drawable/white_background_with_default_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/common_dp_8"
+            android:paddingTop="@dimen/common_dp_16"
+            android:paddingRight="@dimen/common_dp_8"
+            android:paddingBottom="@dimen/common_dp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/Guideline3"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageViewSearch"
+                android:layout_width="@dimen/common_dp_48"
+                android:layout_height="@dimen/common_dp_48"
+                android:tint="@color/icon_home"
+                app:srcCompat="@drawable/ic_search"
+                android:layout_marginTop="@dimen/common_dp_16"
+                android:layout_marginBottom="@dimen/common_dp_16" />
+
+            <TextView
+                android:id="@+id/textViewSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/common_dp_32"
+                android:text="@string/text_search"
+                android:textColor="@color/icon_home"
+                android:textSize="@dimen/common_sp_24" />
+        </LinearLayout>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/Guideline3"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <LinearLayout
+            android:id="@+id/layoutNewCustomer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_dp_16"
+            android:layout_marginTop="@dimen/common_dp_16"
+            android:layout_marginRight="@dimen/common_dp_32"
+            android:layout_marginBottom="@dimen/common_dp_16"
+            android:background="@drawable/white_background_with_default_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/common_dp_8"
+            android:paddingTop="@dimen/common_dp_16"
+            android:paddingRight="@dimen/common_dp_8"
+            android:paddingBottom="@dimen/common_dp_16"
+            app:layout_constraintLeft_toRightOf="@id/Guideline3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageViewNewCustomer"
+                android:layout_width="@dimen/common_dp_48"
+                android:layout_height="@dimen/common_dp_48"
+                android:layout_marginTop="@dimen/common_dp_16"
+                android:tint="@color/icon_home"
+                app:srcCompat="@drawable/ic_customer"
+                android:layout_marginBottom="@dimen/common_dp_16" />
+
+            <TextView
+                android:id="@+id/textViewNewCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/common_dp_32"
+                android:text="@string/text_new_customer"
+                android:textColor="@color/icon_home"
+                android:textSize="@dimen/common_sp_24" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
     <LinearLayout
         android:id="@+id/layoutReminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutSearch"
+        android:layout_marginLeft="@dimen/common_dp_32"
+        android:layout_marginTop="@dimen/common_dp_32"
+        android:layout_marginRight="@dimen/common_dp_32"
+        android:layout_marginBottom="@dimen/common_dp_32"
+        android:background="@drawable/white_background_with_default_border"
         android:clickable="true"
         android:focusable="true"
-        android:paddingTop="@dimen/common_dp_16"
-        android:paddingBottom="@dimen/common_dp_16"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/common_dp_8"
+        android:paddingTop="@dimen/common_dp_16"
         android:paddingRight="@dimen/common_dp_8"
-        android:layout_margin="@dimen/common_dp_8"
-        android:background="@drawable/white_background_with_default_border">
+        android:paddingBottom="@dimen/common_dp_16"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_bias="1">
 
         <ImageView
             android:id="@+id/imageViewReminder"
-            android:layout_width="@dimen/common_dp_64"
-            android:layout_height="@dimen/common_dp_64"/>
+            android:layout_width="@dimen/common_dp_48"
+            android:layout_height="@dimen/common_dp_48"
+            android:layout_marginTop="@dimen/common_dp_16"
+            android:layout_marginBottom="@dimen/common_dp_16"
+            android:tint="@color/icon_home"
+            app:srcCompat="@drawable/ic_notifications_button" />
+
         <TextView
             android:id="@+id/textViewReminder"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/common_dp_32"
-            android:textSize="@dimen/common_sp_24"
-            android:text="@string/text_reminder"/>
+            android:text="@string/text_reminder"
+            android:textColor="@color/icon_home"
+            android:textSize="@dimen/common_sp_24" />
     </LinearLayout>
 
     <Button
@@ -119,9 +159,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_dp_8"
+        android:layout_marginBottom="@dimen/common_dp_32"
+        android:background="@drawable/white_background_with_default_border"
+        android:paddingLeft="@dimen/common_dp_32"
+        android:paddingRight="@dimen/common_dp_32"
         android:text="Log Out"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/layoutReminder"
+        android:textColor="@color/icon_home"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -21,4 +21,6 @@
     <dimen name="common_sp_24">24sp</dimen>
     <dimen name="common_dp_24">24dp</dimen>
     <dimen name="common_dp_20">20dp</dimen>
+    <dimen name="common_dp_12">12dp</dimen>
+    <dimen name="common_dp_48">48dp</dimen>
 </resources>

@@ -85,7 +85,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     fun setBackEnabled(isBackEnabled: Boolean) {
         if (isBackEnabled) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_material)
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back_button)
 
         } else {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
