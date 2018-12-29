@@ -105,3 +105,7 @@ fun View.setVisible(isVisible: Boolean) {
         this.visibility = View.GONE
     }
 }
+
+fun Boolean.toYesNo(): String {
+    return if (this) "YES" else "NO"
+}

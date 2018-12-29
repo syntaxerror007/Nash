@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.provider.CustomerProvider
-import com.android.nash.util.convertToString
+import de.siegmar.fastcsv.writer.CsvAppender
 import de.siegmar.fastcsv.writer.CsvWriter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -84,32 +84,33 @@ class CustomerListViewModel : CoreViewModel() {
     fun downloadCustomer(file: File) {
         var csvWriter = CsvWriter()
         var appender = csvWriter.append(file, StandardCharsets.UTF_8)
+        writeLine(CustomerDataModel.getCsvHeader(), appender)
+        isLoadingLiveData.value = true
         var temp = mCustomerProvider.getAllCustomerKey()
-                .flatMapIterable { it }
-                .flatMapMaybe {
+                .concatMapIterable { it }
+                .concatMapMaybe {
                     mCustomerProvider.getCustomerFromUUID(it)
-                }.flatMap {
+                }.concatMap {
                     try {
-                        val temps = arrayOf(it.uuid, it.customerName, it.customerEmail, it.customerPhone, it.customerAddress, it.customerDateOfBirth.convertToString())
-                        val temp = listOf(temps)
-                        temps.forEach {
-                            appender.appendField(it)
-                        }
-                        appender.endLine()
-                        appender.flush()
+                        val rowData = it.toCsvRow()
+                        writeLine(rowData, appender)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     } finally {
                     }
-                    return@flatMap Observable.just(it)
+                    return@concatMap Observable.just(it)
                 }.subscribe({
-                    try {
-                        appender.close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    isLoadingLiveData.value = false
                 }) {
                     it.printStackTrace()
                 }
+    }
+
+    private fun writeLine(temps: Array<String>, appender: CsvAppender) {
+        appender.apply {
+            temps.forEach { appendField(it) }
+            endLine()
+            flush()
+        }
     }
 }
