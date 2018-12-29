@@ -2,11 +2,10 @@ package com.android.nash.core.dialog.loading
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.app.AppCompatDialog
 import com.android.nash.R
-import com.android.nash.core.CoreViewModel
-import com.android.nash.core.dialog.CoreDialog
 
-class LoadingDialog(context: Context) : CoreDialog<CoreViewModel>(context) {
+class LoadingDialog(context: Context) : AppCompatDialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.loading_dialog)

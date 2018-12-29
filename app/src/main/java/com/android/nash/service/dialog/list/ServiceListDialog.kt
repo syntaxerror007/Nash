@@ -18,7 +18,6 @@ class ServiceListDialog(context: Context, serviceListCallback: ServiceListCallba
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_dialog)
-        initDialogSize()
         initDialogAdapter()
         setListener()
     }

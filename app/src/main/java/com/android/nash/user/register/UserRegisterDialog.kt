@@ -13,6 +13,7 @@ class UserRegisterDialog(context: Context, userCallback: UserRegisterCallback) :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_activity)
         btnRegister.setOnClickListener { registerUser() }
+        btnCancel.setOnClickListener { cancel() }
     }
 
     private fun registerUser() {

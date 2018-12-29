@@ -16,7 +16,6 @@ class ServiceGroupFormDialog(context: Context, serviceGroupCallback: ServiceGrou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_group_form_dialog)
-        initDialogSize()
         setListener()
         initData()
     }

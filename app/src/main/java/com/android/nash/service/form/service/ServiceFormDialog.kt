@@ -24,7 +24,6 @@ class ServiceFormDialog(context: Context, serviceCallback: ServiceCallback, serv
             editTextServiceName.setText(prevServiceDataModel?.serviceName)
             editTextReminder.setText("${prevServiceDataModel?.reminder}")
         }
-        initDialogSize()
         setListener()
     }
 

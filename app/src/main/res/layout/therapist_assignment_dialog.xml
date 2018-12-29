@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/common_dp_16"
     android:layout_marginRight="@dimen/common_dp_16"
-    android:layout_marginTop="@dimen/common_dp_16"
+    android:paddingTop="@dimen/common_dp_16"
+    android:paddingBottom="@dimen/common_dp_16"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -19,8 +20,9 @@
         android:text="Assign Therapist"/>
     <ImageView
         android:id="@+id/btnClose"
-        android:layout_width="@dimen/common_dp_32"
-        android:layout_height="@dimen/common_dp_32"
+        android:layout_width="@dimen/common_dp_16"
+        android:layout_height="@dimen/common_dp_16"
+        android:layout_marginTop="@dimen/common_dp_4"
         android:layout_marginRight="@dimen/common_dp_16"
         android:background="@drawable/ic_close_button"
         app:layout_constraintRight_toRightOf="parent"

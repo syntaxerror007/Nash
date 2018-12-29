@@ -18,7 +18,6 @@ class CustomerServiceDetailDialog(context: Context, private val customerServiceD
         setContentView(R.layout.customer_service_detail_dialog)
         buttonClose.setOnClickListener { dismiss() }
         setData(customerServiceDataModel = customerServiceDataModel)
-        initDialogSize()
     }
 
 

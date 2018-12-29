@@ -4,7 +4,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/common_dp_0">
+    android:paddingTop="@dimen/common_dp_16"
+    android:paddingBottom="@dimen/common_dp_16">
     <TextView
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
@@ -17,10 +18,10 @@
         android:paddingLeft="@dimen/common_dp_16"
         app:layout_constraintRight_toLeftOf="@+id/buttonClose"/>
     <ImageView
-        android:layout_marginTop="@dimen/common_dp_8"
         android:id="@+id/buttonClose"
-        android:layout_width="@dimen/common_dp_32"
-        android:layout_height="@dimen/common_dp_32"
+        android:layout_width="@dimen/common_dp_16"
+        android:layout_height="@dimen/common_dp_16"
+        android:layout_marginTop="@dimen/common_dp_12"
         android:src="@drawable/ic_close_button"
         android:layout_marginRight="@dimen/common_dp_16"
         app:layout_constraintTop_toTopOf="parent"

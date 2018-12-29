@@ -25,7 +25,6 @@ class RegisterTherapistDialog(context: Context, therapistRegisterCallback: Thera
             editTextPhoneNumber.setText(therapistDataModel?.phoneNumber)
             editTextWorkSince.setText(therapistDataModel?.workSince?.convertToString())
         }
-        initDialogSize()
         setListener()
     }
 

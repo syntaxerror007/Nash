@@ -16,7 +16,6 @@ class TherapistAssignmentDialog(context: Context, serviceDataModel: ServiceDataM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.therapist_assignment_dialog)
-        initDialogSize()
         setData()
         btnCancel.setOnClickListener { cancel() }
         btnClose.setOnClickListener { cancel() }

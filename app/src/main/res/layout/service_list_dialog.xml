@@ -20,9 +20,9 @@
             android:textSize="18sp"/>
         <ImageView
             android:id="@+id/btnClose"
-            android:layout_marginTop="@dimen/common_dp_8"
-            android:layout_width="@dimen/common_dp_32"
-            android:layout_height="@dimen/common_dp_32"
+            android:layout_width="@dimen/common_dp_16"
+            android:layout_height="@dimen/common_dp_16"
+            android:layout_marginTop="@dimen/common_dp_12"
             android:layout_marginRight="@dimen/common_dp_16"
             android:background="@drawable/ic_close_button"
             app:layout_constraintRight_toRightOf="parent"
