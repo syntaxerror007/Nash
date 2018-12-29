@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.recyclerview.EndlessOnScrollListener
@@ -55,7 +54,6 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         if (!file.exists()) {
             file.createNewFile()
         }
-        Log.d("MO", file.absolutePath)
 
         getViewModel().downloadCustomer(file = file)
     }

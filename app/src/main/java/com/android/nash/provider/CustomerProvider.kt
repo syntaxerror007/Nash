@@ -2,16 +2,19 @@ package com.android.nash.provider
 
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.util.CUSTOMER_DB
+import com.android.nash.util.CUSTOMER_KEY_DB
 import com.androidhuman.rxfirebase2.database.RxFirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 
 class CustomerProvider {
     private val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val mCustomerDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_DB)
+    private val mCustomerKeyDatabaseRef: DatabaseReference = mFirebaseDatabase.getReference(CUSTOMER_KEY_DB)
     val totalItemPerPage = 50
 
     fun getKey(databaseReference: DatabaseReference): String = databaseReference.push().key!!
@@ -19,6 +22,7 @@ class CustomerProvider {
     fun insertCustomer(customerDataModel: CustomerDataModel): Completable = with(customerDataModel) {
         if (uuid.isBlank())
             uuid = getKey(mCustomerDatabaseRef)
+        mCustomerKeyDatabaseRef.child(uuid).setValue(true)
         return RxFirebaseDatabase.setValue(mCustomerDatabaseRef.child(uuid), customerDataModel)
     }
 
@@ -61,6 +65,25 @@ class CustomerProvider {
                 Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.getValue(CustomerDataModel::class.java) })
             else
                 Observable.just(listOf())
+        }
+    }
+
+    fun getAllCustomerKey(): Observable<List<String>> {
+        return RxFirebaseDatabase.data(mCustomerKeyDatabaseRef).flatMapObservable {
+            if (it.exists()) {
+                return@flatMapObservable Observable.fromArray(it.children.mapNotNull { return@mapNotNull it.key })
+            }
+            return@flatMapObservable Observable.just(listOf<String>())
+        }
+    }
+
+    fun getCustomerFromUUID(it: String): Maybe<CustomerDataModel> {
+        return RxFirebaseDatabase.data(mCustomerDatabaseRef.child(it)).flatMapMaybe {
+            if (it.exists()) {
+                return@flatMapMaybe Maybe.just(it.getValue(CustomerDataModel::class.java)!!)
+            } else {
+                return@flatMapMaybe Maybe.empty<CustomerDataModel>()
+            }
         }
     }
 }

@@ -82,32 +82,32 @@ class CustomerListViewModel : CoreViewModel() {
     }
 
     fun downloadCustomer(file: File) {
-        var lastLoadedCustomerUUID = ""
-        var isLoadFinish = false
-
-        val disposable = mCustomerProvider.getAllCustomer(lastLoadedCustomerUUID).flatMap {
-            if (it.isEmpty()) {
-                isLoadFinish = true
-            }
-            var csvWriter = CsvWriter()
-            try {
-                if (it.isEmpty()) {
-                    isLoadFinish = true
-                }
-                val temp = it.map {
-                    arrayOf(it.uuid, it.customerName, it.customerEmail, it.customerPhone, it.customerAddress, it.customerDateOfBirth.convertToString())
-                }
-                csvWriter.write(file, StandardCharsets.UTF_8, temp)
-                lastLoadedCustomerUUID = it.last().uuid
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-
-            }
-            return@flatMap Observable.just(it)
-        }
-                .subscribe({
-
+        var csvWriter = CsvWriter()
+        var appender = csvWriter.append(file, StandardCharsets.UTF_8)
+        var temp = mCustomerProvider.getAllCustomerKey()
+                .flatMapIterable { it }
+                .flatMapMaybe {
+                    mCustomerProvider.getCustomerFromUUID(it)
+                }.flatMap {
+                    try {
+                        val temps = arrayOf(it.uuid, it.customerName, it.customerEmail, it.customerPhone, it.customerAddress, it.customerDateOfBirth.convertToString())
+                        val temp = listOf(temps)
+                        temps.forEach {
+                            appender.appendField(it)
+                        }
+                        appender.endLine()
+                        appender.flush()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                    }
+                    return@flatMap Observable.just(it)
+                }.subscribe({
+                    try {
+                        appender.close()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }) {
                     it.printStackTrace()
                 }
