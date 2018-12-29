@@ -27,7 +27,7 @@
         android:layout_width="@dimen/common_dp_16"
         android:layout_height="@dimen/common_dp_16"
         android:layout_margin="@dimen/common_dp_8"
-        android:background="@android:drawable/ic_menu_close_clear_cancel"/>
+        android:background="@drawable/ic_close_button" />
     <View
         android:id="@+id/divider"
         app:layout_constraintTop_toBottomOf="@id/textViewLocationName"

@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
-        android:background="@android:drawable/ic_menu_edit"/>
+        android:tint="@color/white"
+        android:src="@drawable/ic_edit" />
     <TextView
         android:id="@+id/groupTitleTextView"
         android:layout_width="0dp"

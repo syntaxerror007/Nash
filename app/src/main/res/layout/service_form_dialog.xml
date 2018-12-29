@@ -19,7 +19,7 @@
         android:layout_width="@dimen/common_dp_32"
         android:layout_height="@dimen/common_dp_32"
         android:paddingTop="@dimen/common_dp_8"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:src="@drawable/ic_close_button"
         android:layout_marginRight="@dimen/common_dp_16"
         app:layout_constraintRight_toRightOf="parent" />
     <android.support.design.widget.TextInputLayout

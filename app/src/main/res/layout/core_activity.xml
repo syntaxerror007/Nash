@@ -60,7 +60,7 @@
                     android:background="@color/white"
                     android:textColor="@color/black"
                     android:layout_marginRight="@dimen/common_dp_16"
-                    android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+                    android:drawableRight="@drawable/ic_close_button"
                     android:visibility="gone"
                     tools:text="test test" />
 

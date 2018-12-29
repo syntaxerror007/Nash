@@ -22,7 +22,7 @@
         android:layout_width="@dimen/common_dp_32"
         android:layout_height="@dimen/common_dp_32"
         android:layout_marginRight="@dimen/common_dp_16"
-        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="@drawable/ic_close_button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

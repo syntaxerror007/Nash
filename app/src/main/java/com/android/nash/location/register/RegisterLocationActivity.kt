@@ -139,7 +139,7 @@ class RegisterLocationActivity : CoreActivity<RegisterLocationViewModel>(), User
         getViewModel().setUserDataModel(userDataModel)
         if (password != null)
             getViewModel().setUserPassword(password)
-        btnRegisterCashier.text = userDataModel.username
+        btnRegister.text = userDataModel.username
     }
 
 
