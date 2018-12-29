@@ -73,8 +73,7 @@
                     android:layout_alignParentRight="true"
                     android:padding="@dimen/common_dp_4"
                     android:visibility="gone"
-                    android:tint="@color/white"
-                    app:srcCompat="@drawable/ic_search" />
+                    android:tint="@color/white" />
                 <ImageView
                     android:id="@+id/imageViewSecondaryButton"
                     android:layout_width="@dimen/common_dp_32"
@@ -83,8 +82,7 @@
                     android:layout_toLeftOf="@id/imageViewPrimaryButton"
                     android:visibility="gone"
                     android:tint="@color/white"
-                    android:padding="@dimen/common_dp_4"
-                    app:srcCompat="@drawable/ic_search" />
+                    android:padding="@dimen/common_dp_4" />
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 

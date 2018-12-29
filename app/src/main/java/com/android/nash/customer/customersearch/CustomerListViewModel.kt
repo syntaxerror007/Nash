@@ -85,7 +85,6 @@ class CustomerListViewModel : CoreViewModel() {
         var csvWriter = CsvWriter()
         var appender = csvWriter.append(file, StandardCharsets.UTF_8)
         writeLine(CustomerDataModel.getCsvHeader(), appender)
-        isLoadingLiveData.value = true
         var temp = mCustomerProvider.getAllCustomerKey()
                 .concatMapIterable { it }
                 .concatMapMaybe {
@@ -96,11 +95,9 @@ class CustomerListViewModel : CoreViewModel() {
                         writeLine(rowData, appender)
                     } catch (e: Exception) {
                         e.printStackTrace()
-                    } finally {
                     }
                     return@concatMap Observable.just(it)
-                }.subscribe({
-                    isLoadingLiveData.value = false
+                }.toList().subscribe({
                 }) {
                     it.printStackTrace()
                 }

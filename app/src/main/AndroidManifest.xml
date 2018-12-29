@@ -59,6 +59,10 @@
         <activity
             android:name=".customer.customerdetail.CustomerDetailActivity"
             android:screenOrientation="landscape" />
+
+        <service
+            android:name=".backgroundservice.CustomerDownloadService"
+            android:exported="false" />
     </application>
 
 </manifest>
