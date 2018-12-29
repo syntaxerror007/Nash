@@ -26,6 +26,7 @@ class ServiceListActivity : CoreActivity<ServiceListViewModel>(), ServiceGroupCa
         super.onCreate(savedInstanceState)
         setContentView(R.layout.service_list_activity)
         setTitle("Services")
+        setDrawerItemSelected(R.id.menu_service)
         btnAddNewServiceGroup.setOnClickListener { showServiceGroupDialog() }
         observe()
         getViewModel().loadAllService()

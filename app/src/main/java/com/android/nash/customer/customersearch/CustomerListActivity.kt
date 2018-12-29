@@ -27,6 +27,7 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.customer_list_activity)
         setTitle("Customer")
+        setDrawerItemSelected(R.id.menu_customer)
         hideSearchForm()
         setPrimaryButtonClick {
             showSearchForm()

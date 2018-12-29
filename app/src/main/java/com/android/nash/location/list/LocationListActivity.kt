@@ -22,6 +22,7 @@ class LocationListActivity : CoreActivity<LocationListViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_list_activity)
         setTitle(R.string.text_location_list_title)
+        setDrawerItemSelected(R.id.menu_location)
         loadingDialog = LoadingDialog(this)
         observeLiveData()
         getViewModel().getAllLocation()

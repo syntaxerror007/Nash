@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_customer"
-        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:icon="@drawable/ic_customer"
         android:title="Customer" />
     <item android:id="@+id/menu_location"
-        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:icon="@drawable/ic_location"
         android:title="Location"/>
     <item android:id="@+id/menu_service"
-        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:icon="@drawable/ic_service"
         android:title="Service"/>
     <item android:id="@+id/menu_setting"
-        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:icon="@drawable/ic_settings"
         android:title="Setting"/>
     <item
         android:id="@+id/menu_logout"
-        android:icon="@drawable/common_google_signin_btn_icon_dark"
+        android:icon="@drawable/ic_location"
         android:title="Log Out" />
 </menu>

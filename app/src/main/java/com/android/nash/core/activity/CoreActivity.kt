@@ -160,7 +160,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         imageViewSecondaryButton.setVisible(true)
     }
 
-    fun setDrawerItemClickListener() {
+    private fun setDrawerItemClickListener() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_location -> {
@@ -183,6 +183,10 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
             mDrawerLayout.closeDrawers()
             true
         }
+    }
+
+    fun setDrawerItemSelected(menuId: Int) {
+        navigationView.menu.findItem(menuId).isChecked = true
     }
 
     fun doLogout() {
