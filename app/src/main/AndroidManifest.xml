@@ -60,6 +60,10 @@
             android:name=".customer.customerdetail.CustomerDetailActivity"
             android:screenOrientation="landscape" />
 
+        <activity
+            android:name=".setting.SettingActivity"
+            android:screenOrientation="landscape" />
+
         <service
             android:name=".backgroundservice.CustomerDownloadService"
             android:exported="false" />

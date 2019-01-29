@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextNewPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline1"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_new_password_hint"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        android:inputType="textPassword"
+        app:met_floatingLabel="highlight" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/editTextRepeatNewPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/guideline1"
+        android:layout_marginLeft="@dimen/common_dp_16"
+        android:layout_marginRight="@dimen/common_dp_16"
+        android:layout_marginTop="@dimen/common_dp_8"
+        android:hint="@string/text_repeat_new_password"
+        android:paddingLeft="@dimen/common_dp_4"
+        android:paddingRight="@dimen/common_dp_4"
+        android:inputType="textPassword"
+        app:met_floatingLabel="highlight" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnChangePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_button_change_password"
+        android:paddingLeft="@dimen/common_dp_24"
+        android:paddingRight="@dimen/common_dp_24"
+        android:layout_marginTop="@dimen/common_dp_12"
+        app:layout_constraintTop_toBottomOf="@id/editTextRepeatNewPassword"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:textAllCaps="true" />
+</android.support.constraint.ConstraintLayout>

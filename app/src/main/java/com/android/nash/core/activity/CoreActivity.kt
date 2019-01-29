@@ -25,6 +25,7 @@ import com.android.nash.data.UserDataModel
 import com.android.nash.location.list.LocationListActivity
 import com.android.nash.login.LoginActivity
 import com.android.nash.service.ServiceListActivity
+import com.android.nash.setting.SettingActivity
 import com.android.nash.util.setVisible
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.core_activity.*
@@ -201,7 +202,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     }
 
     private fun gotoSettingPage() {
-
+        startActivity(Intent(this, SettingActivity::class.java))
     }
 
     private fun gotoServicePage() {

@@ -125,6 +125,15 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
     }
 
     private fun initRecyclerViewCustomer(it: List<CustomerDataModel>) {
+        val x = 10
+        when {
+            x == 1 -> print("x == 1")
+            x == 2 -> print("x == 2")
+            x > 2 -> print("x > 2")
+            else -> { // Note the block
+                print("x is less than 1")
+            }
+        }
         customerListAdapter.updateData(it)
     }
 }

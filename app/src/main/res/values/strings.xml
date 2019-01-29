@@ -60,4 +60,7 @@
     <string name="text_confirmation_dialog_delete_message"><![CDATA[Are you sure you want to delete <b>%1$s</b> data?]]></string>
     <string name="text_common_no">No</string>
     <string name="text_common_yes">Yes</string>
+    <string name="text_new_password_hint">New Password</string>
+    <string name="text_repeat_new_password">Repeat New Password</string>
+    <string name="text_button_change_password">Change Password</string>
 </resources>

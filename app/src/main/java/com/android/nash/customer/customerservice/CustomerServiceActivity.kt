@@ -86,8 +86,8 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
     }
 
     private fun initToolbarButton() {
-        setPrimaryButtonImage(R.drawable.ic_menu)
-        setSecondaryButtonImage(R.drawable.ic_launcher_background)
+        setPrimaryButtonImage(R.drawable.ic_customer_white)
+        setSecondaryButtonImage(R.drawable.ic_service_gray)
         showPrimaryButton()
         showSecondaryButton()
         setPrimaryButtonClick {

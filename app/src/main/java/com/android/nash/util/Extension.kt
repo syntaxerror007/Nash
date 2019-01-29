@@ -20,10 +20,11 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 
 fun ImageView.loadUrl(url: CharSequence?, @DrawableRes placeholder: Int) {
-    val requestOptions: RequestOptions = RequestOptions().placeholder(placeholder)
+    val requestOptions = RequestOptions().placeholder(placeholder)
     Glide.with(context).load(url).apply(requestOptions).into(this)
 }
 
@@ -108,4 +109,11 @@ fun View.setVisible(isVisible: Boolean) {
 
 fun Boolean.toYesNo(): String {
     return if (this) "YES" else "NO"
+}
+
+fun String.isValidEmail(): Boolean {
+    val VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)
+
+    val matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(this)
+    return matcher.find()
 }

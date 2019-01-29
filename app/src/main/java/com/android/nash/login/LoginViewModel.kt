@@ -3,6 +3,7 @@ package com.android.nash.login
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
+import com.android.nash.util.isValidEmail
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginViewModel : CoreViewModel() {
@@ -32,11 +33,14 @@ class LoginViewModel : CoreViewModel() {
         if (!isDataValid(username, password)) {
             return
         }
-        FirebaseAuth.getInstance().signInWithEmailAndPassword("$username@nash.com", password).addOnCompleteListener {
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(getUsername(username), password).addOnCompleteListener {
             loadingState.value = false
             successLogin.value = it.isSuccessful
         }
     }
+
+    private fun getUsername(username: String) = if (username.isValidEmail()) username else "$username@nash.com"
 
     private fun isDataValid(username: String, password: String): Boolean {
         if (username.isBlank()) {
