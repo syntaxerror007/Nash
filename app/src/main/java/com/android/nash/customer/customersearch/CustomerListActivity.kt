@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView
 import com.android.nash.R
 import com.android.nash.backgroundservice.CustomerDownloadService
 import com.android.nash.core.activity.CoreActivity
+import com.android.nash.core.dialog.confirmation.ConfirmationDialog
+import com.android.nash.core.dialog.confirmation.ConfirmationDialogViewModel
 import com.android.nash.core.recyclerview.EndlessOnScrollListener
 import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.customer.newcustomer.CustomerNewFormActivity
@@ -39,10 +41,9 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         observeLiveData()
         getViewModel().listenOnTextChanged()
         getViewModel().getAllCustomer()
-        setupRecyclerView()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(isAdmin: Boolean) {
         val mLayoutManager = LinearLayoutManager(this)
         recyclerViewCustomer.layoutManager = mLayoutManager
         recyclerViewCustomer.isNestedScrollingEnabled = true
@@ -51,8 +52,23 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
                 getViewModel().loadMore()
             }
         })
-        customerListAdapter = CustomerListAdapter(mutableListOf()) { onCustomerItemClicked(it) }
+        customerListAdapter = CustomerListAdapter(mutableListOf(), onDeleteClicked = { onCustomerDelete(it) }, onItemClickListener = { onCustomerItemClicked(it) }, isAdmin = isAdmin)
         recyclerViewCustomer.adapter = customerListAdapter
+    }
+
+    private fun onCustomerDelete(it: CustomerDataModel) {
+        val confirmationDialog = ConfirmationDialog(this)
+        confirmationDialog.setData(ConfirmationDialogViewModel("",
+                getString(R.string.text_confirmation_dialog_delete_message, it.customerName),
+                getString(R.string.text_common_yes),
+                getString(R.string.text_common_no),
+                onNoClicked = {
+                    confirmationDialog.cancel()
+                }, onYesClicked = {
+            confirmationDialog.dismiss()
+            getViewModel().deleteCustomer(it)
+        }))
+        confirmationDialog.show()
     }
 
     private fun downloadAsCSV() {
@@ -117,23 +133,22 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
                 showPrimaryButton()
                 setPrimaryButtonClick { downloadAsCSV() }
                 setPrimaryButtonImage(R.drawable.ic_export_excel)
+                setupRecyclerView(true)
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
+                setupRecyclerView(false)
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        })
+
+        getViewModel().isDeleteLiveData().observe(this, Observer {
+            if (it == true) {
+                getViewModel().getAllCustomer()
             }
         })
     }
 
     private fun initRecyclerViewCustomer(it: List<CustomerDataModel>) {
-        val x = 10
-        when {
-            x == 1 -> print("x == 1")
-            x == 2 -> print("x == 2")
-            x > 2 -> print("x > 2")
-            else -> { // Note the block
-                print("x is less than 1")
-            }
-        }
         customerListAdapter.updateData(it)
     }
 }

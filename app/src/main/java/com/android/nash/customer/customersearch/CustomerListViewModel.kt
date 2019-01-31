@@ -5,13 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import com.android.nash.core.CoreViewModel
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.provider.CustomerProvider
-import de.siegmar.fastcsv.writer.CsvAppender
-import de.siegmar.fastcsv.writer.CsvWriter
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.io.File
-import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 class CustomerListViewModel : CoreViewModel() {
@@ -20,6 +15,7 @@ class CustomerListViewModel : CoreViewModel() {
     private var customers = mutableListOf<CustomerDataModel>()
 
     private val isLoadingLiveData = MutableLiveData<Boolean>()
+    private val isDeleteLiveData = MutableLiveData<Boolean>()
     private val isLoadMore = MutableLiveData<Boolean>()
     private val isLoadFinish = MutableLiveData<Boolean>()
 
@@ -28,6 +24,8 @@ class CustomerListViewModel : CoreViewModel() {
     fun isLoadingLiveData(): LiveData<Boolean> = isLoadingLiveData
 
     fun getCustomerLiveData(): LiveData<List<CustomerDataModel>> = customersLiveData
+
+    fun isDeleteLiveData(): LiveData<Boolean> = isDeleteLiveData
 
     fun getAllCustomer() {
         isLoadingLiveData.value = true
@@ -81,33 +79,11 @@ class CustomerListViewModel : CoreViewModel() {
         }
     }
 
-    fun downloadCustomer(file: File) {
-        var csvWriter = CsvWriter()
-        var appender = csvWriter.append(file, StandardCharsets.UTF_8)
-        writeLine(CustomerDataModel.getCsvHeader(), appender)
-        var temp = mCustomerProvider.getAllCustomerKey()
-                .concatMapIterable { it }
-                .concatMapMaybe {
-                    mCustomerProvider.getCustomerFromUUID(it)
-                }.concatMap {
-                    try {
-                        val rowData = it.toCsvRow()
-                        writeLine(rowData, appender)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    return@concatMap Observable.just(it)
-                }.toList().subscribe({
-                }) {
-                    it.printStackTrace()
-                }
-    }
-
-    private fun writeLine(temps: Array<String>, appender: CsvAppender) {
-        appender.apply {
-            temps.forEach { appendField(it) }
-            endLine()
-            flush()
+    fun deleteCustomer(it: CustomerDataModel) {
+        val disposable = mCustomerProvider.deleteCustomer(it.uuid).doOnSubscribe { isLoadingLiveData.value = true }.doOnTerminate { isLoadingLiveData.value = false }.subscribe({
+            isDeleteLiveData.value = true
+        }) {
+            isDeleteLiveData.value = false
         }
     }
 }

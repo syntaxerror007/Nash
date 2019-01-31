@@ -99,6 +99,15 @@
             android:gravity="center_vertical"
             android:tint="@color/gray"
             app:srcCompat="@drawable/ic_view" />
+        <ImageView
+            android:id="@+id/imageViewDelete"
+            android:layout_width="@dimen/common_dp_16"
+            android:layout_height="@dimen/common_dp_16"
+            android:layout_margin="@dimen/common_dp_4"
+            android:gravity="center_vertical"
+            android:tint="@color/gray"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_close_button" />
     </LinearLayout>
 
 
