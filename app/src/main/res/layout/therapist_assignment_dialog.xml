@@ -28,7 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.android.nash.core.spinner.multicheckspinner.MultipleSelectionSpinner
+    <com.nash.android.core.spinner.multicheckspinner.MultipleSelectionSpinner
         android:id="@+id/therapistSelector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

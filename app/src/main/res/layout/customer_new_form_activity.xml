@@ -72,7 +72,7 @@
         app:met_maxCharacters="14"
         app:met_floatingLabel="highlight" />
 
-    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+    <com.nash.android.core.yesnocheckbox.MultiCheckCheckGroup
         android:id="@+id/hasEyelashBeforeMCG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:padding="@dimen/common_dp_4" />
 
-    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+    <com.nash.android.core.yesnocheckbox.MultiCheckCheckGroup
         android:id="@+id/haveAllergyMCG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:padding="@dimen/common_dp_4" />
 
-    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+    <com.nash.android.core.yesnocheckbox.MultiCheckCheckGroup
         android:id="@+id/wearContactLensMCG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:padding="@dimen/common_dp_4" />
 
-    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+    <com.nash.android.core.yesnocheckbox.MultiCheckCheckGroup
         android:id="@+id/hadEyeSurgeryMCG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
         android:layout_marginRight="@dimen/common_dp_16"
         android:padding="@dimen/common_dp_4" />
 
-    <com.android.nash.core.yesnocheckbox.MultiCheckCheckGroup
+    <com.nash.android.core.yesnocheckbox.MultiCheckCheckGroup
         android:id="@+id/knowNashMCG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

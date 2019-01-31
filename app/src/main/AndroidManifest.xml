@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.android.nash">
+    package="com.nash.android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -46,15 +46,16 @@
         </activity>
         <activity android:name=".location.list.LocationListActivity"
             android:screenOrientation="landscape" />
-        <activity android:name="com.android.nash.customer.newcustomer.CustomerNewFormActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name="com.android.nash.customer.customerservice.CustomerServiceActivity" />
-        <activity android:name="com.android.nash.customer.customersearch.CustomerListActivity" />
         <activity
-            android:name="com.android.nash.reminder.CustomerReminderActivity"
+            android:name="com.nash.android.customer.newcustomer.CustomerNewFormActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.nash.android.customer.customerservice.CustomerServiceActivity" />
+        <activity android:name="com.nash.android.customer.customersearch.CustomerListActivity" />
+        <activity
+            android:name="com.nash.android.reminder.CustomerReminderActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.android.nash.customer.customerservice.create.CustomerAddServiceFormActivity"
+            android:name="com.nash.android.customer.customerservice.create.CustomerAddServiceFormActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".customer.customerdetail.CustomerDetailActivity"
