@@ -93,7 +93,7 @@ class RegisterLocationViewModel : CoreViewModel() {
             secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", toRegisterUserPassword.value!!).addOnCompleteListener { it ->
                 secondaryFirebaseAuth.signOut()
                 if (it.isSuccessful) {
-                    val createdUserUid = it.result.user.uid
+                    val createdUserUid = it.result!!.user.uid
                     val userDataModel = UserDataModel()
                     userDataModel.username = username
                     userDataModel.id = createdUserUid

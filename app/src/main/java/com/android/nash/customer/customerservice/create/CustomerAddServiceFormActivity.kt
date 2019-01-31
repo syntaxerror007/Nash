@@ -6,7 +6,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.data.*
@@ -14,18 +17,21 @@ import com.android.nash.util.DateUtil
 import com.android.nash.util.convertToCalendar
 import com.android.nash.util.convertToString
 import com.android.nash.util.toNashDate
-import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
 import kotlinx.android.synthetic.main.customer_add_service_form_activity.*
 import org.parceler.Parcels
 import java.util.*
 
+
 class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewModel>() {
-    private lateinit var mServiceGroupAdapter: SimpleArrayListAdapter<ServiceGroupDataModel>
-    private lateinit var mServiceAdapter: SimpleArrayListAdapter<ServiceDataModel>
-    private lateinit var mTherapistAdapter: SimpleArrayListAdapter<TherapistDataModel>
+    //    private lateinit var mServiceGroupAdapter: SimpleArrayListAdapter<ServiceGroupDataModel>
+//    private lateinit var mServiceAdapter: SimpleArrayListAdapter<ServiceDataModel>
+//    private lateinit var mTherapistAdapter: SimpleArrayListAdapter<TherapistDataModel>
     private var serviceGroupSelected = false
     private var serviceSelected = false
     private var therapistSelected = false
+    private var selectedServiceGroup: ServiceGroupDataModel? = null
+    private var selectedService: ServiceDataModel? = null
+    private var selectedTherapist: TherapistDataModel? = null
 
     override fun onCreateViewModel(): CustomerAddServiceFormViewModel = ViewModelProviders.of(this).get(CustomerAddServiceFormViewModel::class.java)
 
@@ -82,87 +88,115 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
 
     private fun initForm() {
         if (getViewModel().getServiceGroups().value != null) {
-            mServiceGroupAdapter = SimpleArrayListAdapter(this, getViewModel().getServiceGroups().value!!)
-            editTextServiceGroupName.setAdapter(mServiceGroupAdapter)
-            editTextServiceGroupName.setOnItemSelectedListener(object : OnItemSelectedListener {
-                override fun onNothingSelected() {
-                    disableServiceName()
-                    disableTherapistName()
-                    disablePrice()
-                    serviceGroupSelected = false
+            initSearchServiceGroupAutoComplete()
+            btnRegister.visibility = View.GONE
+        }
+    }
+
+    private fun initSearchServiceGroupAutoComplete() {
+        val serviceGroupSearchListItem = getViewModel().getServiceGroups().value!!.mapIndexed { index, serviceGroupDataModel ->
+            SearchListItem(index, serviceGroupDataModel.serviceGroupName)
+        }
+        editTextServiceGroupName.isFocusable = false
+        editTextServiceGroupName.isClickable = true
+        editTextServiceGroupName.setTextColor(ContextCompat.getColor(this, R.color.black))
+        val serviceGroupSearchableDialog = SearchableDialog(this, serviceGroupSearchListItem, "Service Group")
+        serviceGroupSearchableDialog.setOnItemSelected { position, _ ->
+            if (getViewModel().getServiceGroups().value != null && position < getViewModel().getServiceGroups().value!!.size) {
+                val serviceGroups = getViewModel().getServiceGroups().value!!
+                selectedServiceGroup = serviceGroups[position]
+                val serviceSearchListItem = selectedServiceGroup?.services?.mapIndexed { index, service ->
+                    SearchListItem(index, service.serviceName)
                 }
+                editTextServiceGroupName.setText(selectedServiceGroup?.serviceGroupName)
+                enableServiceName(serviceSearchListItem)
+                disableTherapistName()
+                disablePrice()
 
-                override fun onItemSelected(view: View?, position: Int, id: Long) {
-                    if (getViewModel().getServiceGroups().value != null && position > 0 && position <= getViewModel().getServiceGroups().value!!.size) {
-                        if (mServiceGroupAdapter.getItem(position) != null) {
-                            mServiceAdapter = SimpleArrayListAdapter(this@CustomerAddServiceFormActivity, mServiceGroupAdapter.getItem(position)!!.services)
-                            editTextServiceName.setAdapter(mServiceAdapter)
-                            enableServiceName()
-                            serviceGroupSelected = true
-                        }
-                    } else {
-                        serviceGroupSelected = false
-                        disableServiceName()
-                    }
-                }
+                resetTherapist()
+                resetService()
+                resetPrice()
+                serviceGroupSelected = true
+            } else {
+                disableServiceName()
+                disableTherapistName()
+                disablePrice()
 
-            })
-            editTextServiceName.setOnItemSelectedListener(object : OnItemSelectedListener {
-                override fun onNothingSelected() {
-                    disableTherapistName()
-                    disablePrice()
-                    serviceSelected = false
-                }
+                resetTherapist()
+                resetService()
+                resetPrice()
+            }
+        }
+        editTextServiceGroupName.setOnClickListener {
+            serviceGroupSearchableDialog.show()
+        }
+    }
 
-                override fun onItemSelected(view: View?, position: Int, id: Long) {
-                    val services = (editTextServiceGroupName.selectedItem as ServiceGroupDataModel).services
-                    val selectedService = editTextServiceName.selectedItem as ServiceDataModel
-                    val therapists = getViewModel().getTherapistLiveData().value?.filter { it.uuid in selectedService.assignedTherapistSet }
-                    serviceSelected = true
-                    if (therapists != null) {
-                        mTherapistAdapter = SimpleArrayListAdapter(this@CustomerAddServiceFormActivity, therapists)
-                        editTextTherapist.setAdapter(mTherapistAdapter)
-                    }
-                    enableTherapistName()
-                }
+    private fun initSearchServiceAutoComplete(serviceSearchListItem: List<SearchListItem>?) {
+        val serviceSearchableDialog = SearchableDialog(this, serviceSearchListItem, "Select Treatment")
+        editTextServiceName.isFocusable = false
+        editTextServiceName.isClickable = true
+        serviceSearchableDialog.setOnItemSelected { position, _ ->
+            val services = selectedServiceGroup?.services
+            selectedService = services?.elementAt(position)
+            val therapists = getViewModel().getTherapistLiveData().value?.filter {
+                selectedService?.assignedTherapistSet?.contains(it.uuid) ?: false
+            }
+            editTextServiceName.setText(selectedService?.serviceName)
+            serviceSelected = true
+            if (therapists != null) {
+                enableTherapistName(therapists.mapIndexed { index, therapist ->
+                    SearchListItem(index, therapist.therapistName)
+                })
+                resetTherapist()
+                resetPrice()
+                disablePrice()
+            }
+        }
 
-            })
+        editTextServiceName.setOnClickListener {
+            serviceSearchableDialog.show()
+        }
+    }
 
-            editTextTherapist.setOnItemSelectedListener(object : OnItemSelectedListener {
-                override fun onNothingSelected() {
-                    disablePrice()
-                    therapistSelected = false
-                }
 
-                override fun onItemSelected(view: View?, position: Int, id: Long) {
-                    enablePrice()
-                    therapistSelected = true
-                }
-
-            })
+    private fun initSearchTherapistAutoComplete(therapists: List<SearchListItem>) {
+        val therapistSearchableDialog = SearchableDialog(this, therapists, "Select Therapist")
+        editTextTherapist.isFocusable = false
+        editTextTherapist.isClickable = true
+        therapistSearchableDialog.setOnItemSelected { _, therapistName ->
+            selectedTherapist = getViewModel().getTherapistLiveData().value?.find {
+                it.therapistName == therapistName.title
+            }
+            editTextTherapist.setText(selectedTherapist?.therapistName)
+            therapistSelected = true
+            resetPrice()
+            enablePrice()
+        }
+        editTextTherapist.setOnClickListener {
+            therapistSearchableDialog.show()
         }
     }
 
     private fun setOnClickListener() {
         btnRegister.setOnClickListener {
             if (isFormValid()) {
-                val selectedServiceGroup = editTextServiceGroupName.selectedItem as ServiceGroupDataModel
-                val selectedService = editTextServiceName.selectedItem as ServiceDataModel
-                val selectedTherapist = editTextTherapist.selectedItem as TherapistDataModel
+                val selectedServiceGroup = selectedServiceGroup
+                val selectedService = selectedService
+                val selectedTherapist = selectedTherapist
                 val price = editTextPrice.text.toString().toLong()
                 val treatmentDate = DateUtil.convertShownDateToNashDate(editTextServiceDate.text.toString())
                 val treatmentDateCalendar = treatmentDate.convertToCalendar()
                 val toRemindCalendar = treatmentDateCalendar.clone() as Calendar
                 val lashType = editTextLashType.text.toString()
-                toRemindCalendar.add(Calendar.DAY_OF_MONTH, selectedService.reminder)
                 val toRemindDate = toRemindCalendar.toNashDate()
 
                 getViewModel().registerServiceToCustomer(CustomerServiceDataModel(
                         customerUUID = if (getViewModel().customerUUID != null) getViewModel().customerUUID!! else "",
                         locationUUID = getViewModel().locationUUID!!,
-                        serviceGroupUUID = selectedServiceGroup.uuid,
-                        serviceUUID = selectedService.uuid,
-                        therapistUUID = selectedTherapist.uuid,
+                        serviceGroupUUID = selectedServiceGroup!!.uuid,
+                        serviceUUID = selectedService!!.uuid,
+                        therapistUUID = selectedTherapist!!.uuid,
                         treatmentDate = treatmentDate,
                         treatmentDateTimestamp = treatmentDateCalendar.timeInMillis,
                         toRemindDate = toRemindDate,
@@ -208,28 +242,49 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
         inputLayoutPrice.visibility = View.GONE
         inputLayoutLashType.visibility = View.GONE
         editTextServiceDate.visibility = View.GONE
+        btnRegister.visibility = View.GONE
     }
 
     private fun enablePrice() {
         inputLayoutPrice.visibility = View.VISIBLE
         inputLayoutLashType.visibility = View.VISIBLE
         editTextServiceDate.visibility = View.VISIBLE
+        btnRegister.visibility = View.VISIBLE
     }
 
-    private fun enableTherapistName() {
+    private fun enableTherapistName(therapists: List<SearchListItem>) {
+        initSearchTherapistAutoComplete(therapists)
         editTextTherapist.visibility = View.VISIBLE
     }
+
 
     private fun disableTherapistName() {
         editTextTherapist.visibility = View.GONE
     }
 
-    private fun enableServiceName() {
+    private fun enableServiceName(serviceSearchListItem: List<SearchListItem>?) {
+        initSearchServiceAutoComplete(serviceSearchListItem)
         editTextServiceName.visibility = View.VISIBLE
 
     }
 
     private fun disableServiceName() {
         editTextServiceName.visibility = View.GONE
+    }
+
+    private fun resetTherapist() {
+        editTextTherapist.text = null
+        selectedTherapist = null
+        therapistSelected = false
+    }
+
+    private fun resetService() {
+        editTextServiceName.text = null
+        selectedService = null
+        serviceSelected = false
+    }
+
+    private fun resetPrice() {
+        editTextPrice.text = null
     }
 }

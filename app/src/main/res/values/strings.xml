@@ -63,4 +63,7 @@
     <string name="text_new_password_hint">New Password</string>
     <string name="text_repeat_new_password">Repeat New Password</string>
     <string name="text_button_change_password">Change Password</string>
+    <string name="text_service_group_hint">Service Group</string>
+    <string name="text_service_hint">Service</string>
+    <string name="text_therapist_hint">Therapist</string>
 </resources>

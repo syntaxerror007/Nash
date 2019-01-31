@@ -83,4 +83,18 @@ class MultiCheckCheckGroup : LinearLayout {
     fun setAdditionalInfo(additionalInfo: String) {
         editTextAdditionalInfo.setText(additionalInfo)
     }
+
+    override fun setEnabled(isEnabled: Boolean) {
+        optionsCheckBox.forEach {
+            it.isEnabled = isEnabled
+            it.isClickable = isEnabled
+            it.setTextColor(ContextCompat.getColor(context, R.color.black))
+            if (it.isChecked) {
+                it.highlightColor = ContextCompat.getColor(context, R.color.colorAccent)
+            }
+        }
+        editTextAdditionalInfo.isEnabled = isEnabled
+        editTextAdditionalInfo.isClickable = isEnabled
+        editTextAdditionalInfo.setTextColor(ContextCompat.getColor(context, R.color.black))
+    }
 }

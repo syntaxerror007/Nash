@@ -49,4 +49,7 @@ class CustomerNewFormViewModel : CoreViewModel() {
     fun setCustomerDataModel(customerDataModel: CustomerDataModel) {
         customerDataModelLiveData = customerDataModel
     }
+
+    fun getCustomerData(): CustomerDataModel = customerDataModelLiveData!!
+
 }

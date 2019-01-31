@@ -2,7 +2,6 @@ package com.android.nash.util
 
 import android.app.Dialog
 import android.content.Context
-import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -10,23 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import com.android.nash.data.NashDate
 import com.android.nash.util.DateUtil.Companion.DATE_FORMAT_SHOWN
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-
-fun ImageView.loadUrl(url: CharSequence?, @DrawableRes placeholder: Int) {
-    val requestOptions = RequestOptions().placeholder(placeholder)
-    Glide.with(context).load(url).apply(requestOptions).into(this)
-}
 
 fun TextView.htmlFormat(text: String?) {
     this.text = StringUtil.fromHtml(text)

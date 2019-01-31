@@ -3,11 +3,15 @@ package com.android.nash.customer.newcustomer
 import android.app.DatePickerDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.android.nash.R
 import com.android.nash.core.activity.CoreActivity
 import com.android.nash.core.yesnocheckbox.MultiCheckCheckGroupData
+import com.android.nash.customer.customerservice.CustomerServiceActivity
 import com.android.nash.data.CustomerDataModel
 import com.android.nash.data.NashDate
 import com.android.nash.util.DateUtil
@@ -17,6 +21,7 @@ import org.parceler.Parcels
 import java.util.*
 
 class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
+    var isEditMode: Boolean? = null
     override fun onCreateViewModel(): CustomerNewFormViewModel = ViewModelProviders.of(this).get(CustomerNewFormViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,12 +33,66 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         setBackEnabled(true)
         val customerDataModel: CustomerDataModel? = Parcels.unwrap(intent.extras?.getParcelable("customerDataModel"))
         if (customerDataModel != null) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             getViewModel().setCustomerDataModel(customerDataModel)
-            setTitle("Edit Customer - ${customerDataModel.customerName}")
+            setTitle("Customer - ${customerDataModel.customerName}")
             setDataToForm(customerDataModel)
+            initToolbarButton()
+            buttonSave.text = "Edit"
+            isEditMode = false
         }
         setupCalendarDialog()
-        buttonSave.setOnClickListener { saveCustomer() }
+        buttonSave.setOnClickListener {
+            if (isEditMode == null) {
+                saveCustomer()
+            } else {
+                if (isEditMode!!) {
+                    saveCustomer()
+                } else {
+                    isEditMode = true
+                    setButtonClickability(false)
+                    setFormEnabled(true)
+                    buttonSave.text = "Save"
+                }
+            }
+        }
+    }
+
+    private fun initToolbarButton() {
+        showPrimaryButton()
+        showSecondaryButton()
+        setButtonClickability(true)
+    }
+
+    private fun setButtonClickability(isClickable: Boolean) {
+        if (isClickable) {
+            setPrimaryButtonImage(R.drawable.ic_customer_white)
+            setSecondaryButtonImage(R.drawable.ic_service_gray)
+            setPrimaryButtonClick {
+
+            }
+
+            setSecondaryButtonClick {
+                navigateToCustomerServiceList()
+            }
+        } else {
+            setPrimaryButtonImage(R.drawable.ic_customer_white)
+            setSecondaryButtonImage(R.drawable.ic_service_white)
+            setPrimaryButtonClick {
+
+            }
+
+            setSecondaryButtonClick {
+
+            }
+        }
+    }
+
+    private fun navigateToCustomerServiceList() {
+        val bundle = Bundle()
+        bundle.putParcelable("customerDataModel", Parcels.wrap(getViewModel().getCustomerData()))
+        startActivity(Intent(this, CustomerServiceActivity::class.java).putExtras(bundle))
+        finish()
     }
 
     private fun setDataToForm(customerDataModel: CustomerDataModel) {
@@ -54,11 +113,50 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         wearContactLensMCG.setAdditionalInfo(customerDataModel.wearContactLensInfo)
         hadEyeSurgeryMCG.setAdditionalInfo(customerDataModel.hadSurgeryInfo)
         knowNashMCG.setAdditionalInfo(customerDataModel.knowNashFromInfo)
+
+        setFormEnabled(false)
+
+        editTextCustomerName.setTextColor(ContextCompat.getColor(this, R.color.black))
+        editTextBirthDate.setTextColor(ContextCompat.getColor(this, R.color.black))
+        editTextAddress.setTextColor(ContextCompat.getColor(this, R.color.black))
+        editTextEmail.setTextColor(ContextCompat.getColor(this, R.color.black))
+        editTextPhoneNumber.setTextColor(ContextCompat.getColor(this, R.color.black))
+        editTextCustomerName.setTextColor(ContextCompat.getColor(this, R.color.black))
+    }
+
+    private fun setFormEnabled(isEnabled: Boolean) {
+        editTextCustomerName.isEnabled = isEnabled
+        editTextBirthDate.isEnabled = isEnabled
+        editTextAddress.isEnabled = isEnabled
+        editTextEmail.isEnabled = isEnabled
+        editTextPhoneNumber.isEnabled = isEnabled
+
+        editTextCustomerName.isClickable = isEnabled
+        editTextBirthDate.isClickable = isEnabled
+        editTextAddress.isClickable = isEnabled
+        editTextEmail.isClickable = isEnabled
+        editTextPhoneNumber.isClickable = isEnabled
+
+        hasEyelashBeforeMCG.isEnabled = isEnabled
+        haveAllergyMCG.isEnabled = isEnabled
+        wearContactLensMCG.isEnabled = isEnabled
+        hadEyeSurgeryMCG.isEnabled = isEnabled
+        knowNashMCG.isEnabled = isEnabled
+
+        checkBoxAgreeTnC.isEnabled = isEnabled
+        checkBoxAgreeTnC.isClickable = isEnabled
     }
 
     private fun observeViewModel() {
         getViewModel().isLoading().observe(this, Observer { observeLoading(it!!) })
-        getViewModel().isSuccess().observe(this, Observer { finish() })
+        getViewModel().isSuccess().observe(this, Observer {
+            if (isEditMode == null) {
+                finish()
+            } else {
+                buttonSave.text = "Edit"
+                setFormEnabled(false)
+            }
+        })
         getViewModel().getErrorMessage().observe(this, Observer { Toast.makeText(this, it!!, Toast.LENGTH_LONG).show() })
     }
 
@@ -87,7 +185,6 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
     }
 
     private fun saveCustomer() {
-
         val customerDataModel = if (getViewModel().getCustomerLiveData() != null) getViewModel().getCustomerLiveData() else CustomerDataModel()
         if (!isValid(editTextCustomerName.text.toString())) {
             editTextCustomerName.error = "Please put customer name"

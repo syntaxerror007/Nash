@@ -67,7 +67,7 @@ class RegisterViewModel: CoreViewModel() {
 
         secondaryFirebaseAuth.createUserWithEmailAndPassword("$username@$COMPANY_NAME.com", password).addOnCompleteListener {
             if (it.isSuccessful) {
-                val createdUserUid = it.result.user.uid
+                val createdUserUid = it.result!!.user.uid
                 val userDataModel = UserDataModel()
                 userDataModel.username = username
                 userDataModel.id = createdUserUid
