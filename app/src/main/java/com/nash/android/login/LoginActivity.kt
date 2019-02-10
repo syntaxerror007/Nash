@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.nash.android.R
 import com.nash.android.core.activity.CoreActivity
 import com.nash.android.home.HomeActivity
+import kotlinx.android.synthetic.main.core_activity.*
 import kotlinx.android.synthetic.main.login_activity.*
 
 class LoginActivity : CoreActivity<LoginViewModel>(), View.OnClickListener {

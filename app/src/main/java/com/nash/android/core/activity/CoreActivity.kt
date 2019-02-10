@@ -29,6 +29,9 @@ import com.nash.android.service.ServiceListActivity
 import com.nash.android.setting.SettingActivity
 import com.nash.android.util.setVisible
 import kotlinx.android.synthetic.main.core_activity.*
+import android.content.pm.PackageManager
+import android.support.v4.widget.TextViewCompat
+import android.widget.TextView
 
 
 abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreActivity<T> {
@@ -44,6 +47,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         super.onCreate(savedInstanceState)
         viewModel = onCreateViewModel()
         loadingDialog = LoadingDialog(this)
+
         initViewModel()
     }
 
@@ -236,7 +240,22 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     override fun setContentView(resId: Int) {
         super.setContentView(R.layout.core_activity)
         setupToolbar()
+
+        textViewVersion.text = getVersionName()
+
         layoutInflater.inflate(resId, coreContainer, true)
+    }
+
+
+    fun getVersionName(): String {
+        try {
+            val pInfo = applicationContext.packageManager.getPackageInfo(packageName, 0)
+            val version = pInfo.versionName
+            return "V$version"
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return ""
     }
 
     fun getViewModel(): T {

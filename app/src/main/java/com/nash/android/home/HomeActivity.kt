@@ -18,6 +18,7 @@ class HomeActivity : CoreActivity<HomeViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
+        textViewHomeVersion.text = getVersionName()
         homeContainer.setVisible(false)
         getViewModel().setLoading(true)
         getViewModel().getUserDataModel().observe(this, Observer { onUserLoaded(it!!) })
