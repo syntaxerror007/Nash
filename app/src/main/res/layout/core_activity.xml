@@ -109,6 +109,10 @@
             android:id="@+id/textViewVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/common_dp_12"
+            android:textSize="@dimen/common_sp_18"
+            android:textColor="@color/icon_home"
             android:layout_gravity="bottom"/>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
