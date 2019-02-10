@@ -130,11 +130,11 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
         })
 
         getViewModel().getUserDataModel().observe(this, Observer {
+            setupRecyclerView(it != null && it.userType == ADMIN_TYPE)
             requestedOrientation = if (it != null && it.userType == ADMIN_TYPE) {
                 showSecondaryButton()
                 setSecondaryButtonClick { downloadAsCSV() }
                 setSecondaryButtonImage(R.drawable.ic_export_excel)
-                setupRecyclerView(true)
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
                 setupRecyclerView(false)

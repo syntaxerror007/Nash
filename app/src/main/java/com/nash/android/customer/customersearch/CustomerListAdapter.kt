@@ -34,6 +34,8 @@ class CustomerListAdapter(val data: MutableList<CustomerDataModel> = mutableList
                 imageViewDelete.setOnClickListener {
                     onDeleteClickListener(customerServiceDataModel)
                 }
+            } else {
+                imageViewDelete.setVisible(false)
             }
             imageViewNeedToRemind.setVisible(customerServiceDataModel.isNeedToBeReminded)
 
