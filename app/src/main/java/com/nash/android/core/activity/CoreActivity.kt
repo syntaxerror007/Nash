@@ -259,6 +259,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
     fun showSearchForm() {
         editTextSearch.setVisible(true)
         hidePrimaryButton()
+        imageViewSecondaryButton.setVisible(false)
     }
 
     private fun hidePrimaryButton() {
@@ -269,6 +270,7 @@ abstract class CoreActivity<T : CoreViewModel> : AppCompatActivity(), BaseCoreAc
         editTextSearch.setVisible(false)
         editTextSearch.text = null
         showPrimaryButton()
+        showSecondaryButton()
     }
 
 

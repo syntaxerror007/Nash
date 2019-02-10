@@ -184,10 +184,10 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                 val selectedServiceGroup = selectedServiceGroup
                 val selectedService = selectedService
                 val selectedTherapist = selectedTherapist
-                val price = editTextPrice.text.toString().toLong()
                 val treatmentDate = DateUtil.convertShownDateToNashDate(editTextServiceDate.text.toString())
                 val treatmentDateCalendar = treatmentDate.convertToCalendar()
-                val toRemindCalendar = treatmentDateCalendar.clone() as Calendar
+                val toRemindCalendar = (treatmentDateCalendar.clone() as Calendar)
+                toRemindCalendar.add(Calendar.DAY_OF_YEAR, selectedService?.reminder ?: 0)
                 val lashType = editTextLashType.text.toString()
                 val toRemindDate = toRemindCalendar.toNashDate()
 
@@ -205,7 +205,7 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
                         serviceGroup = selectedServiceGroup,
                         service = selectedService,
                         therapist = selectedTherapist,
-                        price = price
+                        price = 0
                 ))
             }
         }
@@ -230,23 +230,17 @@ class CustomerAddServiceFormActivity : CoreActivity<CustomerAddServiceFormViewMo
         } else {
             //                editTextServiceGroupNameError.visibility = View.GONE
         }
-        if (editTextPrice.text.toString().isEmpty()) {
-            editTextPrice.error = "Please input price"
-            return false
-        }
         return true
     }
 
 
     private fun disablePrice() {
-        inputLayoutPrice.visibility = View.GONE
         inputLayoutLashType.visibility = View.GONE
         editTextServiceDate.visibility = View.GONE
         btnRegister.visibility = View.GONE
     }
 
     private fun enablePrice() {
-        inputLayoutPrice.visibility = View.VISIBLE
         inputLayoutLashType.visibility = View.VISIBLE
         editTextServiceDate.visibility = View.VISIBLE
         btnRegister.visibility = View.VISIBLE

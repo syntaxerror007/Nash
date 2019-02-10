@@ -14,8 +14,10 @@ import com.nash.android.core.yesnocheckbox.MultiCheckCheckGroupData
 import com.nash.android.customer.customerservice.CustomerServiceActivity
 import com.nash.android.data.CustomerDataModel
 import com.nash.android.data.NashDate
+import com.nash.android.util.ADMIN_TYPE
 import com.nash.android.util.DateUtil
 import com.nash.android.util.convertToString
+import com.nash.android.util.setVisible
 import kotlinx.android.synthetic.main.customer_new_form_activity.*
 import org.parceler.Parcels
 import java.util.*
@@ -33,13 +35,14 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
         setBackEnabled(true)
         val customerDataModel: CustomerDataModel? = Parcels.unwrap(intent.extras?.getParcelable("customerDataModel"))
         if (customerDataModel != null) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             getViewModel().setCustomerDataModel(customerDataModel)
             setTitle("Customer - ${customerDataModel.customerName}")
             setDataToForm(customerDataModel)
             initToolbarButton()
             buttonSave.text = "Edit"
             isEditMode = false
+        } else {
+            buttonSave.setVisible(true)
         }
         setupCalendarDialog()
         buttonSave.setOnClickListener {
@@ -158,6 +161,13 @@ class CustomerNewFormActivity : CoreActivity<CustomerNewFormViewModel>() {
             }
         })
         getViewModel().getErrorMessage().observe(this, Observer { Toast.makeText(this, it!!, Toast.LENGTH_LONG).show() })
+
+        getViewModel().getUserDataModel().observe(this, Observer {
+            if (it?.userType.equals(ADMIN_TYPE)) {
+                buttonSave.setVisible(true)
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+        })
     }
 
     private fun observeLoading(it: Boolean) {

@@ -7,8 +7,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.nash.android.R
 import com.nash.android.core.activity.CoreActivity
-import com.nash.android.customer.customerdetail.CustomerDetailActivity
 import com.nash.android.customer.customerservice.create.CustomerAddServiceFormActivity
+import com.nash.android.customer.newcustomer.CustomerNewFormActivity
 import com.nash.android.data.CustomerServiceDataModel
 import com.nash.android.data.UserDataModel
 import com.nash.android.util.convertToPrice
@@ -32,6 +32,7 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
             bundle.putParcelable("customerFormData", Parcels.wrap(getViewModel().getFormData()))
             startActivityForResult(Intent(this@CustomerServiceActivity, CustomerAddServiceFormActivity::class.java).putExtras(bundle), 1)
         }
+        initToolbarButton()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -80,14 +81,13 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
 
     private fun initView(it: UserDataModel) {
         if (it.userType.equals("ADMIN", true)) {
-            initToolbarButton()
             buttonAddService.setVisible(false)
         }
     }
 
     private fun initToolbarButton() {
-        setPrimaryButtonImage(R.drawable.ic_customer_white)
-        setSecondaryButtonImage(R.drawable.ic_service_gray)
+        setPrimaryButtonImage(R.drawable.ic_customer_gray)
+        setSecondaryButtonImage(R.drawable.ic_service_white)
         showPrimaryButton()
         showSecondaryButton()
         setPrimaryButtonClick {
@@ -101,17 +101,15 @@ class CustomerServiceActivity : CoreActivity<CustomerServiceViewModel>() {
     private fun navigateToCustomerDetail() {
         val bundle = Bundle()
         bundle.putParcelable("customerDataModel", Parcels.wrap(getViewModel().getCustomerData()))
-        startActivity(Intent(this, CustomerDetailActivity::class.java).putExtras(bundle))
+        startActivity(Intent(this, CustomerNewFormActivity::class.java).putExtras(bundle))
         finish()
     }
 
     private fun observeCustomerService(it: List<CustomerServiceDataModel>) {
         if (it.isEmpty()) {
             recyclerViewHeader.setVisible(false)
-            recyclerViewFooter.setVisible(false)
         } else {
             recyclerViewHeader.setVisible(true)
-            recyclerViewFooter.setVisible(true)
         }
         recyclerViewService.adapter = CustomerServiceAdapter(it) {
             it.customerDataModel = getViewModel().getCustomerLiveData().value!!

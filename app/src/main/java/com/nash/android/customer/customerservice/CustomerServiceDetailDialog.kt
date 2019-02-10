@@ -29,6 +29,5 @@ class CustomerServiceDetailDialog(context: Context, private val customerServiceD
         therapistName.text = customerServiceDataModel.therapist?.therapistName
         treatmentDate.text = customerServiceDataModel.treatmentDate.convertToString()
         toRemindDate.text = customerServiceDataModel.toRemindDate.convertToString()
-        price.text = "Rp. ${customerServiceDataModel.price.convertToPrice()}"
     }
 }

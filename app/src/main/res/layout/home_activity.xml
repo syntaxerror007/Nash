@@ -54,7 +54,7 @@
                 android:layout_width="@dimen/common_dp_48"
                 android:layout_height="@dimen/common_dp_48"
                 android:tint="@color/icon_home"
-                app:srcCompat="@drawable/ic_search"
+                app:srcCompat="@drawable/ic_search_white"
                 android:layout_marginTop="@dimen/common_dp_16"
                 android:layout_marginBottom="@dimen/common_dp_16" />
 

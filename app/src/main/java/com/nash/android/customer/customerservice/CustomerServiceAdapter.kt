@@ -21,7 +21,6 @@ class CustomerServiceAdapter(val list: List<CustomerServiceDataModel>, private v
         fun bind(customerServiceDataModel: CustomerServiceDataModel, onItemClick: (CustomerServiceDataModel) -> Unit) = with(itemView) {
             textViewCustomerServiceDate.text = customerServiceDataModel.treatmentDate.convertToString()
             textViewCustomerServiceName.text = customerServiceDataModel.service?.serviceName
-            textViewCustomerServicePrice.text = customerServiceDataModel.price.convertToPrice()
             textViewCustomerServiceTherapist.text = customerServiceDataModel.therapist?.therapistName
             textViewCustomerServiceLocation.text = customerServiceDataModel.locationName
             setOnClickListener { onItemClick.invoke(customerServiceDataModel) }

@@ -35,6 +35,7 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
 
         setDrawerItemSelected(R.id.menu_customer)
         hideSearchForm()
+        setPrimaryButtonImage(R.drawable.ic_search_white)
         setPrimaryButtonClick {
             showSearchForm()
         }
@@ -130,9 +131,9 @@ class CustomerListActivity : CoreActivity<CustomerListViewModel>() {
 
         getViewModel().getUserDataModel().observe(this, Observer {
             requestedOrientation = if (it != null && it.userType == ADMIN_TYPE) {
-                showPrimaryButton()
-                setPrimaryButtonClick { downloadAsCSV() }
-                setPrimaryButtonImage(R.drawable.ic_export_excel)
+                showSecondaryButton()
+                setSecondaryButtonClick { downloadAsCSV() }
+                setSecondaryButtonImage(R.drawable.ic_export_excel)
                 setupRecyclerView(true)
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {

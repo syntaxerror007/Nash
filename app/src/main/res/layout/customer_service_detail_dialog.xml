@@ -205,6 +205,7 @@
         app:layout_constraintTop_toBottomOf="@id/toRemindDate"
         app:layout_constraintLeft_toLeftOf="@id/guideline1"
         app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
         android:textStyle="bold"
         android:textSize="@dimen/common_sp_20"
         android:text="Price" />
@@ -215,6 +216,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/common_sp_18"
         android:layout_marginTop="@dimen/common_dp_4"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/priceLabel"
         app:layout_constraintLeft_toLeftOf="@id/guideline1"
         app:layout_constraintRight_toRightOf="parent" />
