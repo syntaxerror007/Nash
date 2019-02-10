@@ -65,8 +65,8 @@
 
                 <ImageView
                     android:id="@+id/imageViewPrimaryButton"
-                    android:layout_width="@dimen/common_dp_32"
-                    android:layout_height="@dimen/common_dp_32"
+                    android:layout_width="@dimen/common_dp_24"
+                    android:layout_height="@dimen/common_dp_24"
                     android:layout_margin="@dimen/common_dp_16"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
@@ -75,8 +75,8 @@
                     android:tint="@color/white" />
                 <ImageView
                     android:id="@+id/imageViewSecondaryButton"
-                    android:layout_width="@dimen/common_dp_32"
-                    android:layout_height="@dimen/common_dp_32"
+                    android:layout_width="@dimen/common_dp_24"
+                    android:layout_height="@dimen/common_dp_24"
                     android:layout_margin="@dimen/common_dp_16"
                     android:layout_toLeftOf="@id/imageViewPrimaryButton"
                     android:visibility="gone"
